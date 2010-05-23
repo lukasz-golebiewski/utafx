@@ -3,17 +3,17 @@ package uta;
 import java.util.Arrays;
 import java.util.List;
 
-public class Action {
+public class Alternative {
 
 	private List<Criterion> criteria;
 	private double[] values;
 
-	public Action(double[] values, Criterion... criteria) {
+	public Alternative(double[] values, Criterion... criteria) {
 		this.criteria = Arrays.asList(criteria);
 		this.values = values;
 	}
 
-	public Action(double[] values, List<Criterion> criteria) {
+	public Alternative(double[] values, List<Criterion> criteria) {
 		this.criteria = criteria;
 		this.values = values;
 	}
