@@ -14,6 +14,6 @@ public interface IUtaSolver {
 	 * @return array of LinearFunctions, the i-th function corresponds to the
 	 *         i-th criterion in the param list of criterions
 	 */
-	LinearFunction[] solve(ReferenceRanking ranking, List<Criterion> criteria);
+	LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria);
 
 }

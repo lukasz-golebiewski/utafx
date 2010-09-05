@@ -1,17 +1,15 @@
 package uta;
 
-import helpers.AssertHelper;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import junit.framework.Assert;
 
 public class UtaStarSolverTest {
 
-	@Test
-	public void testSolve01() {
-		IUtaSolver starSolver = new UtaStarSolver();
+	// @Test
+	public void testBuildRank() {
+		UtaStarSolver tested = new UtaStarSolver();
 
 		// Create criteria
 		Criterion price = new Criterion(30, 2, 2);
@@ -30,19 +28,23 @@ public class UtaStarSolverTest {
 		Alternative bus = new Alternative(new double[] { 6, 40, 0 }, criteria);
 		Alternative taxi = new Alternative(new double[] { 30, 30, 3 }, criteria);
 
-		// Create ranking
-		ReferenceRanking ranking = new ReferenceRanking(new double[] { 1, 2, 2, 3, 4 }, rer, metro1, metro2, bus, taxi);
-
-		LinearFunction[] actuals = starSolver.solve(ranking, criteria);
-
 		double[][] expecteds = new double[3][];
 		expecteds[0] = new double[] { 0, 0.5, 0.5 };
 		expecteds[1] = new double[] { 0, 0.05, 0.05, 0.1 };
 		expecteds[2] = new double[] { 0, 0, 0, 0.4 };
 
-		for (int i = 0; i < expecteds.length; i++) {
-			AssertHelper.assertArraysEqual(expecteds[i], actuals[i].getValues());
-		}
+		LinearFunction f1 = new LinearFunction(new double[] { 30, 16, 2 }, new double[] { 0, 0.5, 0.5 }, price);
+		LinearFunction f2 = new LinearFunction(new double[] { 40, 30, 20, 10 }, new double[] { 0, 0.05, 0.05, 0.1 }, time);
+		LinearFunction f3 = new LinearFunction(new double[] { 0, 1, 2, 3 }, new double[] { 0, 0, 0, 0.4 }, comfort);
+
+		Ranking<Alternative> result = tested.buildRank(new LinearFunction[] { f1, f2, f3 }, new Alternative[] { rer, metro1, metro2, bus,
+				taxi });
+
+		Assert.assertEquals(1, result.getRank(rer));
+		Assert.assertEquals(2, result.getRank(metro1));
+		Assert.assertEquals(2, result.getRank(metro2));
+		Assert.assertEquals(3, result.getRank(bus));
+		Assert.assertEquals(4, result.getRank(taxi));
 
 	}
 }

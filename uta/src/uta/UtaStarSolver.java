@@ -1,7 +1,9 @@
 package uta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.math.optimization.GoalType;
 import org.apache.commons.math.optimization.OptimizationException;
@@ -17,16 +19,16 @@ public class UtaStarSolver implements IUtaSolver {
 	private double indifferenceTreshold = 0.05;
 
 	@Override
-	public LinearFunction[] solve(ReferenceRanking ranking, List<Criterion> criteria) {
+	public LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria) {
 
-		Alternative[] alternatives = ranking.getAlternatives();
+		List<Alternative> alternatives = ranking.getAlternatives();
 		LinearFunction[] functions = createResultFunctions(criteria);
 
 		WVariablesRepresentation[] wReps = createWVariablesRepresentations(alternatives, functions);
 		List<LinearConstraint> constraints = prepareConstraints(wReps, ranking);
 
 		int wOffset = wReps[0].getFlattenedCoefficients().length;
-		double[] objectiveCoefficients = new double[wOffset + alternatives.length * 2];
+		double[] objectiveCoefficients = new double[wOffset + alternatives.size() * 2];
 		for (int i = wOffset; i < objectiveCoefficients.length; i++) {
 			objectiveCoefficients[i] = 1;
 		}
@@ -50,9 +52,9 @@ public class UtaStarSolver implements IUtaSolver {
 		int varOffset = 0;
 		for (int i = 0; i < functions.length; i++) {
 			double increment = 0;
-			for (int j = 1; j < functions[i].getValues().length; j++, varOffset++) {
+			for (int j = 1; j < functions[i].getNoOfPoints(); j++, varOffset++) {
 				increment += solution.getPoint()[varOffset];
-				functions[i].getValues()[j] = increment;
+				functions[i].addValue(increment, j);
 			}
 		}
 	}
@@ -66,18 +68,18 @@ public class UtaStarSolver implements IUtaSolver {
 		return functions;
 	}
 
-	private List<LinearConstraint> prepareConstraints(WVariablesRepresentation[] wReps, ReferenceRanking ranking) {
+	private List<LinearConstraint> prepareConstraints(WVariablesRepresentation[] wReps, Ranking<Alternative> ranking) {
 
 		List<LinearConstraint> result = new ArrayList<LinearConstraint>();
 
-		Alternative[] alts = ranking.getAlternatives();
+		List<Alternative> alts = ranking.getAlternatives();
 
 		final int wCoefficientsCount = wReps[0].getFlattenedCoefficients().length;
 		final double[] errorCoefficients = new double[] { -1, 1, 1, -1 };
-		final int errorCoefficientsCount = alts.length * 2;
+		final int errorCoefficientsCount = alts.size() * 2;
 
-		for (int i = 0; i < alts.length; i++) {
-			Alternative successor = ranking.getSuccessor(alts[i]);
+		for (int i = 0; i < alts.size(); i++) {
+			Alternative successor = ranking.getSuccessor(alts.get(i));
 
 			// if a successor exists a constraint can be formulated
 			if (successor != null) {
@@ -94,7 +96,7 @@ public class UtaStarSolver implements IUtaSolver {
 					coefficients[j] = errorCoefficients[k];
 				}
 
-				if (ranking.sameRank(alts[i], successor)) {
+				if (ranking.sameRank(alts.get(i), successor)) {
 					result.add(new LinearConstraint(coefficients, Relationship.EQ, 0));
 				} else {
 					result.add(new LinearConstraint(coefficients, Relationship.GEQ, indifferenceTreshold));
@@ -112,16 +114,28 @@ public class UtaStarSolver implements IUtaSolver {
 		return result;
 	}
 
-	private WVariablesRepresentation[] createWVariablesRepresentations(Alternative[] alternatives, LinearFunction[] functions) {
-		MarginalValuesRepresentation[] mvReps = new MarginalValuesRepresentation[alternatives.length];
-		WVariablesRepresentation[] wvReps = new WVariablesRepresentation[alternatives.length];
+	private WVariablesRepresentation[] createWVariablesRepresentations(List<Alternative> alternatives, LinearFunction[] functions) {
+		MarginalValuesRepresentation[] mvReps = new MarginalValuesRepresentation[alternatives.size()];
+		WVariablesRepresentation[] wvReps = new WVariablesRepresentation[alternatives.size()];
 
-		for (int i = 0; i < alternatives.length; i++) {
-			mvReps[i] = new MarginalValuesRepresentation(alternatives[i], functions);
+		for (int i = 0; i < alternatives.size(); i++) {
+			mvReps[i] = new MarginalValuesRepresentation(alternatives.get(i), functions);
 			wvReps[i] = new WVariablesRepresentation(mvReps[i].getCoefficients());
 		}
 
 		return wvReps;
+	}
+
+	Ranking<Alternative> buildRank(LinearFunction[] functions, Alternative[] alts) {
+		Map<Alternative, Double> altsAndUtils = new HashMap<Alternative, Double>();
+		for (Alternative alternative : alts) {
+			for (LinearFunction function : functions) {
+				double value = alternative.getValueOn(function.getCriterion());
+				// function.get
+			}
+		}
+
+		return null;
 	}
 
 }

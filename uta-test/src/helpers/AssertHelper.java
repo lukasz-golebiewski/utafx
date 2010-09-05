@@ -17,7 +17,22 @@ public class AssertHelper {
 		}
 	}
 
+	public static void assertArraysEqual(double[] expected, Double[] actual, double precision) {
+		if (expected.length != actual.length) {
+			Assert.fail("Arrays' lengths different");
+		}
+		for (int i = 0; i < actual.length; i++) {
+			if (Math.abs(expected[i] - actual[i]) > precision) {
+				Assert.fail("Expected element " + expected[i] + " but was " + actual[i] + " at position [" + i + "]");
+			}
+		}
+	}
+
 	public static void assertArraysEqual(double[] expected, double[] actual) {
+		assertArraysEqual(expected, actual, default_precision);
+	}
+
+	public static void assertArraysEqual(double[] expected, Double[] actual) {
 		assertArraysEqual(expected, actual, default_precision);
 	}
 }

@@ -3,10 +3,14 @@ package uta;
 import java.util.Arrays;
 import java.util.List;
 
-public class Alternative {
+public class Alternative implements Comparable<Alternative> {
 
 	private List<Criterion> criteria;
 	private double[] values;
+
+	public Alternative() {
+
+	}
 
 	public Alternative(double[] values, Criterion... criteria) {
 		this.criteria = Arrays.asList(criteria);
@@ -21,5 +25,10 @@ public class Alternative {
 	public double getValueOn(Criterion criterion) {
 		int criterionIndex = criteria.indexOf(criterion);
 		return values[criterionIndex];
+	}
+
+	@Override
+	public int compareTo(Alternative o) {
+		return this.toString().compareTo(o.toString());
 	}
 }

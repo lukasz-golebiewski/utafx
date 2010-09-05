@@ -31,7 +31,7 @@ class MarginalValuesRepresentation {
 	private void create() {
 		// init vectors
 		for (int i = 0; i < functions.size(); i++) {
-			coefficients[i] = new double[functions.get(i).getCharacteristicPoints().length];
+			coefficients[i] = new double[functions.get(i).getNoOfPoints()];
 		}
 
 		// interpolate
@@ -39,7 +39,7 @@ class MarginalValuesRepresentation {
 			LinearFunction currentFunction = functions.get(i);
 
 			double evaluation = alternative.getValueOn(currentFunction.getCriterion());
-			double[] charPoints = currentFunction.getCharacteristicPoints();
+			Double[] charPoints = currentFunction.getCharacteristicPoints();
 			boolean increasingFunction = currentFunction.isIncreasing();
 
 			for (int j = 0; j < charPoints.length; j++) {
