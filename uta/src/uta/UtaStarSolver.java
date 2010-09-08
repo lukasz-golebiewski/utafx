@@ -1,9 +1,11 @@
 package uta;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.math.optimization.GoalType;
 import org.apache.commons.math.optimization.OptimizationException;
@@ -13,6 +15,7 @@ import org.apache.commons.math.optimization.linear.LinearObjectiveFunction;
 import org.apache.commons.math.optimization.linear.LinearOptimizer;
 import org.apache.commons.math.optimization.linear.Relationship;
 import org.apache.commons.math.optimization.linear.SimplexSolver;
+import org.matheclipse.generic.interfaces.Pair;
 
 public class UtaStarSolver implements IUtaSolver {
 
@@ -127,15 +130,56 @@ public class UtaStarSolver implements IUtaSolver {
 	}
 
 	Ranking<Alternative> buildRank(LinearFunction[] functions, Alternative[] alts) {
-		Map<Alternative, Double> altsAndUtils = new HashMap<Alternative, Double>();
+
+		SortedSet<Pair<Alternative, Double>> altsAndUtils = new TreeSet<Pair<Alternative, Double>>(
+				new Comparator<Pair<Alternative, Double>>() {
+
+					@Override
+					public int compare(Pair<Alternative, Double> o1, Pair<Alternative, Double> o2) {
+						int result = Double.compare(o2.getSecond(), o1.getSecond());
+						if (result == 0) {
+							return 1;
+						}
+						return result;
+
+					}
+				});
+
 		for (Alternative alternative : alts) {
-			for (LinearFunction function : functions) {
-				double value = alternative.getValueOn(function.getCriterion());
-				// function.get
-			}
+			double util = getGeneralUtil(functions, alternative);
+			altsAndUtils.add(new Pair<Alternative, Double>(alternative, util));
 		}
 
-		return null;
+		Iterator<Pair<Alternative, Double>> iterator = altsAndUtils.iterator();
+
+		Alternative[] alts2 = new Alternative[alts.length];
+		double[] ranking = new double[alts.length];
+
+		double prevUtil = 2.0;
+		int rank = 0;
+		int i = 0;
+		while (iterator.hasNext()) {
+			Pair<Alternative, Double> pair = iterator.next();
+			pair.getFirst();
+			if (pair.getSecond() < prevUtil) {
+				rank++;
+				prevUtil = pair.getSecond();
+			}
+			ranking[i] = rank;
+			alts2[i] = pair.getFirst();
+			i++;
+		}
+
+		return new Ranking<Alternative>(ranking, alts2);
+	}
+
+	double getGeneralUtil(LinearFunction[] functions, Alternative alternative) {
+		double util = 0;
+		for (LinearFunction function : functions) {
+			double value = alternative.getValueOn(function.getCriterion());
+			util += function.getValueAt(value);
+		}
+		return util;
 	}
 
 }

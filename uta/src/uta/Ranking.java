@@ -16,7 +16,6 @@ public class Ranking<T> {
 	private List<Pair<T, Double>> pairs;
 
 	public Ranking(double[] ranking, T... alts) {
-
 		this.pairs = new ArrayList<Pair<T, Double>>();
 		for (int i = 0; i < alts.length; i++) {
 			pairs.add(new Pair<T, Double>(alts[i], ranking[i]));
