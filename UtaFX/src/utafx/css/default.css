@@ -1,0 +1,53 @@
+/*
+
+Basic Default Styles
+
+Some default styles are listed below.  You can change the value of these properties to effect everything which has a default style at the same time.
+
+Examples:
+
+//change font to 14 point Amble Condensed
+-fx-font: 14pt "Amble Cn"
+
+//change base color to gold
+-fx-base: gold;
+
+//change background color to #fff8dc (cornsilk)
+-fx-background: #fff8dc;
+
+*/
+
+.scene {
+
+    /*** default font for all content, inherited by all nodes */
+
+    -fx-font: 12pt "Amble Cn";
+
+    /*** main color palette */
+
+    -fx-accent: #0093ff;
+    -fx-base: #d0d0d0;
+    -fx-background: #f4f4f4;
+    -fx-control-inner-background: white;
+    -fx-focus-color: #0093ff;
+    -fx-dark-text-color: black;
+    -fx-mid-text-color: #292929;
+    -fx-light-text-color: white;
+
+    /*** color used in styling controls, based on the base color but changed by pseudo-states like hover and pressed to make it lighter or darker than the base color */
+
+    -fx-color: -fx-base;
+
+    /*** two colors are used to change the "color" property when we change pseudo-states */
+
+    -fx-hover-base: ladder base stops
+        (20%,derive(-fx-base,20%))
+        (35%,derive(-fx-base,30%))
+        (50%,derive(-fx-base,40%));
+    -fx-pressed-base: derive(-fx-base,-20%);
+
+    /*** default color for all text, readable color on the default background color */
+
+    -fx-text-fill: -fx-text-background-color;
+
+}

@@ -1,0 +1,27 @@
+/*
+
+Application Specific Styles
+
+These styles are specific to the application.  They use the scene properties defined by default.css.
+
+*/
+
+.title-text {
+    -fx-text-fill: -fx-mid-text-color;
+    -fx-font-size: 1.6em;
+}
+.highlight-line {
+    -fx-stroke: linear (0%,0%) to (100%,0%) stops (0%,-fx-accent) (50%,-fx-base) (100%,-fx-background);
+}
+.app-background {
+    -fx-fill: -fx-background;
+}
+.area-background {
+    -fx-fill: -fx-background;
+}
+.tool-bar-preview {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-spacing: 5;
+    -fx-padding: 5;
+}
