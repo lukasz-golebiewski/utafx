@@ -1,7 +1,9 @@
 package uta;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.matheclipse.generic.interfaces.Pair;
 
@@ -70,6 +72,14 @@ public class Ranking<T> {
 			}
 		}
 		return -1;
+	}
+
+	public int getNumberOfRanks() {
+		Set<Double> set = new HashSet<Double>();		
+		for(Pair<T,Double> pair : pairs){
+			set.add(pair.getSecond());
+		}				
+		return set.size();
 	}
 
 }

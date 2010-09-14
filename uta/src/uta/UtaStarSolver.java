@@ -19,11 +19,82 @@ import org.matheclipse.generic.interfaces.Pair;
 
 public class UtaStarSolver implements IUtaSolver {
 
-	private double indifferenceTreshold = 0.05;
+	private static final KendallHelper KENDALL_HELPER = new KendallHelper();
 
-	@Override
-	public LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria) {
+	private static final double BEST_POSSIBLE_KENDALL = 1d;
+	
+	private double indifferenceThreshold = 0.05;
+	
+	private boolean doPostOptimalAnalysis; 
+	
+	private LinearFunction[] bestFunctions;
+	
+	private double bestKendall;
+	
+	public UtaStarSolver() {
+		this(false);
+	}
+	
+	public UtaStarSolver(boolean doPostOptimalAnalysis) {
+		this.doPostOptimalAnalysis = doPostOptimalAnalysis;		
+	}
+	
+	public synchronized LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria, List<Alternative> alternatives) {
+		setValues(criteria, alternatives);		
+		return solve(ranking, criteria);
+	}
 
+	private void setValues(List<Criterion> criteria,
+			List<Alternative> alternatives) {
+		for(Criterion criterion : criteria) {
+			double maxValue = Double.MIN_VALUE;
+			double minValue = Double.MAX_VALUE;			
+			for(Alternative alt : alternatives){
+				double val = alt.getValueOn(criterion);
+				if(val > maxValue)
+					maxValue = val;
+				if(val < minValue){
+					minValue = val;
+				}
+			}						
+			if(criterion.isGain()){
+				criterion.setBestValue(maxValue);			
+				criterion.setWorstValue(minValue);
+			} else {
+				criterion.setBestValue(minValue);			
+				criterion.setWorstValue(maxValue);
+			}			
+		}
+	}
+	
+	public synchronized LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria) {
+		
+		if(!doPostOptimalAnalysis){
+			return solve_OldImplementation(ranking, criteria);
+		}
+		
+		this.bestFunctions = null;
+		this.bestKendall = 2;		
+		final double initialThreshold = 1d/(ranking.getNumberOfRanks() - 1d);
+		
+		//iteration 1:
+		setIndifferenceThreshold(initialThreshold);
+		solve_NewImplementation(ranking, criteria);
+		
+		//iteration 2:
+		setIndifferenceThreshold(initialThreshold/2);
+		solve_NewImplementation(ranking, criteria);
+		
+		//iteration 3:
+		setIndifferenceThreshold(0);
+		solve_NewImplementation(ranking, criteria);
+		
+		return bestFunctions;
+	}	
+
+	LinearFunction[] solve_OldImplementation(Ranking<Alternative> ranking,
+			List<Criterion> criteria) {
+		
 		List<Alternative> alternatives = ranking.getAlternatives();
 		LinearFunction[] functions = createResultFunctions(criteria);
 
@@ -41,14 +112,116 @@ public class UtaStarSolver implements IUtaSolver {
 		LinearOptimizer optimizer = new SimplexSolver();
 
 		try {
+			//initial computation of the solution:
 			RealPointValuePair solution = optimizer.optimize(objectiveFunction, constraints, GoalType.MINIMIZE, true);
 			populateFunctions(functions, solution);
+
 		} catch (OptimizationException e) {
 			// Unbounded or not feasible?
 			e.printStackTrace();
+		}		
+		
+		return functions;
+	}
+
+	LinearFunction[] solve_NewImplementation(Ranking<Alternative> ranking,
+			List<Criterion> criteria) {
+		
+		List<Alternative> alternatives = ranking.getAlternatives();
+		LinearFunction[] functions = createResultFunctions(criteria);
+
+		WVariablesRepresentation[] wReps = createWVariablesRepresentations(alternatives, functions);
+		
+		List<LinearConstraint> constraints = prepareConstraints(wReps, ranking);
+
+		int wOffset = wReps[0].getFlattenedCoefficients().length;
+		double[] objectiveCoefficients = new double[wOffset + alternatives.size() * 2];
+		for (int i = wOffset; i < objectiveCoefficients.length; i++) {
+			objectiveCoefficients[i] = 1;
+		}
+		LinearObjectiveFunction objectiveFunction = new LinearObjectiveFunction(objectiveCoefficients, 0);
+
+		// do the optimization
+		LinearOptimizer optimizer = new SimplexSolver();		
+		
+		try {
+			//initial computation of the solution:
+			RealPointValuePair solution = optimizer.optimize(objectiveFunction, constraints, GoalType.MINIMIZE, true);
+			populateFunctions(functions, solution);
+			
+			if(solution.getValue() > 0) {	
+				Ranking<Alternative> rankFromUtil = buildRank(functions, alternatives);
+				double kendallsCoefficient = KENDALL_HELPER.getCoefficient(ranking, rankFromUtil);
+				if(kendallsCoefficient > bestKendall){
+					this.bestFunctions = functions;
+					this.bestKendall = kendallsCoefficient;
+				}				
+				double distance = solution.getValue() + (0.1 * solution.getValue());
+				doPostOptimalAnalysis(distance, wReps, constraints, alternatives);				
+				
+			} else {
+				//solution = 0				
+				bestFunctions = functions;
+				bestKendall = 1d;
+			}
+		} catch (OptimizationException e) {
+			// Unbounded or not feasible?
+			e.printStackTrace();
+		}		
+		
+		return bestFunctions;
+	}
+	
+	private void setIndifferenceThreshold(double value) {		
+		this.indifferenceThreshold = value;
+		
+	}
+
+	private void doPostOptimalAnalysis(double distance, WVariablesRepresentation[] wReps, List<LinearConstraint> constraints, List<Alternative> alternatives) {
+			
+		int wOffset = wReps[0].getFlattenedCoefficients().length;
+		double[] coefficients = new double[wOffset + alternatives.size() * 2];
+		for (int i = wOffset; i < coefficients.length; i++) {
+			coefficients[i] = 1;
 		}
 
-		return functions;
+		LinearConstraint additionalConstraint = new LinearConstraint(coefficients, Relationship.LEQ, distance);
+		constraints.add(additionalConstraint);
+		
+		// it1:
+		double[][] objCoefficients = wReps[0].getCoefficients().clone();
+		for (int i = 0; i < objCoefficients.length; i++) {
+			
+		}
+		
+		//iteration 1:
+		double[] objectiveCoefficients = new double[wOffset + alternatives.size() * 2];	
+		
+		for(int i = 0;i < wReps[0].getCoefficients().length; i++){
+			for (int j = 0; j < wReps[0].getCoefficients()[i].length; j++) {
+				
+			}			
+		}
+		
+		LinearObjectiveFunction objectiveFunction = new LinearObjectiveFunction(objectiveCoefficients, 0);
+				
+	}
+	
+	private double[] flatten(double[][] toFlatten) {
+		int resultSize = 0;
+		for (int i = 0; i < toFlatten.length; i++) {
+			resultSize += toFlatten[i].length;
+		}
+		
+		double[] result = new double[resultSize];
+		int index = 0;
+		for (int i = 0; i < toFlatten.length; i++) {
+			for (int j = 0; j < toFlatten[i].length; j++) {
+				result[index++] = toFlatten[i][j];
+			}
+		}
+		
+		return result;
 	}
 
 	private void populateFunctions(LinearFunction[] functions, RealPointValuePair solution) {
@@ -102,7 +275,7 @@ public class UtaStarSolver implements IUtaSolver {
 				if (ranking.sameRank(alts.get(i), successor)) {
 					result.add(new LinearConstraint(coefficients, Relationship.EQ, 0));
 				} else {
-					result.add(new LinearConstraint(coefficients, Relationship.GEQ, indifferenceTreshold));
+					result.add(new LinearConstraint(coefficients, Relationship.GEQ, indifferenceThreshold));
 				}
 			}
 		}
@@ -129,6 +302,10 @@ public class UtaStarSolver implements IUtaSolver {
 		return wvReps;
 	}
 
+	Ranking<Alternative> buildRank(LinearFunction[] functions, List<Alternative> alts) {
+		return buildRank(functions, alts.toArray(new Alternative[0]));
+	}
+	
 	Ranking<Alternative> buildRank(LinearFunction[] functions, Alternative[] alts) {
 
 		SortedSet<Pair<Alternative, Double>> altsAndUtils = new TreeSet<Pair<Alternative, Double>>(

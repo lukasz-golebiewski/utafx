@@ -4,7 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-public class ReferenceRankingTest {
+public class RankingTest {
 
 	@Test
 	public void testGetSuccessor() {
@@ -74,5 +74,42 @@ public class ReferenceRankingTest {
 		Assert.assertTrue(tested.sameRank(a3, a2));
 		Assert.assertFalse(tested.sameRank(a1, a2));
 		Assert.assertFalse(tested.sameRank(a1, a3));
+	}
+	
+	@Test
+	public void testGetNumberOfRanks1(){
+		double[] ranking = new double[] { 1, 2, 2 };
+		Alternative a1, a2, a3;
+		a1 = new Alternative();
+		a2 = new Alternative();
+		a3 = new Alternative();
+
+		Ranking<Alternative> tested = new Ranking<Alternative>(ranking, a1, a3, a2);
+		Assert.assertEquals(2, tested.getNumberOfRanks());
+	}
+	
+	@Test
+	public void testGetNumberOfRanks2(){
+		double[] ranking = new double[] { 3, 2, 2, 1, 1 };
+		Alternative a1, a2, a3, a4, a5;
+		a1 = new Alternative();
+		a2 = new Alternative();
+		a3 = new Alternative();
+		a4 = new Alternative();
+		a5 = new Alternative();
+		Ranking<Alternative> tested = new Ranking<Alternative>(ranking, a1, a3, a2, a4, a5);
+		Assert.assertEquals(3, tested.getNumberOfRanks());
+	}
+	
+	@Test
+	public void testGetNumberOfRanks3(){
+		double[] ranking = new double[] { 5, 1, 2 };
+		Alternative a1, a2, a3;
+		a1 = new Alternative();
+		a2 = new Alternative();
+		a3 = new Alternative();
+
+		Ranking<Alternative> tested = new Ranking<Alternative>(ranking, a1, a3, a2);
+		Assert.assertEquals(3, tested.getNumberOfRanks());
 	}
 }
