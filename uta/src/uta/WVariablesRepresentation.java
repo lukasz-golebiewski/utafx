@@ -12,14 +12,16 @@ import java.util.List;
 class WVariablesRepresentation {
 
 	private double[][] w;
-	private double[][] mvrCoefficients;
 
+	WVariablesRepresentation(double[][] wCoefficients, Object dummy) {
+		this.w = wCoefficients;		
+	}
+	
 	WVariablesRepresentation(double[][] mvrCoefficients) {
-		this.mvrCoefficients = mvrCoefficients;
-		create();
+		create(mvrCoefficients);
 	}
 
-	private void create() {
+	private void create(double[][] mvrCoefficients) {
 		this.w = new double[mvrCoefficients.length][];
 		for (int i = 0; i < w.length; i++) {
 			w[i] = new double[mvrCoefficients[i].length - 1];

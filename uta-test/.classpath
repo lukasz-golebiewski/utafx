@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/uta"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/uta"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/easymock-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/objenesis-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/asm-3.2.jar"/>
+	<classpathentry kind="lib" path="/uta/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/uta/lib/google-collect-1.0-rc3.jar"/>
+	<classpathentry kind="lib" path="/uta/lib/jsr305.jar"/>
+	<classpathentry kind="lib" path="/uta/lib/log4j-1.2.11.jar"/>
+	<classpathentry kind="lib" path="/uta/lib/meconsole009.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

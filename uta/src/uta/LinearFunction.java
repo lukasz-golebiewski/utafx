@@ -4,23 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Piecewise linear function representing utility of a certain criterion.
  * 
  * @author masklin
  * 
  */
 public class LinearFunction {
 
-	private Criterion criterion;
+	private final Criterion criterion;
 
 	/**
 	 * List of characteristic points.
 	 */
-	private List<Double> chPs;
+	private final List<Double> chPs;
 	/**
 	 * List of values.
 	 */
 
-	private List<Double> vals;
+	private final List<Double> vals;
 
 	LinearFunction(Criterion criterion) {
 		chPs = new ArrayList<Double>();
@@ -76,10 +77,18 @@ public class LinearFunction {
 		return chPs.get(chPs.size() - 1) - chPs.get(0) > 0;
 	}
 
+	/**
+	 * Returns the value of this function in the specified point.
+	 * 
+	 * @param point
+	 *            - at the x axis
+	 * @return value from the y axis
+	 */
 	public double getValueAt(double point) {
 		int indexOf = chPs.indexOf(point);
-		if (indexOf >= 0)
+		if (indexOf >= 0) {
 			return vals.get(indexOf);
+		}
 
 		Double temp = null;
 		int index = -1;

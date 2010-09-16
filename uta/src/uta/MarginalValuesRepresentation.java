@@ -12,10 +12,10 @@ import java.util.List;
  */
 class MarginalValuesRepresentation {
 
-	private Alternative alternative;
-	private List<LinearFunction> functions;
+	private final Alternative alternative;
+	private final List<LinearFunction> functions;
 
-	private double[][] coefficients;
+	private final double[][] coefficients;
 
 	MarginalValuesRepresentation(Alternative alternative, LinearFunction[] functions) {
 		this(alternative, Arrays.asList(functions));
@@ -64,14 +64,6 @@ class MarginalValuesRepresentation {
 			}
 		}
 
-	}
-
-	double getCoefficient(int i, int j) {
-		return coefficients[i][j];
-	}
-
-	double[] getCoefficients(int i) {
-		return coefficients[i];
 	}
 
 	double[][] getCoefficients() {
