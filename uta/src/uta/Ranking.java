@@ -1,6 +1,8 @@
 package uta;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,8 +19,12 @@ public class Ranking<T> {
 
 	private List<Pair<T, Double>> pairs;
 
+        public Ranking(){
+            this.pairs = new ArrayList<Pair<T, Double>>();
+        }
+
 	public Ranking(double[] ranking, T... alts) {
-		this.pairs = new ArrayList<Pair<T, Double>>();
+                this();
 		for (int i = 0; i < alts.length; i++) {
 			pairs.add(new Pair<T, Double>(alts[i], ranking[i]));
 		}
@@ -82,4 +88,25 @@ public class Ranking<T> {
 		return set.size();
 	}
 
+        public void add(T t, double rank){
+            pairs.add(new Pair(t, rank));
+        }
+
+    @Override
+    public String toString() {
+        Collections.sort(pairs, new Comparator<Pair<T, Double>>(){
+            @Override
+            public int compare(Pair<T, Double> o1, Pair<T, Double> o2) {
+                return o1.getSecond().compareTo(o2.getSecond());
+            }
+        });
+        StringBuilder out = new StringBuilder();
+        for(Pair p: pairs){
+            out.append(p.getFirst().toString());
+            out.append(" ");
+            out.append(p.getSecond().toString());
+            out.append("\n");
+        }
+        return out.toString();
+    }
 }

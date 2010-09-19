@@ -1,6 +1,7 @@
 package uta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -45,11 +46,23 @@ public class UtaStarSolver implements IUtaSolver {
 		this.doPostOptimalAnalysis = doPostOptimalAnalysis;
 	}
 
+        @Override
 	public synchronized LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria,
 			List<Alternative> alternatives) {
 		setMinMaxValuesOfCriteria(criteria, alternatives);
 		return solve(ranking, criteria);
 	}
+
+        /**
+         * Backdoor for JavaFX call, since no generics are supported in JavaFX.
+         * @param ranking
+         * @param criteria
+         * @param alternatives
+         * @return 
+         */
+        public synchronized LinearFunction[] solve(Ranking<Alternative> ranking, Criterion[] criteria, Alternative[] alternatives) {
+            return solve(ranking, Arrays.asList(criteria), Arrays.asList(alternatives));
+        }
 
 	private void setMinMaxValuesOfCriteria(List<Criterion> criteria, List<Alternative> alternatives) {
 		for (Criterion criterion : criteria) {
@@ -338,7 +351,7 @@ public class UtaStarSolver implements IUtaSolver {
 		return buildRank(functions, alts.toArray(new Alternative[0]));
 	}
 
-	Ranking<Alternative> buildRank(LinearFunction[] functions, Alternative[] alts) {
+	public Ranking<Alternative> buildRank(LinearFunction[] functions, Alternative[] alts) {
 
 		SortedSet<Pair<Alternative, Double>> altsAndUtils = new TreeSet<Pair<Alternative, Double>>(
 				new Comparator<Pair<Alternative, Double>>() {
@@ -382,7 +395,7 @@ public class UtaStarSolver implements IUtaSolver {
 		return new Ranking<Alternative>(ranking, alts2);
 	}
 
-	double getGeneralUtil(LinearFunction[] functions, Alternative alternative) {
+	public double getGeneralUtil(LinearFunction[] functions, Alternative alternative) {
 		double util = 0;
 		for (LinearFunction function : functions) {
 			double value = alternative.getValueOn(function.getCriterion());

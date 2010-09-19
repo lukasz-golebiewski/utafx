@@ -2,11 +2,17 @@ package uta;
 
 public class Criterion {
 
-	private double worstValue;
+        private String name;
+        private double worstValue;
 	private double bestValue;
 	private int noOfSegments;
 	private Boolean isGain;
 
+        public Criterion(String name, boolean isGain, int noOfSegents) {
+            this(noOfSegents, isGain);
+            this.name = name;
+        }
+        
 	/**
 	 * 
 	 * @param noOfSegments - number of linear segments
@@ -45,9 +51,16 @@ public class Criterion {
 	
 	public boolean isGain(){
 		if(isGain == null){
-			return bestValue > worstValue;
+			return (isGain = bestValue > worstValue);
 		}
 		return isGain;
 	}
 
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }    
 }
