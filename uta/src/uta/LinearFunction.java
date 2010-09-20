@@ -1,6 +1,8 @@
 package uta;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -14,59 +16,57 @@ public class LinearFunction {
 	private final Criterion criterion;
 
 	/**
-	 * List of characteristic points.
+	 * List of characteristic points. Point representing the worst value is
+	 * always at index = 0 and the best value is at last index.
 	 */
-	private final List<Double> chPs;
-	/**
-	 * List of values.
-	 */
-
-	private final List<Double> vals;
+	private final List<Point> characteristicPoints = new ArrayList<Point>();
 
 	LinearFunction(Criterion criterion) {
-		chPs = new ArrayList<Double>();
-		vals = new ArrayList<Double>();
-
 		this.criterion = criterion;
 		double interval = (criterion.getBestValue() - criterion.getWorstValue()) / criterion.getNoOfSegments();
 
-		chPs.add(criterion.getWorstValue());
+		characteristicPoints.add(new Point(criterion.getWorstValue(), 0));
+
 		for (int i = 1; i < (criterion.getNoOfSegments() + 1); i++) {
-			chPs.add(chPs.get(i - 1) + interval);
+			characteristicPoints.add(new Point(characteristicPoints.get(i - 1).getX() + interval, 0));
 		}
 	}
 
 	LinearFunction(double[] characteristicPoints, double[] values, Criterion criterion) {
-		chPs = new ArrayList<Double>();
 		for (int i = 0; i < characteristicPoints.length; i++) {
-			chPs.add(characteristicPoints[i]);
+			this.characteristicPoints.add(new Point(characteristicPoints[i], values[i]));
 		}
-
-		vals = new ArrayList<Double>();
-		for (int i = 0; i < values.length; i++) {
-			vals.add(values[i]);
-		}
-
 		this.criterion = criterion;
 	}
 
 	public Double[] getValues() {
-		return vals.toArray(new Double[] {});
+		Double[] result = new Double[characteristicPoints.size()];
+		int i = 0;
+		for (Iterator<Point> iterator = characteristicPoints.iterator(); iterator.hasNext(); i++) {
+			result[i] = iterator.next().getY();
+		}
+		return result;
 	}
 
 	public void addValue(double val, int index) {
-		while (index > vals.size()) {
-			vals.add(0d);
-		}
-		vals.add(index, val);
+		characteristicPoints.get(index).setY(val);
+	}
+
+	List<Point> getPoints() {
+		return Collections.unmodifiableList(characteristicPoints);
 	}
 
 	public Double[] getCharacteristicPoints() {
-		return chPs.toArray(new Double[] {});
+		Double[] result = new Double[characteristicPoints.size()];
+		int i = 0;
+		for (Iterator<Point> iterator = characteristicPoints.iterator(); iterator.hasNext(); i++) {
+			result[i] = iterator.next().getX();
+		}
+		return result;
 	}
 
 	public int getNoOfPoints() {
-		return chPs.size();
+		return characteristicPoints.size();
 	}
 
 	public Criterion getCriterion() {
@@ -74,7 +74,7 @@ public class LinearFunction {
 	}
 
 	public boolean isIncreasing() {
-		return chPs.get(chPs.size() - 1) - chPs.get(0) > 0;
+		return characteristicPoints.get(characteristicPoints.size() - 1).getX() - characteristicPoints.get(0).getX() > 0;
 	}
 
 	/**
@@ -85,34 +85,29 @@ public class LinearFunction {
 	 * @return value from the y axis
 	 */
 	public double getValueAt(double point) {
-		int indexOf = chPs.indexOf(point);
-		if (indexOf >= 0) {
-			return vals.get(indexOf);
-		}
-
 		Double temp = null;
 		int index = -1;
 
 		if (this.isIncreasing()) {
-			if (chPs.get(0) > point) {
-				return vals.get(0);
+			if (characteristicPoints.get(0).getX() > point) {
+				return characteristicPoints.get(0).getY();
 			}
 
-			for (int i = 0; i < chPs.size(); i++) {
-				if (chPs.get(i) > point) {
-					temp = chPs.get(i);
+			for (int i = 0; i < characteristicPoints.size(); i++) {
+				if (characteristicPoints.get(i).getX() > point) {
+					temp = characteristicPoints.get(i).getX();
 					index = i;
 					break;
 				}
 			}
 		} else {
-			if (chPs.get(0) < point) {
-				return vals.get(0);
+			if (characteristicPoints.get(0).getX() < point) {
+				return characteristicPoints.get(0).getY();
 			}
 
-			for (int i = 0; i < chPs.size(); i++) {
-				if (chPs.get(i) < point) {
-					temp = chPs.get(i);
+			for (int i = 0; i < characteristicPoints.size(); i++) {
+				if (characteristicPoints.get(i).getX() < point) {
+					temp = characteristicPoints.get(i).getX();
 					index = i;
 					break;
 				}
@@ -121,15 +116,40 @@ public class LinearFunction {
 
 		int i = index;
 		if (temp == null) {
-			return vals.get(vals.size() - 1);
+			return characteristicPoints.get(characteristicPoints.size() - 1).getY();
 		}
 
-		double interval = Math.abs(chPs.get(i) - chPs.get(i - 1));
-		double distance = Math.abs(point - chPs.get(i - 1));
+		double interval = Math.abs(characteristicPoints.get(i).getX() - characteristicPoints.get(i - 1).getX());
+		double distance = Math.abs(point - characteristicPoints.get(i - 1).getX());
 
-		double val = vals.get(i) - vals.get(i - 1);
+		double val = characteristicPoints.get(i).getY() - characteristicPoints.get(i - 1).getY();
 		double temp2 = val / interval;
-		return distance * temp2 + vals.get(i - 1);
+		return distance * temp2 + characteristicPoints.get(i - 1).getY();
 
+	}
+
+	Point getBetterNeighbor(Point p) {
+		int index = characteristicPoints.indexOf(p);
+		if (index == -1)
+			throw new RuntimeException("Tried to get a neighbor of a point which doesn't belong to this function!");
+		if (++index > characteristicPoints.size() - 1)
+			return null;
+
+		return characteristicPoints.get(index);
+	}
+
+	Point getWorseNeighbor(Point p) {
+		int index = characteristicPoints.indexOf(p);
+		if (index == -1)
+			throw new RuntimeException("Tried to get a neighbor of a point which doesn't belong to this function!");
+
+		if (--index < 0)
+			return null;
+
+		return characteristicPoints.get(index);
+	}
+
+	Point getBestPoint() {
+		return characteristicPoints.get(characteristicPoints.size() - 1);
 	}
 }

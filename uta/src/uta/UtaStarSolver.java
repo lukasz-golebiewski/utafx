@@ -46,23 +46,23 @@ public class UtaStarSolver implements IUtaSolver {
 		this.doPostOptimalAnalysis = doPostOptimalAnalysis;
 	}
 
-        @Override
-	public synchronized LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria,
-			List<Alternative> alternatives) {
+	@Override
+	public LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria, List<Alternative> alternatives) {
 		setMinMaxValuesOfCriteria(criteria, alternatives);
 		return solve(ranking, criteria);
 	}
 
-        /**
-         * Backdoor for JavaFX call, since no generics are supported in JavaFX.
-         * @param ranking
-         * @param criteria
-         * @param alternatives
-         * @return 
-         */
-        public synchronized LinearFunction[] solve(Ranking<Alternative> ranking, Criterion[] criteria, Alternative[] alternatives) {
-            return solve(ranking, Arrays.asList(criteria), Arrays.asList(alternatives));
-        }
+	/**
+	 * Backdoor for JavaFX call, since no generics are supported in JavaFX.
+	 * 
+	 * @param ranking
+	 * @param criteria
+	 * @param alternatives
+	 * @return
+	 */
+	public LinearFunction[] solve(Ranking<Alternative> ranking, Criterion[] criteria, Alternative[] alternatives) {
+		return solve(ranking, Arrays.asList(criteria), Arrays.asList(alternatives));
+	}
 
 	private void setMinMaxValuesOfCriteria(List<Criterion> criteria, List<Alternative> alternatives) {
 		for (Criterion criterion : criteria) {
@@ -87,7 +87,7 @@ public class UtaStarSolver implements IUtaSolver {
 		}
 	}
 
-	public synchronized LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria) {
+	public LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria) {
 
 		if (!doPostOptimalAnalysis) {
 			return solve_OldImplementation(ranking, criteria);
@@ -171,8 +171,7 @@ public class UtaStarSolver implements IUtaSolver {
 			checkKendall(ranking, functions);
 
 			double distance = solution.getValue() + (0.1 * solution.getValue());
-			LinearFunction[] optimizedFunctions = doPostOptimalAnalysis(distance, wReps, constraints, alternatives,
-					criteria);
+			LinearFunction[] optimizedFunctions = doPostOptimalAnalysis(distance, wReps, constraints, alternatives, criteria);
 
 			checkKendall(ranking, optimizedFunctions);
 
@@ -209,8 +208,8 @@ public class UtaStarSolver implements IUtaSolver {
 
 	}
 
-	LinearFunction[] doPostOptimalAnalysis(double searchDistance, WVariablesRepresentation[] wReps,
-			List<LinearConstraint> constraints, List<Alternative> alternatives, List<Criterion> criteria) {
+	LinearFunction[] doPostOptimalAnalysis(double searchDistance, WVariablesRepresentation[] wReps, List<LinearConstraint> constraints,
+			List<Alternative> alternatives, List<Criterion> criteria) {
 
 		int numberOfLinearFunctions = wReps[0].getCoefficients().length;
 		LinearFunction[] result = createResultFunctions(criteria);
@@ -238,8 +237,7 @@ public class UtaStarSolver implements IUtaSolver {
 			offset = j;
 			LinearObjectiveFunction objectiveFunction = new LinearObjectiveFunction(objectiveCoefficients, 0);
 			try {
-				intermediateSolutions[i] = new SimplexSolver().optimize(objectiveFunction, constraints,
-						GoalType.MAXIMIZE, true);
+				intermediateSolutions[i] = new SimplexSolver().optimize(objectiveFunction, constraints, GoalType.MAXIMIZE, true);
 			} catch (OptimizationException e) {
 				handleOptimizationException(e);
 			}
@@ -264,8 +262,7 @@ public class UtaStarSolver implements IUtaSolver {
 
 	private void handleOptimizationException(OptimizationException e) {
 		throw new RuntimeException(
-				"Simplex solver has thrown an OptimizationException, this should never happen and indicates an error in the program",
-				e);
+				"Simplex solver has thrown an OptimizationException, this should never happen and indicates an error in the program", e);
 	}
 
 	private void populateFunctions(LinearFunction[] functions, RealPointValuePair solution) {
@@ -334,8 +331,7 @@ public class UtaStarSolver implements IUtaSolver {
 		return result;
 	}
 
-	private WVariablesRepresentation[] createWVariablesRepresentations(List<Alternative> alternatives,
-			LinearFunction[] functions) {
+	private WVariablesRepresentation[] createWVariablesRepresentations(List<Alternative> alternatives, LinearFunction[] functions) {
 		MarginalValuesRepresentation[] mvReps = new MarginalValuesRepresentation[alternatives.size()];
 		WVariablesRepresentation[] wvReps = new WVariablesRepresentation[alternatives.size()];
 

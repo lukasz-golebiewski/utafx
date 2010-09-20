@@ -19,12 +19,12 @@ public class Ranking<T> {
 
 	private List<Pair<T, Double>> pairs;
 
-        public Ranking(){
-            this.pairs = new ArrayList<Pair<T, Double>>();
-        }
+	public Ranking() {
+		this.pairs = new ArrayList<Pair<T, Double>>();
+	}
 
 	public Ranking(double[] ranking, T... alts) {
-                this();
+		this();
 		for (int i = 0; i < alts.length; i++) {
 			pairs.add(new Pair<T, Double>(alts[i], ranking[i]));
 		}
@@ -81,32 +81,32 @@ public class Ranking<T> {
 	}
 
 	public int getNumberOfRanks() {
-		Set<Double> set = new HashSet<Double>();		
-		for(Pair<T,Double> pair : pairs){
+		Set<Double> set = new HashSet<Double>();
+		for (Pair<T, Double> pair : pairs) {
 			set.add(pair.getSecond());
-		}				
+		}
 		return set.size();
 	}
 
-        public void add(T t, double rank){
-            pairs.add(new Pair(t, rank));
-        }
+	public void add(T t, double rank) {
+		pairs.add(new Pair<T, Double>(t, rank));
+	}
 
-    @Override
-    public String toString() {
-        Collections.sort(pairs, new Comparator<Pair<T, Double>>(){
-            @Override
-            public int compare(Pair<T, Double> o1, Pair<T, Double> o2) {
-                return o1.getSecond().compareTo(o2.getSecond());
-            }
-        });
-        StringBuilder out = new StringBuilder();
-        for(Pair p: pairs){
-            out.append(p.getFirst().toString());
-            out.append(" ");
-            out.append(p.getSecond().toString());
-            out.append("\n");
-        }
-        return out.toString();
-    }
+	@Override
+	public String toString() {
+		Collections.sort(pairs, new Comparator<Pair<T, Double>>() {
+			@Override
+			public int compare(Pair<T, Double> o1, Pair<T, Double> o2) {
+				return o1.getSecond().compareTo(o2.getSecond());
+			}
+		});
+		StringBuilder out = new StringBuilder();
+		for (Pair<T, Double> p : pairs) {
+			out.append(p.getFirst().toString());
+			out.append(" ");
+			out.append(p.getSecond().toString());
+			out.append("\n");
+		}
+		return out.toString();
+	}
 }

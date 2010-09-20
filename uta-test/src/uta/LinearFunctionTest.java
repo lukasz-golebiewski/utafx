@@ -1,5 +1,8 @@
 package uta;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -53,5 +56,32 @@ public class LinearFunctionTest {
 	public void testIsIncreasing2() {
 		LinearFunction tested = new LinearFunction(new double[] { 9, 9, 15 }, new double[] { 0, 0.4, 0.6 }, null);
 		Assert.assertTrue(tested.isIncreasing());
+	}
+
+	@Test
+	public void testGetBetterNeighbor() {
+		LinearFunction tested = new LinearFunction(new double[] { 9, 9, 15 }, new double[] { 0, 0.4, 0.6 }, null);
+		assertNull(tested.getBetterNeighbor(tested.getPoints().get(2)));
+	}
+
+	@Test
+	public void testGetBetterNeighbor02() {
+		LinearFunction tested = new LinearFunction(new double[] { 9, 9, 15 }, new double[] { 0, 0.4, 0.6 }, null);
+		assertNotNull(tested.getBetterNeighbor(tested.getPoints().get(1)));
+		assertEquals(tested.getPoints().get(2), tested.getBetterNeighbor(tested.getPoints().get(1)));
+	}
+
+	@Test
+	public void testGetWorseNeighbor() {
+		LinearFunction tested = new LinearFunction(new double[] { 15, 9, 4 }, new double[] { 0.6, 0.4, 0.3 }, null);
+		assertNull(tested.getWorseNeighbor(tested.getPoints().get(0)));
+	}
+
+	@Test
+	public void testGetWorseNeighbor02() {
+		LinearFunction tested = new LinearFunction(new double[] { 15, 14, 11 }, new double[] { 0.6, 0.4, 0.3 }, null);
+		Point worseNeighbor = tested.getWorseNeighbor(tested.getPoints().get(1));
+		assertNotNull(worseNeighbor);
+		assertEquals(tested.getPoints().get(0), worseNeighbor);
 	}
 }
