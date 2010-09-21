@@ -77,4 +77,13 @@ public class Alternative implements Comparable<Alternative> {
 		return index;
 	}
 
+	public double getGeneralUtil(LinearFunction[] functions) {
+		double util = 0;
+		for (LinearFunction function : functions) {
+			double value = getValueOn(function.getCriterion());
+			util += function.getValueAt(value);
+		}
+		return util;
+	}
+
 }

@@ -2,18 +2,12 @@ package uta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-class StandardConstraintsManager implements ConstraintsManager {
-
-	private LinearFunction[] functions;
-
-	private Map<Point, Constraint> constraints = new HashMap<Point, Constraint>();
+class StandardConstraintsManager extends AbstractConstraintsManager {
 
 	StandardConstraintsManager(LinearFunction[] functions) {
-		this.functions = functions;
+		super(functions);
 		this.buildConstraints();
 	}
 
@@ -156,24 +150,6 @@ class StandardConstraintsManager implements ConstraintsManager {
 
 		funcs.removeAll(toRemove);
 		return missingValue;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see uta.ConstraintsManager#getConstraints()
-	 */
-	public Constraint[] getConstraints() {
-		return constraints.values().toArray(new Constraint[constraints.size()]);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see uta.ConstraintsManager#getConstraintFor(uta.Point)
-	 */
-	public Constraint getConstraintFor(Point p) {
-		return constraints.get(p);
 	}
 
 }

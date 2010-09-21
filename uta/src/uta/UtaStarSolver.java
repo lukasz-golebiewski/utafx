@@ -2,11 +2,7 @@ package uta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.apache.commons.math.optimization.GoalType;
 import org.apache.commons.math.optimization.OptimizationException;
@@ -16,11 +12,10 @@ import org.apache.commons.math.optimization.linear.LinearObjectiveFunction;
 import org.apache.commons.math.optimization.linear.LinearOptimizer;
 import org.apache.commons.math.optimization.linear.Relationship;
 import org.apache.commons.math.optimization.linear.SimplexSolver;
-import org.matheclipse.generic.interfaces.Pair;
 
 public class UtaStarSolver implements IUtaSolver {
 
-	private static final KendallHelper KENDALL_HELPER = new KendallHelper();
+	private static final RankingUtils RANKING_UTILS = new RankingUtils();
 
 	private double indifferenceThreshold = 0.05;
 
@@ -196,7 +191,7 @@ public class UtaStarSolver implements IUtaSolver {
 
 	private void checkKendall(Ranking<Alternative> ranking, LinearFunction[] functions) {
 		Ranking<Alternative> rankFromUtil = buildRank(functions, ranking.getAlternatives());
-		double kendallsCoefficient = KENDALL_HELPER.getCoefficient(ranking, rankFromUtil);
+		double kendallsCoefficient = RANKING_UTILS.getKendallsCoefficient(ranking, rankFromUtil);
 		if (kendallsCoefficient > bestKendall) {
 			this.bestFunctions = functions;
 			this.bestKendall = kendallsCoefficient;
@@ -343,61 +338,30 @@ public class UtaStarSolver implements IUtaSolver {
 		return wvReps;
 	}
 
+	/**
+	 * @deprecated Use
+	 *             {@link uta.RankingUtils#buildRank(LinearFunction[],Alternative[])}
+	 *             instead
+	 */
 	Ranking<Alternative> buildRank(LinearFunction[] functions, List<Alternative> alts) {
 		return buildRank(functions, alts.toArray(new Alternative[0]));
 	}
 
+	/**
+	 * @deprecated Use
+	 *             {@link uta.RankingUtils#buildRank(LinearFunction[],Alternative[])}
+	 *             instead
+	 */
 	public Ranking<Alternative> buildRank(LinearFunction[] functions, Alternative[] alts) {
-
-		SortedSet<Pair<Alternative, Double>> altsAndUtils = new TreeSet<Pair<Alternative, Double>>(
-				new Comparator<Pair<Alternative, Double>>() {
-
-					@Override
-					public int compare(Pair<Alternative, Double> o1, Pair<Alternative, Double> o2) {
-						int result = Double.compare(o2.getSecond(), o1.getSecond());
-						if (result == 0) {
-							return 1;
-						}
-						return result;
-
-					}
-				});
-
-		for (Alternative alternative : alts) {
-			double util = getGeneralUtil(functions, alternative);
-			altsAndUtils.add(new Pair<Alternative, Double>(alternative, util));
-		}
-
-		Iterator<Pair<Alternative, Double>> iterator = altsAndUtils.iterator();
-
-		Alternative[] alts2 = new Alternative[alts.length];
-		double[] ranking = new double[alts.length];
-
-		double prevUtil = 2.0;
-		int rank = 0;
-		int i = 0;
-		while (iterator.hasNext()) {
-			Pair<Alternative, Double> pair = iterator.next();
-			pair.getFirst();
-			if (pair.getSecond() < prevUtil) {
-				rank++;
-				prevUtil = pair.getSecond();
-			}
-			ranking[i] = rank;
-			alts2[i] = pair.getFirst();
-			i++;
-		}
-
-		return new Ranking<Alternative>(ranking, alts2);
+		return RANKING_UTILS.buildRank(functions, alts);
 	}
 
+	/**
+	 * @deprecated Use {@link uta.Alternative#getGeneralUtil(LinearFunction[])}
+	 *             instead
+	 */
 	public double getGeneralUtil(LinearFunction[] functions, Alternative alternative) {
-		double util = 0;
-		for (LinearFunction function : functions) {
-			double value = alternative.getValueOn(function.getCriterion());
-			util += function.getValueAt(value);
-		}
-		return util;
+		return alternative.getGeneralUtil(functions);
 	}
 
 }
