@@ -1,12 +1,6 @@
-package utafx.ui;
+package utafx.ui.alternative;
 
 import javafx.scene.CustomNode;
-import javax.swing.JTable;
-import javafx.ext.swing.SwingComponent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.JScrollPane;
-import java.awt.Dimension;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.paint.Color;
@@ -22,11 +16,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
-import java.lang.Integer;
-import utafx.ui.CriteriaUI.TableCell;
-import utafx.ui.CriteriaUI.TableColumn;
-import utafx.ui.CriteriaUI.TableRow;
 import java.util.Arrays;
+import uta.Criterion;
+import utafx.ui.generic.table.TableCell;
+import utafx.ui.generic.table.TableColumn;
+import utafx.ui.generic.table.TableRow;
+import utafx.ui.generic.table.TableUI;
 
 def outerBorderFill = LinearGradient {
             startX: 0.0 startY: 0.0 endX: 0.0 endY: 1.0
@@ -42,47 +37,40 @@ def outerBorderFill = LinearGradient {
 public class AlternativesUI extends CustomNode {
 
     public var criteriaPOJO: uta.Criterion[];
-    var columnNames: String[];
 
-    init {
-        insert "Name" into columnNames;
-        for(c in criteriaPOJO){
-            insert c.getName() into columnNames
-        }
-    }
+    public var model: AlternativesModel;
     
-    var table = AlternativesTable {
-                columns: bind for (c in columnNames){
-                    CriteriaUI.TableColumn{
-                        text: c
-                    }
-                }
-    }
-    
+    var table = TableUI {
+           columns: bind for (cname in model.columnNames) {
+                 TableColumn { text: cname };
+           }
+           rows: bind model.rows
+     }
+
     public function add() {
-        var row = CriteriaUI.TableRow{
-            cells: for (c in columnNames){
-                TableCell{
-                    text: if ((indexof c) == 0){
-                        "Alternative {sizeof table.rows + 1}"
-                    } else {
-                        "{sizeof table.rows +1}"
+        var row = TableRow {
+                    cells: for (c in model.columnNames) {
+                        TableCell {
+                            text: if ((indexof c) == 0) {
+                                "Alternative {sizeof model.rows + 1}"
+                            } else {
+                                "{sizeof model.rows + 1}"
+                            }
+                        }
                     }
                 }
-            }
-        }
-        insert row into table.rows
+        insert row into model.rows
     }
 
     /**
     Removes the selected criterion from the table
      */
     public function remove() {
-        if (table.selection > -1) {
+        if (table.selectedRow > -1) {
             //delete criteria[table.selection];
-            delete  table.rows[table.selection];
+            delete  model.rows[table.selectedRow];
             //table.table.getSelectionModel().setLeadSelectionIndex((sizeof table.rows)-1);
-            table.selection = -1;
+            table.selectedRow = -1;
         }
     }
 
@@ -90,14 +78,13 @@ public class AlternativesUI extends CustomNode {
         println("Executed alternativesUI.getPOJO()");
         var alternativesPOJO: Alternative[];
 
-        for(row in table.rows){
+        for (row in model.rows) {
             var i = indexof row;
-            var name = "{table.model.getValueAt(i, 0)}";
+            var name = "{table.getValueAt(i, 0)}";
             var values: Double[] =
-            for(j in [1.. sizeof criteriaPOJO]){
-                
-                Double.parseDouble("{table.model.getValueAt(i, j)}");
-            }
+                    for (j in [1..<sizeof model.columnNames]) {
+                        Double.parseDouble("{table.getValueAt(i, j)}");
+                    }
             var a = new uta.Alternative();
             a.setName(name);
             a.setValues(values);
@@ -117,19 +104,21 @@ public class AlternativesUI extends CustomNode {
             spacing: 0
             content: [
                 Container {
+                    var rect:Rectangle
+                    var label:Label;
                     content: [
-                        Rectangle {
+                        rect = Rectangle {
                             fill: outerBorderFill
-                            width: 600
+                            width: bind table.width
                             height: 20
                         }
 
-                        Label {
+                        label = Label {
                             textAlignment: TextAlignment.CENTER
                             text: "Define your possible choices"
                             vpos: VPos.CENTER
                             hpos: HPos.CENTER
-                            layoutX: 100
+                            layoutX: bind (rect.boundsInLocal.width - label.boundsInLocal.width) / 2
                             layoutY: 5
                         }
                     ]
@@ -151,7 +140,7 @@ public class AlternativesUI extends CustomNode {
                 Container {
                     content: [
                         Rectangle {
-                            width: 600
+                            width: bind table.width
                             height: 30
                             fill: outerBorderFill
                         }
@@ -185,46 +174,5 @@ public class AlternativesUI extends CustomNode {
             ]
         }
     }
-}
 
-
-package class AlternativesTable extends SwingComponent {
-
-    var table: JTable;
-    var model: javax.swing.table.DefaultTableModel;
-    var tHeight = 200;
-    var tWidth = 600;
-    public var selection: Integer;
-    public var columns: TableColumn[] on replace {
-                model = new javax.swing.table.DefaultTableModel(for (column in columns) column.text, 0);
-                table.setModel(model);
-            };
-    public var rows: TableRow[] on replace oldValue[lo..hi] = newVals {
-                for (index in [hi..lo step -1]) {
-                    model.removeRow(index);
-                }
-
-                for (row in newVals) {
-                    model.addRow(for (cell in row.cells) cell.text);
-                }
-            };
-
-    public override function createJComponent() {
-        table = new JTable();
-        model =
-                table.getModel() as javax.swing.table.DefaultTableModel;
-
-        var selectionModel = table.getSelectionModel();
-        selectionModel.addListSelectionListener(
-        ListSelectionListener {
-            public override function valueChanged(e: ListSelectionEvent) {
-                selection = table.getSelectedRow();
-            //println("Selection = {selection}")
-            }
-        });
-        //var columnModel = table.getColumnModel().getColumn(0) as DefaultTableColumnModel;
-        var pane: JScrollPane = new JScrollPane(table);
-        pane.setPreferredSize(new Dimension(tWidth, tHeight));
-        return pane;
-    }
 }

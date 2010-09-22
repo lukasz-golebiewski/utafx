@@ -26,7 +26,7 @@ var lazyLoad:Container;
 var mainView:MainView;
 
 
-public function run(args: String[]) {
+public function run() {
     Stage {
         title: "UtaFX - UTA methods in JavaFX"
         scene: scene = Scene {
@@ -38,25 +38,31 @@ public function run(args: String[]) {
                     styleClass: "app-background"
                     width: bind scene.width, height: bind scene.height
                 },
-                VBox{
-                    layoutX: APP_PADDING, layoutY: APP_PADDING
-                    layoutInfo: LayoutInfo{
-                        width: bind scene.width - APP_PADDING*2;
-                        height: bind scene.height - APP_PADDING*2;
-                    }
-                    spacing: CONTENT_PADDING
-                    content:[
-                        lazyLoad = VBox{
-                            spacing: CONTENT_PADDING
-                            content: [ ]
-                        },
-                    ]
-                }
+//                VBox{
+//                    layoutX: APP_PADDING, layoutY: APP_PADDING
+//                    layoutInfo: LayoutInfo{
+//                        width: bind scene.width - APP_PADDING*2;
+//                        height: bind scene.height - APP_PADDING*2;
+//                    }
+//                    spacing: CONTENT_PADDING
+//                    content:[
+//                        lazyLoad = VBox{
+//                            spacing: CONTENT_PADDING
+//                            content: [ ]
+//                        },
+//                    ]
+//                }
             ]
         }
     }
     FX.deferAction(function(){
-       mainView = MainView{}
-       insert mainView into lazyLoad.content
+       mainView = MainView{
+            layoutX: APP_PADDING, layoutY: APP_PADDING
+                    layoutInfo: LayoutInfo{
+                        width: bind scene.width - APP_PADDING*2;
+                        height: bind scene.height - APP_PADDING*2;
+                    }
+       }
+       insert mainView into scene.content
     });
 }

@@ -5,7 +5,7 @@ import com.javafx.preview.control.Menu;
 import com.javafx.preview.control.MenuItem;
 import java.lang.System;
 import utafx.control.GUIController;
-import utafx.ui.ReferenceRankUI;
+import utafx.ui.rank.ReferenceRankUI;
 
 /**
  * @author Pawcik
@@ -19,8 +19,17 @@ public class UtaMenuBar extends MenuBar {
                     Menu {
                         text: "File"
                         items: [
-                            MenuItem { text: "Import Preferences..." }
-                            MenuItem { text: "Export Preferences..." }
+                            MenuItem {
+                                text: "Import Preferences..."
+                                action: function() {
+                                    guiController.importPreferences();
+                                } },
+                            MenuItem {
+                                text: "Export Preferences..."
+                                action: function() {
+                                    guiController.exportPreferences();
+                                }
+                            }
                             MenuItem { text: "Exit"
                                 action: function() {
                                     System.exit(0)
@@ -43,7 +52,7 @@ public class UtaMenuBar extends MenuBar {
                                 text: "Alternatives"
                                 action: function() {
                                     if (guiController.view.criteriaAdded) {
-                                        var alterns = guiController.createAlternatives(guiController.view.criteriaPanel.getPOJO());
+                                        var alterns = guiController.createAlternatives();
                                         guiController.view.addAlternatives(alterns);
                                     }
                                 }
@@ -53,18 +62,22 @@ public class UtaMenuBar extends MenuBar {
                                 text: "Reference Ranking";
                                 action: function() {
                                     if (guiController.view.alternativesAdded) {
-                                        var rr:ReferenceRankUI = guiController.createReferenceRank(guiController.view.alternativesPanel.getPOJO());
+                                        var rr: ReferenceRankUI = guiController.createReferenceRank();
                                         guiController.view.addReferenceRank(rr);
                                     }
                                 }
-                                //disable: bind (not guiController.view.alternativesAdded or guiController.view.referenceRankAdded);
+                                disable: bind (not guiController.view.alternativesAdded or guiController.view.referenceRankAdded);
                             }
                         ]
                     },
                     Menu {
                         text: "Tools"
                         items: [
-                            MenuItem { text: "Solve" }
+                            MenuItem { text: "Solve"
+                                action: function() {
+                                    guiController.solve();
+                                }
+                            }
                             MenuItem { text: "Clear Criteria" }
                             MenuItem { text: "Clear Alternatives" }
                             MenuItem { text: "Clear Reference Ranking" }

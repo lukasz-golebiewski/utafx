@@ -1,4 +1,4 @@
-package utafx.ui;
+package utafx.ui.criteria;
 
 import javafx.scene.CustomNode;
 import javafx.scene.Node;
@@ -25,6 +25,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
 import uta.Alternative;
 import uta.Criterion;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
 
 def outerBorderFill = LinearGradient {
             startX: 0.0 startY: 0.0 endX: 0.0 endY: 1.0
@@ -37,7 +39,7 @@ def outerBorderFill = LinearGradient {
 /**
  * @author Pawcik
  */
-public class CriteriaUI extends CustomNode {
+public class OldCriteriaUI extends CustomNode {
 
     /*var criteria: Criterion[];/* on replace{
     for(c in criteria){
@@ -63,15 +65,15 @@ public class CriteriaUI extends CustomNode {
      */
     public function add() {
         var c = Criterion {
-                    name: "Criterion {sizeof table.rows +1}";
+                    name: "Criterion {sizeof table.rows + 1}";
                     type: "{typesCombo.getItemAt(0)}";
                     segments: 2;
                 };
         insert TableRow {
             cells: [
-                CriteriaUI.TableCell { text: c.name },
-                CriteriaUI.TableCell { text: c.type },
-                CriteriaUI.TableCell { text: "{c.segments}" },
+                OldCriteriaUI.TableCell { text: c.name },
+                OldCriteriaUI.TableCell { text: c.type },
+                OldCriteriaUI.TableCell { text: "{c.segments}" },
             ]
         } into table.rows
     //insert Criterion {} into criteria;
@@ -93,7 +95,7 @@ public class CriteriaUI extends CustomNode {
         println("Executed getPOJO");
         var criteriaPOJO: uta.Criterion[];
 
-        for(row in table.rows){
+        for (row in table.rows) {
             var i = indexof row;
             var name = "{table.model.getValueAt(i, 0)}";
             var origType = table.model.getValueAt(i, 1);
@@ -105,19 +107,19 @@ public class CriteriaUI extends CustomNode {
                     };
 
             var seg = Integer.parseInt("{table.model.getValueAt(i, 2)}");
-            var c: uta.Criterion = new uta.Criterion(name, type, seg);
+            var c: uta.Criterion = new uta.Criterion(name, true, seg);
             insert c into criteriaPOJO;
-            println("{c.getName()} {c.getType()} {c.getNoOfSegments()}");
+            println("{c.getName()} {c.isGain()} {c.getNoOfSegments()}");
         }
         return criteriaPOJO;
     }
 
-    public function getCriteriaNames():String[]{
-        for(r in table.rows){
+    public function getCriteriaNames(): String[] {
+        for (r in table.rows) {
             table.model.getValueAt((indexof r), 0).toString();
         }
     }
-    
+
     override function create(): Node {
         typesCombo.addItem("Gain");
         typesCombo.addItem("Cost");
@@ -215,8 +217,9 @@ package class TableRow {
 }
 
 public class Criterion {
-    public-read var name:String;
-    public-read var type:String;
+
+    public-read var name: String;
+    public-read var type: String;
     public-read var segments: Integer = 2;
 }
 
@@ -259,4 +262,14 @@ package class CriteriaTable extends SwingComponent {
         pane.setPreferredSize(new Dimension(tWidth, tHeight));
         return pane;
     }
+}
+
+function run(){
+    Stage {
+       scene: Scene {
+           content: OldCriteriaUI{}
+       }
+
+    }
+
 }

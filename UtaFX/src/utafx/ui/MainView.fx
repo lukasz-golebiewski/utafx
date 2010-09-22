@@ -2,46 +2,52 @@ package utafx.ui;
 
 import javafx.scene.layout.VBox;
 import utafx.control.GUIController;
-import com.javafx.preview.control.MenuBar;
 import utafx.ui.menu.UtaMenuBar;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Container;
 import javafx.scene.control.ScrollView;
 import javafx.scene.control.ScrollBarPolicy;
-import javafx.scene.layout.LayoutInfoBase;
 import utafx.Constants;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.geometry.HPos;
-import javafx.scene.CustomNode;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import utafx.ui.criteria.CriteriaUI;
+import utafx.ui.alternative.AlternativesUI;
+import utafx.ui.rank.ReferenceRankUI;
+import utafx.ui.solution.SolutionUI;
 
 /**
- * @author Pawcik
+ * This class represents the the user screen. 
  */
 public class MainView extends VBox {
 
-    var menu: MenuBar;
+    def MAIN_VIEW_VSPACING = 10;
+    def DYNAMIC_CONTENT_VSPACING = 10;
+    
     var controller: GUIController;
-    var mainContent: Container;
-
+    //container for criterias, alternatives, etc.
+    var dynamicContent: Container;
     public-read var criteriaPanel: CriteriaUI;
-    public-read var alternativesPanel:AlternativesUI;
+    public-read var alternativesPanel: AlternativesUI;
     public-read var referenceRankPanel: ReferenceRankUI;
-    public-read var criteriaAdded = false;
-    public-read var alternativesAdded = false;
-    public-read var referenceRankAdded = false;
+    public-read var solutionPanel: SolutionUI;
+    public-read var criteriaAdded = bind (criteriaPanel != null);
+    public-read var alternativesAdded = bind (alternativesPanel != null);
+    public-read var referenceRankAdded = bind (referenceRankPanel != null);
 
     init {
-        //padding = 10;
-        spacing = 10;
+        spacing = MAIN_VIEW_VSPACING;
         controller = GUIController {
-                    override var view = MainView.this;
-                }
-        menu = UtaMenuBar {
-                    override var guiController = controller;
-                }
-        var label = Label { text: "Welcome to the UTA methods" }
+                    view: MainView.this;
+        }
+        def menu = UtaMenuBar {
+                    guiController: controller;
+        }
+        var label:Text = Text {
+            content: "Welcome to the UTA methods"
+            font: Font{ name: "Amble Cn" size:24 };
+            //effect: Reflection {fraction: 0.7};
+            translateX: bind (width - label.layoutBounds.width)/2.0-label.layoutBounds.minX;
+        }
         content = [
                     menu,
                     label,
@@ -52,38 +58,44 @@ public class MainView extends VBox {
                         fitToWidth: true
                         pannable: false
                         //cursor: Cursor.WAIT
-                        node: bind mainContent
+                        node: bind dynamicContent
                     },
                 ];
-        mainContent = VBox {
-            spacing: 10
+        dynamicContent = VBox {
+                    spacing: DYNAMIC_CONTENT_VSPACING;
         }
     }
 
-    public function addCriteria(node:CriteriaUI){
+    public function addCriteria(node: CriteriaUI) {
         criteriaPanel = node;
-        insert HBox{
-            hpos: HPos.CENTER
+        insert HBox {
+            //padding: Insets {left:10, top:10}
+            //hpos: HPos.CENTER
             content: bind node
-        } into mainContent.content;
-        criteriaAdded = true;
+        } into dynamicContent.content;
+        //criteriaAdded = true;
     }
 
-    public function addAlternatives(node:AlternativesUI){
+    public function addAlternatives(node: AlternativesUI) {
         alternativesPanel = node;
-        insert HBox{
-            hpos: HPos.CENTER
+        insert HBox {
             content: bind node
-        } into mainContent.content;
-        alternativesAdded = true;
+        } into dynamicContent.content;
     }
 
-     public function addReferenceRank(node:ReferenceRankUI){
+    public function addReferenceRank(node: ReferenceRankUI) {
         referenceRankPanel = node;
-        insert HBox{
-            hpos: HPos.CENTER
+        insert HBox {
+            //hpos: HPos.CENTER
             content: bind node
-        } into mainContent.content;
-        alternativesAdded = true;
+        } into dynamicContent.content;
     }
+
+    public function addSolutionUI(node: SolutionUI) {
+        insert HBox {
+            //hpos: HPos.CENTER
+            content: bind node
+        } into dynamicContent.content;
+    }
+
 }
