@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<preferences xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="uta_prefs.xsd">
+	<criteria>
+		<criterion id="0" name="prize" type="cost" />
+		<criterion id="1" name="time" type="cost"  segments="3"/>
+		<criterion id="2" name="comfort" type="gain" segments="3"/>
+	</criteria>
+	<alternatives>
+		<alternative name="Rer" id="0">
+			<values>
+				<value id="0">3</value>
+				<value id="1">10</value>
+				<value id="2">1</value>
+			</values>
+		</alternative>
+		<alternative name="Metro1" id="1">
+			<values>
+				<value id="0">4</value>
+				<value id="1">20</value>
+				<value id="2">2</value>
+			</values>
+		</alternative>
+		<alternative name="Metro2" id="2">
+			<values>
+				<value id="0">2</value>
+				<value id="1">20</value>
+				<value id="2">0</value>
+			</values>
+		</alternative>
+		<alternative name="Bus" id="3">
+			<values>
+				<value id="0">6</value>
+				<value id="1">40</value>
+				<value id="2">0</value>
+			</values>
+		</alternative>
+		<alternative name="Taxi" id="4">
+			<values>
+				<value id="0">30</value>
+				<value id="1">30</value>
+				<value id="2">3</value>
+			</values>
+		</alternative>
+	</alternatives>
+	
+	<refRank>
+		<item id="0" rank="1" />
+		<item id="1" rank="2" />
+		<item id="2" rank="2" />
+		<item id="3" rank="3" />
+		<item id="4" rank="4" />
+	</refRank>
+	
+</preferences>
