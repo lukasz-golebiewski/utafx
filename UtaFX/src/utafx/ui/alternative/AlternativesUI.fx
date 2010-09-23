@@ -22,6 +22,10 @@ import utafx.ui.generic.table.TableCell;
 import utafx.ui.generic.table.TableColumn;
 import utafx.ui.generic.table.TableRow;
 import utafx.ui.generic.table.TableUI;
+import javax.swing.event.TableModelListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableModel;
+import java.util.Date;
 
 def outerBorderFill = LinearGradient {
             startX: 0.0 startY: 0.0 endX: 0.0 endY: 1.0
@@ -36,8 +40,6 @@ def outerBorderFill = LinearGradient {
  */
 public class AlternativesUI extends CustomNode {
 
-    public var criteriaPOJO: uta.Criterion[];
-
     public var model: AlternativesModel;
     
     var table = TableUI {
@@ -46,6 +48,49 @@ public class AlternativesUI extends CustomNode {
            }
            rows: bind model.rows
      }
+
+     postinit {
+        table.addTableModelListener(TableModelListener {
+            public override function tableChanged(e: TableModelEvent): Void {
+                var tm = e.getSource() as TableModel;
+                var row = e.getFirstRow();
+                var lastRow = e.getLastRow();
+                var col = e.getColumn();
+                var type = e.getType();
+                var sType = if (type == e.INSERT) "INSERT" else if (type == e.DELETE) "DELETE" else if (type == e.UPDATE) "UPDATE" else "TYPE-{type}";
+
+                println("{new Date()}: Table changed: firstrow={row} lastRow={lastRow} column={col} type={sType}");
+
+                if (type == e.INSERT) {
+                    for (i in [row..lastRow]) {
+                        var rowsCount = tm.getRowCount();
+                        var columnCount = tm.getColumnCount();
+                        var cellValue = "{tm.getValueAt(i, 0)}";
+                        insert cellValue into model.alternativeNames;
+                    }
+                } else if (type == e.DELETE) {
+                    for (i in [row..lastRow]) {
+                        delete model.alternativeNames[i] from model.alternativeNames;
+                    }
+                } else if (col == 0) {
+                    for (i in [row..lastRow]) {
+                        var value = tm.getValueAt(i, col);
+                        if (value != model.alternativeNames[i]) {
+                            model.alternativeNames[i] = "{value}";
+                        }
+                    }
+                }
+                println("AlternativeNames: {model.alternativeNames}");
+
+                if (row > -1 and col > -1) {
+                    var value = tm.getValueAt(row, col);
+                    println("{new Date()}: Table changed at [{row}, {col}] = {value}");
+
+                }
+            }
+        });
+        println("{new Date()} TableModel listener registered");
+    }
 
     public function add() {
         var row = TableRow {
@@ -75,8 +120,8 @@ public class AlternativesUI extends CustomNode {
     }
 
     public function getPOJO(): uta.Alternative[] {
-        println("Executed alternativesUI.getPOJO()");
-        var alternativesPOJO: Alternative[];
+        //println("Executed alternativesUI.getPOJO()");
+        var alternativesPOJO: Alternative[]=[];
 
         for (row in model.rows) {
             var i = indexof row;
@@ -88,7 +133,7 @@ public class AlternativesUI extends CustomNode {
             var a = new uta.Alternative();
             a.setName(name);
             a.setValues(values);
-            a.setCriteria(criteriaPOJO);
+            //a.setCriteria(criteriaPOJO);
             println("{a.getName()} {Arrays.toString(a.getValues())}");
             insert a into alternativesPOJO;
         }

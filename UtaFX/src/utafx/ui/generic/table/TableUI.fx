@@ -11,47 +11,58 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumnModel;
 import javafx.ext.swing.SwingComponent;
-import java.lang.Math;
+import javax.swing.event.TableModelListener;
+import java.util.Date;
 
 /**
  * @author Pawcik
  */
 public class TableUI extends SwingComponent {
 
-    var table: JTable;
-    var model: javax.swing.table.DefaultTableModel;
     def COLUMN_WIDTH = 80;
+
+    public var tHeight: Integer = 200;
+    public var tWidth: Integer = 300 on replace {
+                println("{new Date()}: (tWidth on replace) Table width replaced with: {tWidth}");
+                pane.setPreferredSize(new Dimension(tWidth, tHeight));
+            }
     
-    public var tHeight:Integer = 200;
-    public var tWidth:Integer = 300 on replace {
-        println("Table width replaced with: {tWidth}");
-        pane.setPreferredSize(new Dimension(tWidth, tHeight));
-    }
     override var width = bind tWidth;
     override var height = bind tHeight;
 
-    public var pane:JScrollPane;
-    
+    var table: JTable;
+    var model: javax.swing.table.DefaultTableModel;
+
+    var tmListeners: TableModelListener[] on replace old {
+        for(tml in old){
+            removeTableModelListener(tml);
+        }
+        reregisterModelChangeListeners();
+    }
+
+    public var pane: JScrollPane;
     public var selectedRow: Integer;
     public var columns: TableColumn[] on replace {
                 model = new javax.swing.table.DefaultTableModel(for (column in columns) column.text, 0);
                 for (row in rows) {
-                    model.addRow(for (cell in [row.cells, TableCell{}]) cell.text);
+                    model.addRow(for (cell in [row.cells, TableCell {}]) cell.text);
                 }
                 table.setModel(model);
-                tWidth = (sizeof columns)*COLUMN_WIDTH;
+                println("{new Date()}: (columns on replace) New model has been set");
+                reregisterModelChangeListeners();
+                tWidth = (sizeof columns) * COLUMN_WIDTH;
             };
     public var rows: TableRow[] on replace oldValue[lo..hi] = newVals {
                 for (index in [hi..lo step -1]) {
                     model.removeRow(index);
-                    println("TableUI: removed row {index}")
+                    println("{new Date()}: TableUI: removed row {index}")
                 }
 
                 for (row in newVals) {
                     model.addRow(for (cell in row.cells) cell.text);
                     println("TableUI: added row")
                 }
-                println("TableUI: rows on replace completed")
+                println("{new Date()}: TableUI: rows on replace completed")
             };
 
     public function getValueAt(row: Integer, col: Integer): Object {
@@ -62,24 +73,55 @@ public class TableUI extends SwingComponent {
         return table.getColumnModel();
     };
 
-    public function tableUpdated(row:Integer, col:Integer):Void{
-        
+    function reregisterModelChangeListeners() {
+        for(tml in tmListeners){
+            addTableModelListener(tml);
+        }
     }
 
-    public override function createJComponent() {          
+    public override function createJComponent() {
+        println("{new Date()} JComponent creation started");
         table = new JTable();
-        model = table.getModel() as javax.swing.table.DefaultTableModel;
-        
+        registerSelectionListener();
+        pane = new JScrollPane(table);
+        pane.setPreferredSize(new Dimension(tWidth, tHeight));
+        println("{new Date()} JComponent created");
+        return pane;
+    }
+
+    function registerSelectionListener() {
         var selectionModel = table.getSelectionModel();
         selectionModel.addListSelectionListener(
         ListSelectionListener {
             public override function valueChanged(e: ListSelectionEvent) {
-                selectedRow = table.getSelectedRow();            
+                selectedRow = table.getSelectedRow();
+                println("{new Date()}: Selected row: {selectedRow}");
             }
-        });        
-        pane = new JScrollPane(table);
-        pane.setPreferredSize(new Dimension(tWidth, tHeight));
-        return pane;
+        });
+        println("{new Date()} Selection listener registered");
     }
+
+    public function addSelectionListener(listener: ListSelectionListener) {
+        if (listener != null) {
+            table.getSelectionModel().addListSelectionListener(listener);
+        }
+    }
+
+    public function addTableModelListener(listener: TableModelListener) {
+        if (listener != null) {
+            table.getModel().addTableModelListener(listener);
+        }
+    }
+
+    public function removeTableModelListener(listener: TableModelListener) {
+        if (listener != null) {
+            table.getModel().removeTableModelListener(listener);
+        }
+    }
+
+    public function getTableModelListeners(): TableModelListener[]{
+        return tmListeners;
+    }
+
 
 }

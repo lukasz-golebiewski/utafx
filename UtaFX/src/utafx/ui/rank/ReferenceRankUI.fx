@@ -39,10 +39,17 @@ public class ReferenceRankUI extends CustomNode {
             //println("Old position: {old},  new rank: {selectedRank} new position{selectedPosition}")
             }
 
+    //new approach
+    public var model:ReferenceRankModel;
+    var availNames = model.alternativeNames;
+    var comboBox2: ChoiceBox;
+    var rr2: RRTreeItem[];
+
     public function reset() {
         println("Reseting ReferenceRank...");
-        rr = [];
+        rr2 = [];
         available = allItems;
+        availNames = model.alternativeNames;
         maxRank = 0;
         selectedRank = 0;
         selectedPosition = 0;
@@ -66,13 +73,19 @@ public class ReferenceRankUI extends CustomNode {
         var box: Container = VBox {
                     spacing: 20
                     content: [
-                        comboBox = ChoiceBox {
+//                        comboBox = ChoiceBox {
+//                                    layoutX: 10
+//                                    layoutY: 10
+//                                    items: bind for (a in available) {
+//                                        a.getName()
+//                                    }
+//                                }
+                          comboBox2 = ChoiceBox {
                                     layoutX: 10
                                     layoutY: 10
-                                    items: bind for (a in available) {
-                                        a.getName()
+                                    items: bind availNames
                                     }
-                                }
+                                
 
                         HBox {
                             spacing: 30
@@ -81,11 +94,14 @@ public class ReferenceRankUI extends CustomNode {
                                 acceptButton = Button {
                                             text: "Accept";
                                             action: function() {
-                                                var availIndex = comboBox.selectedIndex;
-                                                var selectedAltern = available[availIndex];
-                                                insertToTreeView(selectedAltern, selectedRank);
-                                                //switch back to root
+//                                                var index = comboBox.selectedIndex;
+//                                                var selectedAltern = available[index];
+//                                                insertToTreeView(selectedAltern, selectedRank);
+//                                                //switch back to root
                                                 //selectedRank = 0;
+                                                var index = comboBox2.selectedIndex;
+                                                var selectedName = availNames[index];
+                                                insertToTreeView2(selectedName, selectedRank);
                                                 window.hide();
                                             }
                                         },
@@ -100,8 +116,8 @@ public class ReferenceRankUI extends CustomNode {
 
         var window: Window = Window {
                     title: "Add alternative"
-                    width: 200
-                    height: 200
+                    width: 300
+                    height: 400
                     nodes: box;
                 }
         window.show(addButton.scene);
@@ -113,9 +129,10 @@ public class ReferenceRankUI extends CustomNode {
     }
 
     function remove() {
-        var parent = rr[selectedRank - 1];
+        var parent = rr2[selectedRank - 1];
         var item = parent.children[selectedPosition] as RRTreeItem;
-        insert item.alternative into available;
+        //insert item.alternative into available;
+        insert item.altName into availNames;
         delete item from parent.children;
     //        if(sizeof parent.children ==0){
     //            delete parent from rr;
@@ -128,9 +145,9 @@ public class ReferenceRankUI extends CustomNode {
         if (newRank == selectedRank) {
             return;
         } else {
-            var parent = rr[selectedRank - 1];
+            var parent = rr2[selectedRank - 1];
             var item = parent.children[selectedPosition] as RRTreeItem;
-            var newParent = rr[newRank - 1];
+            var newParent = rr2[newRank - 1];
             delete item from parent.children;
             item.position = sizeof newParent.children;
             item.rank = newRank;
@@ -143,9 +160,9 @@ public class ReferenceRankUI extends CustomNode {
         if (newRank == maxRank) {
             return;
         } else {
-            var parent = rr[selectedRank - 1];
+            var parent = rr2[selectedRank - 1];
             var item = parent.children[selectedPosition] as RRTreeItem;
-            var newParent = rr[newRank - 1];
+            var newParent = rr2[newRank - 1];
             delete item from parent.children;
             item.position = sizeof newParent.children;
             item.rank = newRank;
@@ -172,6 +189,29 @@ public class ReferenceRankUI extends CustomNode {
             expanded: true;
         } into currentParent.children;
         delete a from available;
+        maxRank = Math.max(r, maxRank);
+    }
+
+    public function insertToTreeView2(name:String , r: Integer) {
+        var allRanks = sizeof treeView.root.children;
+        if (allRanks < r) {
+            insert RRTreeItem {
+                rank: r;
+                data: "{r}. Ranking"
+                expanded: true;
+            } into rr2;
+        }
+
+        var currentParent = rr2[r - 1] as ReferenceRankUI.RRTreeItem;
+        var pos = sizeof rr2[r - 1].children;
+        insert RRTreeItem {
+            rank: r;
+            //alternative: a;
+            altName: name
+            position: pos;
+            expanded: true;
+        } into currentParent.children;
+        delete name from availNames;
         maxRank = Math.max(r, maxRank);
     }
 
@@ -210,7 +250,7 @@ public class ReferenceRankUI extends CustomNode {
                                 rank: 0;
                                 expanded: true;
                                 data: "Reference Rank"
-                                children: bind rr
+                                children: bind rr2
                             }
                             layoutInfo: LayoutInfo { width: 400, hgrow: Priority.ALWAYS }
                         },
@@ -256,5 +296,9 @@ package class RRTreeItem extends TreeItem {
     public override var onSelected = function() {
                 selectedRank = this.rank;
                 selectedPosition = this.position;
-            }
+    }
+
+    //new approach
+    public var altName:String;
+    override var data = bind altName;
 }

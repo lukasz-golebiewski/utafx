@@ -77,7 +77,8 @@ public class UtaMenuBar extends MenuBar {
                                 action: function() {
                                     guiController.solve();
                                 }
-                            }
+                                disable: bind not guiController.view.referenceRankAdded
+                                }
                             MenuItem { text: "Clear Criteria" }
                             MenuItem { text: "Clear Alternatives" }
                             MenuItem { text: "Clear Reference Ranking" }

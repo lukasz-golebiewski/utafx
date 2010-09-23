@@ -25,7 +25,7 @@ import utafx.ui.generic.table.TableCell;
 import utafx.ui.pref.JAXBSupport;
 import utafx.ui.pref.jaxb.ObjectFactory;
 import java.io.IOException;
-import java.io.File;
+import utafx.ui.rank.ReferenceRankModel;
 
 /**
  * @author Pawcik
@@ -44,9 +44,9 @@ public class GUIController {
         var criterias = view.criteriaPanel.getPOJO();
         AlternativesUI {
             model: AlternativesModel {
-                columnNames: bind ["Name", view.criteriaPanel.getCriteriaNames()]
-            }
-            criteriaPOJO: bind criterias;
+                columnNames: bind ["Name", view.criteriaPanel.model.criteriaNames]
+                criteriaPOJO: bind criterias;
+            }            
         }
     }
 
@@ -54,6 +54,10 @@ public class GUIController {
         var alternatives = view.alternativesPanel.getPOJO();
         ReferenceRankUI {
             allItems: bind alternatives;
+            model: ReferenceRankModel{
+                alternativeNames: bind view.alternativesPanel.model.alternativeNames
+            }
+
         }
     }
 

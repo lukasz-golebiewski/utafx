@@ -22,6 +22,10 @@ import utafx.ui.generic.table.TableColumn;
 import utafx.ui.generic.table.TableRow;
 import utafx.ui.generic.table.TableCell;
 import utafx.ui.generic.table.TableUI;
+import java.util.Date;
+import javax.swing.event.TableModelListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableModel;
 
 def outerBorderFill = LinearGradient {
             startX: 0.0 startY: 0.0 endX: 0.0 endY: 1.0
@@ -40,15 +44,56 @@ public class CriteriaUI extends CustomNode {
     public var model = CriteriaModel {
                 columnNames: ["Name", "Type", "Segments"];
                 rows: []
+                criteriaNames: []
             };
     var table = TableUI {
                 columns: bind for (cname in model.columnNames) {
                     TableColumn { text: cname };
                 }
                 rows: bind model.rows
+            } 
+   
+    postinit {
+        table.addTableModelListener(TableModelListener {
+            public override function tableChanged(e: TableModelEvent): Void {
+                var tm = e.getSource() as TableModel;
+                var row = e.getFirstRow();
+                var lastRow = e.getLastRow();
+                var col = e.getColumn();
+                var type = e.getType();
+                var sType = if (type == e.INSERT) "INSERT" else if (type == e.DELETE) "DELETE" else if (type == e.UPDATE) "UPDATE" else "TYPE-{type}";
+
+                println("{new Date()}: Table changed: firstrow={row} lastRow={lastRow} column={col} type={sType}");
+
+                if (type == e.INSERT) {
+                    for (i in [row..lastRow]) {
+                        var rowsCount = tm.getRowCount();
+                        var columnCount = tm.getColumnCount();
+                        var cellValue = "{tm.getValueAt(i, 0)}";
+                        insert cellValue into model.criteriaNames;
+                    }
+                } else if (type == e.DELETE) {
+                    for (i in [row..lastRow]) {
+                        delete model.criteriaNames[i] from model.criteriaNames;
+                    }
+                } else if (col == 0) {
+                    for (i in [row..lastRow]) {
+                        var value = tm.getValueAt(i, col);
+                        if (value != model.criteriaNames[i]) {
+                            model.criteriaNames[i] = "{value}";
+                        }
+                    }
+                }
+                //println("CriteriaNames: {criteriaNames}");
+
+                if (row > -1 and col > -1) {
+                    var value = tm.getValueAt(row, col);
+                    println("{new Date()}: Table changed at [{row}, {col}] = {value}");
+
+                }
             }
-    public var criteriaNames: String[] = bind for (r in table.rows) {
-                table.getValueAt(indexof r, 0).toString();
+        });
+        println("{new Date()} TableModel listener registered");
     }
 
     /**
@@ -166,7 +211,7 @@ public class CriteriaUI extends CustomNode {
                                     }
                             def pojoCheck = Button {
                                         text: "Pojo"
-                                        action: function(){
+                                        action: function() {
                                             getPOJO()
                                         }
                                     }

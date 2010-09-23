@@ -14,4 +14,5 @@ import utafx.ui.generic.table.TableRow;
 public class CriteriaModel {
     public var columnNames: String[];
     public var rows: TableRow[];
+    public var criteriaNames: String[];
 }

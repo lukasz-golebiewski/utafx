@@ -14,6 +14,8 @@ import utafx.ui.criteria.CriteriaUI;
 import utafx.ui.alternative.AlternativesUI;
 import utafx.ui.rank.ReferenceRankUI;
 import utafx.ui.solution.SolutionUI;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.BlurType;
 
 /**
  * This class represents the the user screen. 
@@ -45,7 +47,7 @@ public class MainView extends VBox {
         var label:Text = Text {
             content: "Welcome to the UTA methods"
             font: Font{ name: "Amble Cn" size:24 };
-            //effect: Reflection {fraction: 0.7};
+            effect: DropShadow{blurType:BlurType.GAUSSIAN};
             translateX: bind (width - label.layoutBounds.width)/2.0-label.layoutBounds.minX;
         }
         content = [
