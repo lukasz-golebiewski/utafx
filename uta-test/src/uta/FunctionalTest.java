@@ -158,8 +158,8 @@ public class FunctionalTest {
 		IUtaSolver starSolver = new UtaStarSolver(true);
 
 		// Create criteria
-		Criterion g1 = new Criterion(1, true);
-		Criterion g2 = new Criterion(1, true);
+		Criterion g1 = new Criterion("a", 1, true);
+		Criterion g2 = new Criterion("b", 1, true);
 
 		List<Criterion> criteria = new ArrayList<Criterion>();
 		criteria.add(g1);

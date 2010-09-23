@@ -1,6 +1,7 @@
 package uta;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import junit.framework.Assert;
@@ -83,5 +84,18 @@ public class LinearFunctionTest {
 		Point worseNeighbor = tested.getWorseNeighbor(tested.getPoints().get(1));
 		assertNotNull(worseNeighbor);
 		assertEquals(tested.getPoints().get(0), worseNeighbor);
+	}
+
+	@Test
+	public void testCopyingConstructor() {
+		LinearFunction f = new LinearFunction(new double[] { 15, 14, 11 }, new double[] { 0.6, 0.4, 0.3 }, new Criterion(1, false));
+		LinearFunction copyOfF = new LinearFunction(f);
+
+		assertFalse(f.getCriterion() == copyOfF.getCriterion());
+		assertEquals(f.getCriterion(), copyOfF.getCriterion());
+
+		assertFalse(f.getPoints() == copyOfF.getPoints());
+		assertFalse(f.getPoints().equals(copyOfF.getPoints()));
+
 	}
 }
