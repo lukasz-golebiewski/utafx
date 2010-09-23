@@ -3,6 +3,7 @@ package uta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 class StandardConstraintsManager extends AbstractConstraintsManager {
 
@@ -65,7 +66,7 @@ class StandardConstraintsManager extends AbstractConstraintsManager {
 			// changing best point's value
 			if (function.getWorseNeighbor(worseNeighbor) != null)
 				constraints.get(worseNeighbor).setUpperBound(changedPoint.getY());
-			onBestPointUpdate(function, changedPoint);
+			doBestPointUpdate(function, functions, true, constraints);
 		} else {
 			// changing point in the middle
 			Constraint c = null;
@@ -90,12 +91,18 @@ class StandardConstraintsManager extends AbstractConstraintsManager {
 		}
 	}
 
-	private void onBestPointUpdate(LinearFunction function, Point changedPoint) {
+	void doBestPointUpdate(LinearFunction function, LinearFunction[] functions, boolean modifyConstraints,
+			Map<Point, Constraint> constraints) {
 		double sumOfAllBestPointsValues = 0d;
 		for (LinearFunction f : functions) {
 			sumOfAllBestPointsValues += f.getBestPoint().getY();
 		}
 
+		compensate(function, functions, sumOfAllBestPointsValues, modifyConstraints, constraints);
+	}
+
+	void compensate(LinearFunction function, LinearFunction[] functions, double sumOfAllBestPointsValues, boolean modifyConstraints,
+			Map<Point, Constraint> constraints) {
 		double missingValue = sumOfAllBestPointsValues - 1.0;
 
 		// missing value should be added/subtracted to/from other best points
@@ -103,11 +110,12 @@ class StandardConstraintsManager extends AbstractConstraintsManager {
 		List<LinearFunction> funcs = new ArrayList<LinearFunction>();
 		funcs.addAll(Arrays.asList(functions));
 		while (missingValue != 0) {
-			missingValue = subtractMissingValue(funcs, function, missingValue);
+			missingValue = subtractMissingValue(funcs, function, missingValue, modifyConstraints, constraints);
 		}
 	}
 
-	private double subtractMissingValue(List<LinearFunction> funcs, LinearFunction function, double missingValue) {
+	double subtractMissingValue(List<LinearFunction> funcs, LinearFunction function, double missingValue, boolean modifyConstraints,
+			Map<Point, Constraint> constraints) {
 		int divisor = funcs.size() > 1 ? funcs.size() - 1 : 1;
 		double singleModificationSize = Math.abs(missingValue / divisor);
 
@@ -144,7 +152,7 @@ class StandardConstraintsManager extends AbstractConstraintsManager {
 				}
 			}
 			Point worseNeighbor = f.getWorseNeighbor(p);
-			if (f.getWorseNeighbor(worseNeighbor) != null)
+			if (modifyConstraints && f.getWorseNeighbor(worseNeighbor) != null)
 				constraints.get(worseNeighbor).setUpperBound(p.getY());
 		}
 

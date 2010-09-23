@@ -39,6 +39,10 @@ public class Criterion {
 		this.noOfSegments = noOfSegments;
 	}
 
+	public Criterion(String name, int noOfSegments, boolean isGain) {
+		this(name, isGain, noOfSegments);
+	}
+
 	public int getNoOfSegments() {
 		return noOfSegments;
 	}
@@ -72,5 +76,48 @@ public class Criterion {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(bestValue);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((isGain == null) ? 0 : isGain.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + noOfSegments;
+		temp = Double.doubleToLongBits(worstValue);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Criterion other = (Criterion) obj;
+		if (Double.doubleToLongBits(bestValue) != Double.doubleToLongBits(other.bestValue))
+			return false;
+		if (isGain == null) {
+			if (other.isGain != null)
+				return false;
+		} else if (!isGain.equals(other.isGain))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (noOfSegments != other.noOfSegments)
+			return false;
+		if (Double.doubleToLongBits(worstValue) != Double.doubleToLongBits(other.worstValue))
+			return false;
+		return true;
 	}
 }

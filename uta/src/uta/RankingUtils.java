@@ -65,6 +65,10 @@ public class RankingUtils {
 		}
 	}
 
+	public Ranking<Alternative> buildRank(LinearFunction[] functions, List<Alternative> alts) {
+		return buildRank(functions, alts.toArray(new Alternative[alts.size()]));
+	}
+
 	public Ranking<Alternative> buildRank(LinearFunction[] functions, Alternative[] alts) {
 
 		SortedSet<Pair<Alternative, Double>> altsAndUtils = new TreeSet<Pair<Alternative, Double>>(

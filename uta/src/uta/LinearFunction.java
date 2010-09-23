@@ -39,6 +39,18 @@ public class LinearFunction {
 		this.criterion = criterion;
 	}
 
+	/**
+	 * Copy constructor.
+	 * 
+	 * @param toCopy
+	 */
+	LinearFunction(LinearFunction toCopy) {
+		this.criterion = new Criterion(toCopy.criterion.getName(), toCopy.criterion.isGain(), toCopy.criterion.getNoOfSegments());
+		for (Point p : toCopy.characteristicPoints) {
+			this.characteristicPoints.add(new Point(p.getX(), p.getY()));
+		}
+	}
+
 	public Double[] getValues() {
 		Double[] result = new Double[characteristicPoints.size()];
 		int i = 0;
@@ -151,5 +163,18 @@ public class LinearFunction {
 
 	Point getBestPoint() {
 		return characteristicPoints.get(characteristicPoints.size() - 1);
+	}
+
+	void setPointAt(double x, Point point) {
+		for (int i = 0; i < characteristicPoints.size(); i++) {
+			if (characteristicPoints.get(i).getX() == point.getX()) {
+				characteristicPoints.set(i, point);
+				return;
+			}
+		}
+	}
+
+	boolean containsPoint(Point p) {
+		return characteristicPoints.contains(p);
 	}
 }
