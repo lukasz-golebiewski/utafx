@@ -68,6 +68,10 @@ public class MainView extends VBox {
         }
     }
 
+    //postinit{
+    //    controller.importPreferences();
+    //}
+
     public function addCriteria(node: CriteriaUI) {
         criteriaPanel = node;
         insert HBox {
