@@ -13,7 +13,6 @@ import javafx.geometry.HPos;
 import javafx.scene.control.ChoiceBox;
 import utafx.ui.window.Window;
 import javafx.scene.layout.Container;
-import javafx.util.Math;
 import uta.Alternative;
 import uta.Ranking;
 
@@ -25,44 +24,38 @@ public class ReferenceRankUI extends CustomNode {
     public var allItems: uta.Alternative[];
     public var available = allItems;
     var treeView: TreeView;
-    var comboBox: ChoiceBox;
     var itemAdded = false;
     var addButton: Button;
     var acceptButton: Button;
     var cancelButton: Button;
     var rr: RRTreeItem[];
-    var maxRank = 0;
-    var selectedRank = 0 on replace old {
-            //println("Old rank: {old},  new rank: {selectedRank} new position{selectedPosition}");
+    //var maxRank = 0;
+    var currentRank = 0 on replace old {
+                println("Old rank: {old},  new rank: {currentRank} position: {currentPosition}");
             }
-    var selectedPosition = 0 on replace old {
-            //println("Old position: {old},  new rank: {selectedRank} new position{selectedPosition}")
+    var currentPosition = 0 on replace old {
+            println("Old position: {old},  new position: {currentPosition}")
             }
-
     //new approach
-    public var model:ReferenceRankModel;
+    public var model: ReferenceRankModel;
     var availNames = model.alternativeNames;
     var comboBox2: ChoiceBox;
-    var rr2: RRTreeItem[];
 
     public function reset() {
         println("Reseting ReferenceRank...");
-        rr2 = [];
+        model.rankings = [];
         available = allItems;
         availNames = model.alternativeNames;
-        maxRank = 0;
-        selectedRank = 0;
-        selectedPosition = 0;
+        //maxRank = 0;
+        currentRank = 0;
+        currentPosition = 0;
         println("Reseted ReferenceRank");
     }
 
     //Adds new alternative to the currently selected ranking
     function add() {
         //if the root is selected, then we are adding another subRefRank
-        if (selectedRank == 0) {
-            selectedRank = maxRank + 1;
-        }
-        maxRank = Math.max(maxRank, selectedRank);
+        //maxRank = Math.max(maxRank, currentRank);
 
         def cancel: function() =
                 function() {
@@ -73,19 +66,18 @@ public class ReferenceRankUI extends CustomNode {
         var box: Container = VBox {
                     spacing: 20
                     content: [
-//                        comboBox = ChoiceBox {
-//                                    layoutX: 10
-//                                    layoutY: 10
-//                                    items: bind for (a in available) {
-//                                        a.getName()
-//                                    }
-//                                }
-                          comboBox2 = ChoiceBox {
+                        //                        comboBox = ChoiceBox {
+                        //                                    layoutX: 10
+                        //                                    layoutY: 10
+                        //                                    items: bind for (a in available) {
+                        //                                        a.getName()
+                        //                                    }
+                        //                                }
+                        comboBox2 = ChoiceBox {
                                     layoutX: 10
                                     layoutY: 10
-                                    items: bind availNames
-                                    }
-                                
+                                    items: bind model.availNames
+                                }
 
                         HBox {
                             spacing: 30
@@ -96,12 +88,12 @@ public class ReferenceRankUI extends CustomNode {
                                             action: function() {
 //                                                var index = comboBox.selectedIndex;
 //                                                var selectedAltern = available[index];
-//                                                insertToTreeView(selectedAltern, selectedRank);
+//                                                insertToTreeView(selectedAltern, currentRank);
 //                                                //switch back to root
-                                                //selectedRank = 0;
+                                                //currentRank = 0;
                                                 var index = comboBox2.selectedIndex;
-                                                var selectedName = availNames[index];
-                                                insertToTreeView2(selectedName, selectedRank);
+                                                var selectedName = model.availNames[index];
+                                                insertToTreeView2(selectedName, currentRank);
                                                 window.hide();
                                             }
                                         },
@@ -129,81 +121,100 @@ public class ReferenceRankUI extends CustomNode {
     }
 
     function remove() {
-        var parent = rr2[selectedRank - 1];
-        var item = parent.children[selectedPosition] as RRTreeItem;
-        //insert item.alternative into available;
-        insert item.altName into availNames;
-        delete item from parent.children;
-    //        if(sizeof parent.children ==0){
-    //            delete parent from rr;
-    //        }
-
+        //        var parent = model.rankings[currentRank - 1];
+        //        var item = parent.children[currentPosition] as RRTreeItem;
+        //        //insert item.alternative into available;
+        //        insert item.altName into availNames;
+        //        delete item from parent.children;
+        //    //        if(sizeof parent.children ==0){
+        //    //            delete parent from rr;
+        //    //        }
+        //model.removeFromTreeModel(s);
+        model.removeItem(currentRank, currentPosition);
+        //last ranking was removed        
     }
 
     function moveUp() {
-        var newRank = Math.max(selectedRank - 1, 1);
-        if (newRank == selectedRank) {
+        if (currentRank < 2) {
             return;
-        } else {
-            var parent = rr2[selectedRank - 1];
-            var item = parent.children[selectedPosition] as RRTreeItem;
-            var newParent = rr2[newRank - 1];
-            delete item from parent.children;
-            item.position = sizeof newParent.children;
-            item.rank = newRank;
-            insert item into newParent.children;
+        }
+        var item = model.rankings[currentRank - 1].children[currentPosition] as RRTreeItem;
+        var newRank = currentRank-1;
+        var newPosition = sizeof model.rankings[newRank-1].children;
+        if (item != null) {
+            model.removeItem(item);
+            insertToTreeView2(item.altName, currentRank - 1);           
+            println("moveUp: current rank: {newRank}");
+            println("moveUp: current position: {newPosition}");
+            currentRank = newRank;
+            currentPosition = newPosition;
         }
     }
 
     function moveDown() {
-        var newRank = Math.min(selectedRank + 1, maxRank);
-        if (newRank == maxRank) {
+        if (currentRank >= sizeof model.rankings) {
             return;
-        } else {
-            var parent = rr2[selectedRank - 1];
-            var item = parent.children[selectedPosition] as RRTreeItem;
-            var newParent = rr2[newRank - 1];
-            delete item from parent.children;
-            item.position = sizeof newParent.children;
-            item.rank = newRank;
-            insert item into newParent.children;
+        }
+        var newRank = currentRank+1;
+        var newPosition = sizeof model.rankings[newRank-1].children;
+        var item = model.rankings[currentRank - 1].children[currentPosition] as RRTreeItem;
+        if (item != null) {
+            model.removeItem(item);
+            insertToTreeView2(item.altName, newRank);
+            println("moveUp: current rank: {newRank}");
+            println("moveUp: current position: {newPosition}");
+            currentRank = newRank;
+            currentPosition = newPosition;
         }
     }
 
     public function insertToTreeView(a: Alternative, r: Integer) {
-        var allRanks = sizeof treeView.root.children;
+        var allRanks = sizeof rr;
         if (allRanks < r) {
             insert RRTreeItem {
                 rank: r;
-                data: "{r}. Ranking"
+                data: bind "{r}. Ranking"
                 expanded: true;
             } into rr;
         }
 
-        var currentParent = rr[r - 1] as ReferenceRankUI.RRTreeItem;
-        var pos = sizeof rr[r - 1].children;
+        var currentParent = rr[r - 1] as RRTreeItem;
         insert RRTreeItem {
-            rank: r;
+            rank: bind (rr[r - 1] as RRTreeItem).rank;
             alternative: a;
-            position: pos;
+            position: bind sizeof rr[r - 1].children
             expanded: true;
         } into currentParent.children;
         delete a from available;
-        maxRank = Math.max(r, maxRank);
+    //maxRank = Math.max(r, maxRank);
     }
 
-    public function insertToTreeView2(name:String , r: Integer) {
-        var allRanks = sizeof treeView.root.children;
-        if (allRanks < r) {
-            insert RRTreeItem {
-                rank: r;
-                data: "{r}. Ranking"
-                expanded: true;
-            } into rr2;
+    public function insertToTreeView2(name: String, r: Integer): Void {
+        insertToTreeView2(name, r, false);
+    }
+
+
+    public function insertToTreeView2(name: String, r: Integer, head: Boolean): Void {
+        var allRanks = sizeof model.rankings;
+
+        if (r == 0) {
+            insertToTreeView2(name, allRanks + 1);
         }
 
-        var currentParent = rr2[r - 1] as ReferenceRankUI.RRTreeItem;
-        var pos = sizeof rr2[r - 1].children;
+        var inserted: RRTreeItem;
+
+        if (allRanks < r) {
+            insert inserted = RRTreeItem {
+                        rank: r;
+                        //-1 tells that this item is ranking
+                        position: -1;
+                        data: bind "{inserted.rank}. Ranking"
+                        expanded: true;
+                    } into model.rankings;
+        }
+
+        var currentParent = model.rankings[r - 1] as ReferenceRankUI.RRTreeItem;
+        var pos = sizeof model.rankings[r - 1].children;
         insert RRTreeItem {
             rank: r;
             //alternative: a;
@@ -211,16 +222,17 @@ public class ReferenceRankUI extends CustomNode {
             position: pos;
             expanded: true;
         } into currentParent.children;
-        delete name from availNames;
-        maxRank = Math.max(r, maxRank);
+        delete name from model.availNames;
+    //maxRank = Math.max(r, maxRank);
     }
 
     public function getPOJO(): Ranking {
         var rankPojo = new Ranking();
+        var maxRank = sizeof model.rankings;
         for (i in [1..maxRank]) {
-            var parent = rr[i - 1];
-            for (c in parent.children) {
-                rankPojo.add((c as RRTreeItem).alternative, i);
+            var ranking = model.rankings[i - 1];
+            for (child in ranking.children) {
+                rankPojo.add(child.data, i);
                 println(rankPojo.toString());
             }
         }
@@ -250,8 +262,9 @@ public class ReferenceRankUI extends CustomNode {
                                 rank: 0;
                                 expanded: true;
                                 data: "Reference Rank"
-                                children: bind rr2
+                                children: bind model.rankings
                             }
+                            pannable: true
                             layoutInfo: LayoutInfo { width: 400, hgrow: Priority.ALWAYS }
                         },
                 HBox {
@@ -285,7 +298,7 @@ public class ReferenceRankUI extends CustomNode {
 package class RRTreeItem extends TreeItem {
 
     protected var rank: Integer;
-    protected var position: Integer;
+    protected var position: Integer;// = bind Sequences.indexOf(this, this.parent.children);
     public override var expanded = true;
     public var alternative: Alternative on replace {
                 //println("Rank = {rank}, position = {position}, Alternative changed");
@@ -294,11 +307,10 @@ package class RRTreeItem extends TreeItem {
                 }
             }
     public override var onSelected = function() {
-                selectedRank = this.rank;
-                selectedPosition = this.position;
-    }
-
+                currentRank = this.rank;
+                currentPosition = this.position;
+            }
     //new approach
-    public var altName:String;
+    public var altName: String;
     override var data = bind altName;
 }
