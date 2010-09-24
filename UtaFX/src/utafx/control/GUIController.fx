@@ -62,18 +62,20 @@ public class GUIController {
     }
 
     public function solve(): Void {
-        var solver: UtaStarSolver = new UtaStarSolver();
-        var rank: Ranking = view.referenceRankPanel.getPOJO();
+        
+        var refRank: Ranking = view.referenceRankPanel.getPOJO();
         var criterias: Criterion[] = view.criteriaPanel.getPOJO();
         var alterns: Alternative[] = view.alternativesPanel.getPOJO();
-        for (a in alterns) {
-            a.setCriteria(criterias);
-        }
-        for (a in rank.getAlternatives()) {
-            (a as uta.Alternative).setCriteria(criterias);
-        }
-
-        var functs: LinearFunction[] = solver.solve(rank, criterias, alterns);
+        var linker = ReferenceLinker{};
+        
+        alterns = linker.interconnectReferences(criterias, alterns);
+        refRank = linker.interconnectReferences(alterns, refRank);
+        
+        //for (a in rank.getAlternatives()) {
+        //    (a as uta.Alternative).setCriteria(criterias);
+        //}
+        var solver: UtaStarSolver = new UtaStarSolver();
+        var functs: LinearFunction[] = solver.solve(refRank, criterias, alterns);
         //functs = solver.solve(rank, criterias, alterns);
         for (f in functs) {
             println("CharPoints: {Arrays.toString(f.getCharacteristicPoints())} \nand values: {Arrays.toString(f.getValues())}");
@@ -156,9 +158,11 @@ public class GUIController {
             prefManager.exportLastDir = fc.selectedFile.getParentFile();
             var converter = JAXBSupport{};
             var prefs = new ObjectFactory().createPreferences();
-            var criteria = converter.convert(view.criteriaPanel);
-            var altrns = converter.convert(view.alternativesPanel);
-            var refRank = converter.convert(view.referenceRankPanel, view.alternativesPanel);
+            var criteria = converter.convert(view.criteriaPanel.getPOJO());
+            var altPojo = view.alternativesPanel.getPOJO();
+            var altrns = converter.convert(altPojo);
+            var refRank = converter.convert(view.referenceRankPanel.getPOJO(), altPojo);
+
             prefs.setCriteria(criteria);
             prefs.setAlternatives(altrns);
             prefs.setRefRank(refRank);
