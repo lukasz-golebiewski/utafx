@@ -134,9 +134,9 @@ public class GUIController {
 
             var items = preferences.getRefRank().getItem();
             for (rr in items) {
-                var a = view.referenceRankPanel.allItems[rr.getId()];
+                var name = view.alternativesPanel.model.alternativeNames[rr.getId()];
                 var r = rr.getRank();
-                view.referenceRankPanel.insertToTreeView(a, r)
+                view.referenceRankPanel.insertToTreeView2(name, r)
             }
         }
         null;
