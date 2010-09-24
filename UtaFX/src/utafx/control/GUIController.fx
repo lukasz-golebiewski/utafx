@@ -26,6 +26,7 @@ import utafx.ui.pref.JAXBSupport;
 import utafx.ui.pref.jaxb.ObjectFactory;
 import java.io.IOException;
 import utafx.ui.rank.ReferenceRankModel;
+import utafx.ui.window.MessageBox;
 
 /**
  * @author Pawcik
@@ -44,20 +45,17 @@ public class GUIController {
         var criterias = view.criteriaPanel.getPOJO();
         AlternativesUI {
             model: AlternativesModel {
-                columnNames: bind ["Name", view.criteriaPanel.model.criteriaNames]
+                columnNames: bind ["Name", view.criteriaPanel.model.criteriaNames];
                 criteriaPOJO: bind criterias;
             }            
         }
     }
 
     public function createReferenceRank(): ReferenceRankUI {
-        var alternatives = view.alternativesPanel.getPOJO();
         ReferenceRankUI {
-            allItems: bind alternatives;
             model: ReferenceRankModel{
                 alternativeNames: bind view.alternativesPanel.model.alternativeNames
             }
-
         }
     }
 
@@ -97,6 +95,7 @@ public class GUIController {
                     show: true
                 }
         if (fc.selectedFile != null) {
+            clearDataControls();
             prefManager.importLastDir = fc.selectedFile.getParentFile();
             var preferences: Preferences = prefManager.doImport(fc.selectedFile);
             var importedCriteria = preferences.getCriteria();
@@ -129,12 +128,12 @@ public class GUIController {
                             ]
                         }
                     }
+            
             if (not view.referenceRankAdded) {
                 view.addReferenceRank(createReferenceRank());
-            }
-            view.referenceRankPanel.reset();
-
+            } 
             var items = preferences.getRefRank().getItem();
+            
             for (rr in items) {
                 var name = view.alternativesPanel.model.alternativeNames[rr.getId()];
                 var r = rr.getRank();
@@ -173,5 +172,20 @@ public class GUIController {
                 println("Could not eport preferences: {e.getMessage()}")
             }
         }
+    }
+
+    public function clearCriterias(){
+        var options = ["OK", "Cancel"];
+        var userOption = MessageBox.showConfirmDialog(view.scene, "This will clear criterias and all referenced data.\n Continue?", "Clear Criteria", options);
+        if(userOption == options[0]){
+            view.criteriaPanel.model.clear();
+        }
+    }
+
+    function clearDataControls(){
+        delete view.dynamicContent.content;
+        view.alternativesPanel = null;
+        view.criteriaPanel = null;
+        view.referenceRankPanel = null;
     }
 }
