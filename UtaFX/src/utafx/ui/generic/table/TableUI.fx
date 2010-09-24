@@ -20,21 +20,16 @@ import java.util.Date;
 public class TableUI extends SwingComponent {
 
     def COLUMN_WIDTH = 80;
-
     public var tHeight: Integer = 200;
     public var tWidth: Integer = 300 on replace {
                 println("{new Date()}: (tWidth on replace) Table width replaced with: {tWidth}");
                 pane.setPreferredSize(new Dimension(tWidth, tHeight));
             }
-    
     override var width = bind tWidth;
     override var height = bind tHeight;
-
     var table: JTable;
     var nativeModel: javax.swing.table.DefaultTableModel;
-
     var tmListeners: TableModelListener[];
-
     public var pane: JScrollPane;
     public var selectedRow: Integer;
     public var columns: TableColumn[] on replace {
@@ -56,7 +51,7 @@ public class TableUI extends SwingComponent {
                 for (row in newVals) {
                     nativeModel.addRow(for (cell in row.cells) cell.text);
                     println("TableUI: added row")
-                }                
+                }
                 println("{new Date()}: TableUI: rows on replace completed")
             };
 
@@ -70,7 +65,7 @@ public class TableUI extends SwingComponent {
 
     function reregisterModelChangeListeners() {
         println("Re-registering {sizeof tmListeners} table model listener");
-        for(tml in tmListeners){
+        for (tml in tmListeners) {
             println("Re-registering table model listener");
             addTableModelListener(tml);
         }
@@ -118,9 +113,8 @@ public class TableUI extends SwingComponent {
         }
     }
 
-    public function getTableModelListeners(): TableModelListener[]{
+    public function getTableModelListeners(): TableModelListener[] {
         return tmListeners;
     }
-
 
 }

@@ -11,8 +11,9 @@ import uta.LinearFunction;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.part.NumberAxis;
 import uta.Alternative;
-import utafx.ui.rank.FinalRankUI;
 import utafx.ui.alternative.AlternativesModel;
+import javafx.scene.layout.HBox;
+import uta.Ranking;
 
 /**
  * @author Pawcik
@@ -22,6 +23,8 @@ public class SolutionUI extends CustomNode {
     public var functions: LinearFunction[];
     public var alternatives: Alternative[];
     public var columnNames: String[];
+    public var refRank: Ranking;
+
     var charts: LineChart[] = [];
 
     public override function create(): Node {
@@ -67,6 +70,7 @@ public class SolutionUI extends CustomNode {
                 FinalRankUI {
                     alterns: alternatives;
                     functions: functions;
+                    refRank: refRank;
                     model: AlternativesModel{
                         columnNames: bind columnNames;
                     }

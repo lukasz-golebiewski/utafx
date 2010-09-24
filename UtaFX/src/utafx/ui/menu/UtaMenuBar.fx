@@ -74,12 +74,13 @@ public class UtaMenuBar extends MenuBar {
                         text: "Tools"
                         items: [
                             MenuItem { text: "Solve"
-                                action: function() {
-                                    guiController.solve();
-                                }
+                                action: guiController.solve                                
                                 disable: bind not guiController.view.referenceRankAdded
                                 }
-                            MenuItem { text: "Clear Criteria" }
+                            MenuItem {
+                                text: "Clear Criteria"
+                                action: guiController.clearCriterias
+                            }
                             MenuItem { text: "Clear Alternatives" }
                             MenuItem { text: "Clear Reference Ranking" }
                             MenuItem { text: "Clear All" }

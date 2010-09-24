@@ -98,10 +98,11 @@ public class MainView extends VBox {
     }
 
     public function addSolutionUI(node: SolutionUI) {
-        insert HBox {
+        insert node
+        //insert HBox {
             //hpos: HPos.CENTER
-            content: bind node
-        } into dynamicContent.content;
+            //content: bind node}
+        into dynamicContent.content;
     }
 
 }

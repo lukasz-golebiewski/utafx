@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package utafx.ui.rank;
+package utafx.ui.solution;
 
 import javafx.scene.CustomNode;
 import javafx.scene.Node;
@@ -28,6 +28,12 @@ import javafx.scene.control.TextBox;
 import javafx.scene.control.CheckBox;
 import uta.RankingUtils;
 import utafx.ui.alternative.AlternativesModel;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.Tile;
+import uta.Ranking;
+import javafx.scene.control.Button;
+import javafx.geometry.Bounds;
 
 def outerBorderFill = LinearGradient {
             startX: 0.0 startY: 0.0 endX: 0.0 endY: 1.0
@@ -45,9 +51,8 @@ public class FinalRankUI extends CustomNode {
     public var functions: LinearFunction[];
     public var alterns: Alternative[];
     //public var columnNames: String[];
-
     public var model: AlternativesModel;
-
+    public var refRank: Ranking;
     var solver: UtaStarSolver;
     var table: TableUI;
     var kendallRate: Container;
@@ -55,6 +60,7 @@ public class FinalRankUI extends CustomNode {
     var kendallValue: Double;
     var kendallCheckBox: CheckBox;
     var preserveKendallRate = bind kendallCheckBox.selected;
+    var valueBox:HBox;
 
     postinit {
         //insert "Name" before columnNames[0];
@@ -70,18 +76,18 @@ public class FinalRankUI extends CustomNode {
                     }
                     rows: for (a in sortedRank.getAlternatives()) {
                         TableRow {
-                            var i=-1;
+                            var i = -1;
                             cells: for (c in model.columnNames) {
                                 println("Column name is {c} index of c is {indexof c}");
                                 var index = indexof c;
                                 var size = sizeof model.columnNames;
                                 i++;
-                                var dupa = i-1;
+                                var dupa = i - 1;
                                 TableCell {
-                                    text: if (i==0) {
+                                    text: if (i == 0) {
                                         println("{a.getName()}");
                                         "{a.getName()}";
-                                    } else if (i==(size-1)) {
+                                    } else if (i == (size - 1)) {
                                         println("Last");
                                         "{solver.getGeneralUtil(functions, a)}";
                                     } else {
@@ -93,31 +99,50 @@ public class FinalRankUI extends CustomNode {
                         }
                     }
                 };
-                kendallRate = VBox{
-                    spacing:5;
-                    content:[
-                        HBox{
+        kendallRate = Tile {
+                    vertical: true
+                   
+                    content: [
+                        valueBox = HBox {
                             spacing: 5
-                            content:[
-                                Label{
+                            //height: 50
+                            content: [
+                                Label {
                                     text: "Kendall Rate"
                                 }
-                                TextBox{
-                                    lines:1
-                                    multiline:false
+                                TextBox {
+                                    lines: 1
+                                    multiline: false
                                     editable: false
+                                    columns: 5
                                     text: bind "{kendallValue}"
                                 }
-
                             ]
                         }
-                        kendallCheckBox = CheckBox{
-                           selected: false
-                           text: "Preserve Kendall Rate"
-                        }
+                        kendallCheckBox = CheckBox {
+                                    selected: false
+                                    text: "Preserve Kendall Rate"
+                        },
+//                        Button {
+//                            text: "Checkbox Bounds"
+//                            action: function() {
+//                                println("Kendall checkbox bounds:");
+//                                println("Bounds in local = {kendallCheckBox.boundsInLocal}");
+//                                println("Bounds in parent = {kendallCheckBox.boundsInParent}");
+//                                println("Layout Bounds = {kendallCheckBox.layoutBounds}");
+//                                println("========================");
+//                                println("HBox(Label+textbox) bounds:");
+//                                println("Bounds in local = {valueBox.boundsInLocal}");
+//                                println("Bounds in parent = {valueBox.boundsInParent}");
+//                                println("Layout Bounds = {valueBox.layoutBounds}");
+//                            }
+//                        }
                     ]
                 };
-
+        kendallValue = rankUtils.getKendallsCoefficient(refRank, sortedRank);
+        valueBox.translateX = 10;
+        kendallCheckBox.translateX = 10;
+    //println(kendallCheckBox.minX);
     }
 
     public override function create(): Node {
@@ -145,15 +170,22 @@ public class FinalRankUI extends CustomNode {
                 }
 
                 HBox {
-                    hpos: HPos.CENTER
-                    height: 200
+                    //hpos: HPos.CENTER
+                    //height: 200
                     content: bind [table,
-                    kendallRate]
+                        kendallRate]
                 }]
         }
     }
 
 }
-    
 
+function run() {
+    Stage {
+        scene: Scene {
+            content: FinalRankUI {
+            }
+        }
+    }
 
+}

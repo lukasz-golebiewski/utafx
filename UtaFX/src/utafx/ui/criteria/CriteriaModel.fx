@@ -15,4 +15,8 @@ public class CriteriaModel {
     public var columnNames: String[];
     public var rows: TableRow[];
     public var criteriaNames: String[];
+
+    public function clear(){
+        delete rows;
+    }
 }
