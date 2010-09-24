@@ -44,8 +44,9 @@ public class ReferenceRankUI extends CustomNode {
     public function reset() {
         println("Reseting ReferenceRank...");
         model.rankings = [];
-        available = allItems;
-        availNames = model.alternativeNames;
+        model.availNames = model.alternativeNames;
+        //available = allItems;
+        //availNames = model.alternativeNames;
         //maxRank = 0;
         currentRank = 0;
         currentPosition = 0;

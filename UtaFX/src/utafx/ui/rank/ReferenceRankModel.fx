@@ -16,6 +16,7 @@ public class ReferenceRankModel {
     public var rankings: RRTreeItem[];
     public var availNames: String[];
     public var alternativeNames: String[] on replace old[start..end] = newValues {
+                println("Updating reference rank...");
                 for (oldValue in old[start..end]) {
                     if (Sequences.indexOf(availNames, oldValue) != -1) {
                         delete oldValue from availNames;
