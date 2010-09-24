@@ -31,42 +31,37 @@ public class TableUI extends SwingComponent {
     override var height = bind tHeight;
 
     var table: JTable;
-    var model: javax.swing.table.DefaultTableModel;
+    var nativeModel: javax.swing.table.DefaultTableModel;
 
-    var tmListeners: TableModelListener[] on replace old {
-        for(tml in old){
-            removeTableModelListener(tml);
-        }
-        reregisterModelChangeListeners();
-    }
+    var tmListeners: TableModelListener[];
 
     public var pane: JScrollPane;
     public var selectedRow: Integer;
     public var columns: TableColumn[] on replace {
-                model = new javax.swing.table.DefaultTableModel(for (column in columns) column.text, 0);
+                nativeModel = new javax.swing.table.DefaultTableModel(for (column in columns) column.text, 0);
                 for (row in rows) {
-                    model.addRow(for (cell in [row.cells, TableCell {}]) cell.text);
+                    nativeModel.addRow(for (cell in [row.cells, TableCell {}]) cell.text);
                 }
-                table.setModel(model);
+                table.setModel(nativeModel);
                 println("{new Date()}: (columns on replace) New model has been set");
                 reregisterModelChangeListeners();
                 tWidth = (sizeof columns) * COLUMN_WIDTH;
             };
     public var rows: TableRow[] on replace oldValue[lo..hi] = newVals {
                 for (index in [hi..lo step -1]) {
-                    model.removeRow(index);
+                    nativeModel.removeRow(index);
                     println("{new Date()}: TableUI: removed row {index}")
                 }
 
                 for (row in newVals) {
-                    model.addRow(for (cell in row.cells) cell.text);
+                    nativeModel.addRow(for (cell in row.cells) cell.text);
                     println("TableUI: added row")
-                }
+                }                
                 println("{new Date()}: TableUI: rows on replace completed")
             };
 
     public function getValueAt(row: Integer, col: Integer): Object {
-        return model.getValueAt(row, col);
+        return nativeModel.getValueAt(row, col);
     };
 
     public function getColumnModel(): TableColumnModel {
@@ -74,7 +69,9 @@ public class TableUI extends SwingComponent {
     };
 
     function reregisterModelChangeListeners() {
+        println("Re-registering {sizeof tmListeners} table model listener");
         for(tml in tmListeners){
+            println("Re-registering table model listener");
             addTableModelListener(tml);
         }
     }
@@ -109,12 +106,14 @@ public class TableUI extends SwingComponent {
 
     public function addTableModelListener(listener: TableModelListener) {
         if (listener != null) {
+            insert listener into tmListeners;
             table.getModel().addTableModelListener(listener);
         }
     }
 
     public function removeTableModelListener(listener: TableModelListener) {
         if (listener != null) {
+            delete listener from tmListeners;
             table.getModel().removeTableModelListener(listener);
         }
     }
