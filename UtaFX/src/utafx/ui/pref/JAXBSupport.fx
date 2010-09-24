@@ -13,6 +13,7 @@ import utafx.ui.pref.jaxb.Alternatives;
 import utafx.ui.rank.ReferenceRankUI;
 import utafx.ui.pref.jaxb.RefRank;
 import uta.Alternative;
+import uta.Ranking;
 
 /**
  * This class acts like a bridge between the FX classes and JAXB generated classes.
@@ -21,8 +22,7 @@ preferences.
  */
 public class JAXBSupport {
 
-    public function convert(criteria: CriteriaUI): Criteria {
-        var data: uta.Criterion[] = criteria.getPOJO();
+    public function convert(data: uta.Criterion[]): Criteria {
         var returnObject: Criteria;
         if (data != null) {
             var factory = ObjectFactory {};
@@ -43,8 +43,7 @@ public class JAXBSupport {
         return returnObject;
     }
 
-    public function convert(alterns: AlternativesUI): Alternatives {
-        var data: uta.Alternative[] = alterns.getPOJO();
+    public function convert(data: uta.Alternative[]): Alternatives {
         var returnObject: Alternatives;
         if (data != null) {
             var factory = ObjectFactory {};
@@ -67,26 +66,24 @@ public class JAXBSupport {
         return returnObject;
     }
 
-    public function convert(refRank: ReferenceRankUI, alterns: AlternativesUI): RefRank {
-        var data = refRank.getPOJO();
-        var allAlterns = alterns.getPOJO();
+    public function convert(refRankData: Ranking, alterns: uta.Alternative[]): RefRank {
         var returnObject: RefRank;
-        if (data != null) {
+        if (refRankData != null) {
             var factory = ObjectFactory {};
             returnObject = factory.createRefRank();
-            for (a in data.getAlternatives()) {
+            for (aName in refRankData.getAlternatives()) {
                 var rrItem = factory.createRrItem();
-                rrItem.setId(getIndexOf(a as uta.Alternative, allAlterns));
-                rrItem.setRank(data.getRank(a));
+                rrItem.setId(getIndexOf(aName as String, alterns));
+                rrItem.setRank(refRankData.getRank(aName));
                 returnObject.getItem().add(rrItem);
             }
         }
         return returnObject;
     }
 
-    function getIndexOf(src: uta.Alternative, all: uta.Alternative[]) {
+    function getIndexOf(alternativeName: String, all: uta.Alternative[]) {
         for (a in all) {
-            if (src.getName() == a.getName()) {
+            if (a.getName() == alternativeName) {
                 return indexof a;
             }
         }
