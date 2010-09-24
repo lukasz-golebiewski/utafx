@@ -27,14 +27,14 @@ public class MainView extends VBox {
     
     var controller: GUIController;
     //container for criterias, alternatives, etc.
-    var dynamicContent: Container;
-    public-read var criteriaPanel: CriteriaUI;
-    public-read var alternativesPanel: AlternativesUI;
-    public-read var referenceRankPanel: ReferenceRankUI;
-    public-read var solutionPanel: SolutionUI;
-    public-read var criteriaAdded = bind (criteriaPanel != null);
-    public-read var alternativesAdded = bind (alternativesPanel != null);
-    public-read var referenceRankAdded = bind (referenceRankPanel != null);
+    public var dynamicContent: Container;
+    public var criteriaPanel: CriteriaUI;
+    public var alternativesPanel: AlternativesUI;
+    public var referenceRankPanel: ReferenceRankUI;
+    public var solutionPanel: SolutionUI;
+    public var criteriaAdded = bind (criteriaPanel != null);
+    public var alternativesAdded = bind (alternativesPanel != null);
+    public var referenceRankAdded = bind (referenceRankPanel != null);
 
     init {
         spacing = MAIN_VIEW_VSPACING;
