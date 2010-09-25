@@ -79,6 +79,7 @@ public class GUIController {
             println("CharPoints: {Arrays.toString(f.getCharacteristicPoints())} \nand values: {Arrays.toString(f.getValues())}");
         }
         var solution = SolutionUI {
+                    refRank: refRank;
                     functions: functs;
                     alternatives: alterns;
                     columnNames: ["Name", view.criteriaPanel.getCriteriaNames(), "Value"];
