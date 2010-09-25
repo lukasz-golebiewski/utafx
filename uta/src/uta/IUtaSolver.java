@@ -26,4 +26,6 @@ public interface IUtaSolver {
 	 */
 	LinearFunction[] solve(Ranking<Alternative> ranking, List<Criterion> criteria, List<Alternative> alternatives);
 
+	LinearFunction[] solve(Ranking<Alternative> ranking, Criterion[] criteria, Alternative[] alternatives);
+
 }

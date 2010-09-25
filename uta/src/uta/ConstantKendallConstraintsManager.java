@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class ConstantKendallConstraintsManager extends StandardConstraintsManager {
 
-	private double searchPrecision = 0.01;
+	private double searchPrecision = 0.001;
 	private static final RankingUtils RANKING_UTILS = new RankingUtils();
 	private final Ranking<Alternative> referenceRank;
 	private Ranking<Alternative> finalRank;
@@ -25,10 +25,10 @@ public class ConstantKendallConstraintsManager extends StandardConstraintsManage
 
 	private void initModifiedConstraints() {
 		for (Point p : constraints.keySet()) {
-			Constraint constraint = new Constraint(p);
-			constraint.setLowerBound(constraints.get(p).getLowerBound());
-			constraint.setUpperBound(constraints.get(p).getUpperBound());
-			modifiedConstraints.put(p, constraint);
+			Constraint constraint = constraints.get(p);
+			double lowerBound = constraint.getLowerBound();
+			double upperBound = constraint.getUpperBound();
+			updateOrCreateConstraint(modifiedConstraints, p, lowerBound, upperBound);
 		}
 	}
 
@@ -41,84 +41,54 @@ public class ConstantKendallConstraintsManager extends StandardConstraintsManage
 	}
 
 	private void updateConstraints() {
+		// iterate over middle points first
 		for (Point p : constraints.keySet()) {
 			if (!isBestPoint(p)) {
-				Constraint c = constraints.get(p);
-
-				double middle = (c.getUpperBound() + p.getY()) / 2;
-				double oldMiddle = p.getY();
-
-				while (Math.abs(middle - oldMiddle) > searchPrecision) {
-					oldMiddle = middle;
-					if (isKendallWorseAtPoint(p, middle)) {
-						middle = (middle + p.getY()) / 2;
-					} else {
-						middle = (middle + c.getUpperBound()) / 2;
-					}
-				}
-				if (Math.abs(middle - c.getUpperBound()) > 0) {
-					setNewUpperBound(p, middle);
-				}
-
-				middle = (p.getY() + c.getLowerBound()) / 2;
-				oldMiddle = p.getY();
-				while (Math.abs(middle - oldMiddle) > searchPrecision) {
-					oldMiddle = middle;
-
-					if (isKendallWorseAtPoint(p, middle)) {
-						middle = (middle + p.getY()) / 2;
-					} else {
-						middle = (middle + c.getLowerBound()) / 2;
-						// middle = middle - p.getY();
-					}
-
-				}
-				if (Math.abs(middle - c.getLowerBound()) > 0) {
-					setNewLowerBound(p, middle);
-				}
+				updatePoint(p);
 			}
 		}
 		// iterate over best points
 		for (Point p : constraints.keySet()) {
 			if (isBestPoint(p)) {
-				// updateBestPointsConstraints(p);
-				Constraint c = constraints.get(p);
-
-				double middle = (c.getUpperBound() + p.getY()) / 2;
-				double oldMiddle = p.getY();
-
-				while (Math.abs(middle - oldMiddle) > searchPrecision) {
-					oldMiddle = middle;
-					if (isKendallWorseAtBestPoint(p, middle)) {
-						middle = (middle + p.getY()) / 2;
-					} else {
-						middle = (middle + c.getUpperBound()) / 2;
-					}
-				}
-				if (Math.abs(middle - c.getUpperBound()) > 0) {
-					setNewUpperBound(p, middle);
-				}
-
-				middle = (p.getY() + c.getLowerBound()) / 2;
-				oldMiddle = p.getY();
-				while (Math.abs(middle - oldMiddle) > searchPrecision) {
-					oldMiddle = middle;
-
-					if (isKendallWorseAtBestPoint(p, middle)) {
-						middle = (middle + p.getY()) / 2;
-					} else {
-						middle = (middle + c.getLowerBound()) / 2;
-						// middle = middle - p.getY();
-					}
-
-				}
-				if (Math.abs(middle - c.getLowerBound()) > 0) {
-					setNewLowerBound(p, middle);
-				}
+				updatePoint(p);
 			}
-
 		}
 
+	}
+
+	private void updatePoint(Point p) {
+		Constraint c = constraints.get(p);
+
+		double newConstraintValue = search(p, c, c.getUpperBound(), p.getY(), true);
+		// if (Math.abs(middle - c.getUpperBound()) > 0) {
+		setNewUpperBound(p, newConstraintValue);
+		// }
+
+		newConstraintValue = search(p, c, p.getY(), c.getLowerBound(), false);
+		// if (Math.abs(middle - c.getLowerBound()) > 0) {
+		setNewLowerBound(p, newConstraintValue);
+		// }
+	}
+
+	private double search(Point p, Constraint c, double high, double low, boolean searchUpwards) {
+		double middle = (high + low) / 2;
+		double prevMiddle = high;
+		double previousHigh = high;
+		double previousLow = low;
+
+		while (Math.abs(middle - prevMiddle) > searchPrecision) {
+			prevMiddle = middle;
+			boolean isWorse = isKendallWorseWhenPointHasValue(p, middle);
+			// conditions are inverted when we are searching downwards
+			if (isWorse == searchUpwards) {
+				previousHigh = middle;
+				middle = (middle + previousLow) / 2;
+			} else {
+				previousLow = middle;
+				middle = (middle + previousHigh) / 2;
+			}
+		}
+		return middle;
 	}
 
 	private void setNewLowerBound(Point p, double middle) {
@@ -129,7 +99,11 @@ public class ConstantKendallConstraintsManager extends StandardConstraintsManage
 		modifiedConstraints.get(p).setUpperBound(middle);
 	}
 
-	boolean isKendallWorseAtPoint(Point p, double value) {
+	boolean isKendallWorseWhenPointHasValue(Point p, double value) {
+		return isBestPoint(p) ? isKendallWorseWhenBestPointHasValue(p, value) : isKendallWorseWhenMiddlePointHasValue(p, value);
+	}
+
+	boolean isKendallWorseWhenMiddlePointHasValue(Point p, double value) {
 		LinearFunction[] deepCopy = new LinearFunction[functions.length];
 		int functionIndex = 0;
 		for (int i = 0; i < functions.length; i++) {
@@ -145,7 +119,7 @@ public class ConstantKendallConstraintsManager extends StandardConstraintsManage
 		return newKendall < currentKendall;
 	}
 
-	boolean isKendallWorseAtBestPoint(Point p, double value) {
+	boolean isKendallWorseWhenBestPointHasValue(Point p, double value) {
 		LinearFunction[] deepCopy = new LinearFunction[functions.length];
 		int functionIndex = 0;
 		for (int i = 0; i < functions.length; i++) {
@@ -178,7 +152,15 @@ public class ConstantKendallConstraintsManager extends StandardConstraintsManage
 
 	@Override
 	public void update(LinearFunction function, Point changedPoint) {
+		super.update(function, changedPoint);
+		// clear all
+		// constraints.clear();
+		// modifiedConstraints.clear();
 
+		// rebuild constraints
+		buildConstraints();
+		initModifiedConstraints();
+		updateConstraints();
 	}
 
 	public Constraint[] getConstraints() {

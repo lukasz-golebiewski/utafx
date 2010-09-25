@@ -7,30 +7,47 @@ import java.util.Map;
 
 class StandardConstraintsManager extends AbstractConstraintsManager {
 
+	private static final double PRECISION = 0.000000000001;
+
 	StandardConstraintsManager(LinearFunction[] functions) {
 		super(functions);
 		this.buildConstraints();
 	}
 
-	private void buildConstraints() {
+	protected void updateOrCreateConstraint(Map<Point, Constraint> constraints, Point p, double lowerBound, double upperBound) {
+		Constraint constraint = constraints.get(p);
+		if (constraint == null) {
+			constraints.put(p, new Constraint(p, lowerBound, upperBound));
+		} else {
+			constraint.setLowerBound(lowerBound);
+			constraint.setUpperBound(upperBound);
+		}
+	}
+
+	protected void buildConstraints() {
 		for (LinearFunction f : functions) {
 			for (Point p : f.getPoints()) {
-				Constraint c = new Constraint(p);
+				// Constraint c = new Constraint(p);
 				Point betterNeighbor = f.getBetterNeighbor(p);
 				Point worseNeighbor = f.getWorseNeighbor(p);
 
+				double lowerBound, upperBound;
+
 				if (null == worseNeighbor) {
 					// c.setUpperBound(betterNeighbor.getY());
-					c.setUpperBound(0);
+					lowerBound = 0;
+					upperBound = 0;
 				} else if (null == betterNeighbor) {
-					c.setLowerBound(worseNeighbor.getY());
-					c.setUpperBound(p.getY()); // temp
+					lowerBound = worseNeighbor.getY();
+					upperBound = (p.getY()); // temp
 				} else {
-					c.setUpperBound(betterNeighbor.getY());
-					c.setLowerBound(worseNeighbor.getY());
+					upperBound = (betterNeighbor.getY());
+					lowerBound = (worseNeighbor.getY());
 				}
 
-				constraints.put(p, c);
+				// constraints.put(p, new Constraint(p, lowerBound,
+				// upperBound));
+				updateOrCreateConstraint(constraints, p, lowerBound, upperBound);
 			}
 		}
 		for (LinearFunction f : functions) {
@@ -60,8 +77,6 @@ class StandardConstraintsManager extends AbstractConstraintsManager {
 		Point worseNeighbor = function.getWorseNeighbor(changedPoint);
 		if (null == worseNeighbor) {
 			throw new RuntimeException("Changing value of the point with worst evaluation is not permitted!");
-			// Constraint c = constraints.get(betterNeighbor);
-			// c.setLowerBound(changedPoint.getY());
 		} else if (null == betterNeighbor) {
 			// changing best point's value
 			if (function.getWorseNeighbor(worseNeighbor) != null)
@@ -109,7 +124,7 @@ class StandardConstraintsManager extends AbstractConstraintsManager {
 		// proportions should be kept
 		List<LinearFunction> funcs = new ArrayList<LinearFunction>();
 		funcs.addAll(Arrays.asList(functions));
-		while (missingValue != 0) {
+		while (Math.abs(missingValue) > PRECISION) {
 			missingValue = subtractMissingValue(funcs, function, missingValue, modifyConstraints, constraints);
 		}
 	}
