@@ -8,17 +8,13 @@ import javafx.scene.CustomNode;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import uta.LinearFunction;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.part.NumberAxis;
 import uta.Alternative;
 import utafx.ui.alternative.AlternativesModel;
 import uta.Ranking;
-import javafx.scene.paint.Paint;
-import javafx.scene.layout.Container;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.chart.part.PlotSymbol;
+import uta.ConstraintsManagerFactory;
+import uta.ConstraintsManager;
+import uta.Constraint;
+import utafx.ui.solution.ChartUI.ChartUIData;
 
 /**
  * @author Pawcik
@@ -29,7 +25,13 @@ public class SolutionUI extends CustomNode {
     public var alternatives: Alternative[];
     public var columnNames: String[];
     public var refRank: Ranking;
-    var charts: LineChart[] = [];
+    public var constraintManager: ConstraintsManager;
+    public var freezedKendall:Boolean = false;
+
+    init {
+         constraintManager = new ConstraintsManagerFactory(freezedKendall).createConstraintsManager(functions, null, null);
+    }
+
 
     public override function create(): Node {
         VBox {
@@ -38,69 +40,31 @@ public class SolutionUI extends CustomNode {
                     content: for (f in functions) {
                         var currentFun = f;
                         var c = f.getCriterion();
-                        charts[sizeof f] = LineChart {
-                                    xAxis: NumberAxis {
-                                        lowerBound: if (c.isGain()) c.getWorstValue() else c.getBestValue()
-                                        upperBound: if (c.isGain()) c.getBestValue() else c.getWorstValue()
-                                        label: "CharPoints"
-                                        labelTickGap: 0.3
-                                        visible: true
-                                        axisStrokeWidth: 1
-                                        tickUnit: 1
-                                    }
-                                    yAxis: NumberAxis {
-                                        lowerBound: 0
-                                        upperBound: 1
-                                        tickUnit: 1
-                                        label: "Values"
-                                        visible: true
-                                    }
-                                    data: [
-                                        LineChart.Series {
-                                            name: "Characteristic points"
-                                            data: for (i in [0..currentFun.getNoOfPoints() - 1]) {
-                                                LineChart.Data {
-                                                    xValue: currentFun.getCharacteristicPoints()[i];
-                                                    yValue: currentFun.getValues()[i];
-                                                }
-                                            }
-                                            symbolCreator: function(series: LineChart.Series, seriesIndex: Integer, item: LineChart.Data, itemIndex: Integer, fill: Paint) {
-                                                Container {
-                                                    content: [
-                                                        Rectangle {
-                                                            width: 10
-                                                            height: 20
-                                                            arcWidth: 10
-                                                            arcHeight: 10
-                                                            fill: Color.GREENYELLOW
-                                                            layoutX: -5;
-                                                            layoutY: -10;
-                                                        }
-                                                        PlotSymbol.Circle {
-                                                            fill: fill
-                                                            onMouseClicked: function(e: MouseEvent) {
-                                                                println("Cirlce clicked: {e}");
-                                                            }
-
-                                                            onMouseDragged: function(e: MouseEvent) {
-                                                                println("Cirlce clicked: {e}");
-                                                            }
-                                                            blocksMouse: true
-                                                        }
-                                                    ]
-                                                //                                    onMouseDragged: function(e: MouseEvent) {
-                                                //                                        println("Container dragged: {e}");
-                                                //                                    }
-                                                //                                    onMouseReleased: function(e: MouseEvent) {
-                                                //                                        println("Container Released: {e}");
-                                                //                                    }
-                                                //                                    onMouseClicked: function(e: MouseEvent) {
-                                                //                                        println("Container clicked: {e}");
-                                                //                                    }
-                                                }
-                                            } }]
+//                        var chart = ChartUI{
+//                            fun: currentFun
+//                            name: c.getName()
+//                        }
+//                        insert chart into charts;
+//                        chart;
+                        ChartUI {                            
+                            data: ChartUIData {
+                                x: currentFun.getCharacteristicPoints()
+                                y: currentFun.getValues();
+                                lowers: for(p in currentFun.getPoints()){
+                                    (constraintManager.getConstraintFor(p) as Constraint).getLowerBound();
                                 }
-                    }
+                                uppers: for(p in currentFun.getPoints()){
+                                    (constraintManager.getConstraintFor(p) as Constraint).getUpperBound();
+                                }
+                            }
+                            xAxisMinAuto: true
+                            xAxisMaxAuto: true
+                            yAxisMin: 0.0
+                            yAxisMax: 1.0                            
+                            name: c.getName()
+                        }
+                     }
+                    
                 },
                 FinalRankUI {
                     alterns: alternatives;
