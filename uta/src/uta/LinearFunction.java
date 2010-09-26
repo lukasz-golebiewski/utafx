@@ -64,7 +64,7 @@ public class LinearFunction {
 		characteristicPoints.get(index).setY(val);
 	}
 
-	List<Point> getPoints() {
+	public List<Point> getPoints() {
 		return Collections.unmodifiableList(characteristicPoints);
 	}
 
