@@ -27,6 +27,8 @@ import utafx.ui.pref.jaxb.ObjectFactory;
 import java.io.IOException;
 import utafx.ui.rank.ReferenceRankModel;
 import utafx.ui.window.MessageBox;
+import uta.ConstraintsManagerFactory;
+import uta.ConstraintsManager;
 
 /**
  * @author Pawcik
@@ -35,6 +37,7 @@ public class GUIController {
 
     public var view: MainView;
     var prefManager = PreferenceManager{};
+    var kendallFreezed = false;
     
 
     public function createCriteria(): CriteriaUI {
@@ -78,11 +81,15 @@ public class GUIController {
         for (f in functs) {
             println("CharPoints: {Arrays.toString(f.getCharacteristicPoints())} \nand values: {Arrays.toString(f.getValues())}");
         }
+
+        var manager: ConstraintsManager = new ConstraintsManagerFactory(kendallFreezed).createConstraintsManager(functs, null, null);
+        
         var solution = SolutionUI {
                     refRank: refRank;
                     functions: functs;
                     alternatives: alterns;
                     columnNames: ["Name", view.criteriaPanel.getCriteriaNames(), "Utillity"];
+                    constraintManager: bind manager;
                 }
         view.addSolutionUI(solution);
     }
