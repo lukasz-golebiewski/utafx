@@ -95,7 +95,7 @@ public class ChartUI extends CustomNode {
                                     upperBound: bind (data.uppers[i])
                                     index: i
                                     valueUpdated: function(){
-                                        //println("Data changed in item {i}");
+                                        println("Data changed in item {i} on chart {name}");
                                     }
                                 }
                                 symbol = CharPointSymbol{
@@ -224,6 +224,8 @@ package class CharPointSymbol extends CustomNode {
     var circleFill:Paint = Color.RED;
     var rectFill:Paint = Color.GREENYELLOW;
 
+    var valueChanged:Boolean;
+
     override function create():Node{
 
         Container {
@@ -255,6 +257,9 @@ package class CharPointSymbol extends CustomNode {
                             var circleMovedBounds = circle.boundsInParent;
                             var circleMovedX = circleMovedBounds.minX + circleMovedBounds.width/2;
                             var circleMovedY = circleMovedBounds.minY + circleMovedBounds.height/2 + delta;
+
+                            var valueBefore = data.y[item.index];
+                            var valueAfter = valueBefore;
                             
                             if(rectangle.boundsInParent.contains(circleMovedX, circleMovedY)){
                                 ////println("Rectangle contains: [{x2}, {y2}]");
@@ -270,8 +275,9 @@ package class CharPointSymbol extends CustomNode {
                                     ////println("Value correction: {factor*delta}");
                                     data.y[item.index]-= factor * delta;
                                     //item.yValue -= factor * delta;
-                                }
+                                }                                
                             } else {
+
                                 ////println("Dragged out of costraints");
                                 if(delta>0){
                                     data.y[item.index]= item.lowerBound;
@@ -281,13 +287,15 @@ package class CharPointSymbol extends CustomNode {
 
                                 ////println("Start[{x1}, {y1}]\nEnd  [{x2}, {y2}]");
                             }
+                            valueAfter = data.y[item.index];
+                            valueChanged = (valueBefore!=valueAfter);
 
                     }
 
                     onMouseReleased:function( e: MouseEvent) {
-                        if(delta != 0){
+                        if(valueChanged){
                             item.valueUpdated()
-                        }                        
+                        }
                     }
 
                     onMouseEntered:function( e: MouseEvent) {                        
