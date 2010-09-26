@@ -18,13 +18,11 @@ import javafx.scene.Scene;
 import javafx.util.Math;
 import javafx.scene.paint.Paint;
 import javafx.scene.chart.part.PlotSymbol;
-import javafx.scene.control.Button;
 import javafx.scene.chart.part.ValueAxis;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.Line;
+import uta.ConstraintsManager;
+import java.util.Date;
+import uta.Point;
+import javafx.util.Sequences;
 
 /**
  * @author Pawcik
@@ -36,7 +34,7 @@ public class ChartUI extends CustomNode {
     public-read var chart: LineChart;
 
     public-init var fun: LinearFunction;
-    public-init var data: ChartUIData;
+    public var data: ChartUIData;
     
     public-init var xAxisMin:Number=0.0;
     public-init var xAxisMax:Number;
@@ -48,22 +46,20 @@ public class ChartUI extends CustomNode {
     public-init var yAxisMinAuto:Boolean=false;
     public-init var yAxisMaxAuto:Boolean=false;
 
+    public var constraintsManager: ConstraintsManager;
+
     var chartX:Number;
     var chartY:Number;
 
-    var factorOld:Double = INITIAL_FACTOR_VALUE;
+    //var factorOld:Double = INITIAL_FACTOR_VALUE;
     var factor:Double = INITIAL_FACTOR_VALUE;
-    var distanceToXAxis:Double;
+    //var distanceToXAxis:Double;
 
     init {
-
-//        if(fun != null){
-//            data.x = fun.getCharacteristicPoints();
-//            data.y = fun.getValues();
-//        }
+        updateLocalBounds();
+        println("Updated bounds of {name} function");
     
         chart = LineChart {
-
                     xAxis: NumberAxis {
                         lowerBound: bind if(xAxisMinAuto) getMin(data.x) else xAxisMin;
                         upperBound: bind if(xAxisMaxAuto) getMax(data.x) else xAxisMax;
@@ -94,8 +90,11 @@ public class ChartUI extends CustomNode {
                                     lowerBound: bind (data.lowers[i])
                                     upperBound: bind (data.uppers[i])
                                     index: i
-                                    valueUpdated: function(){
-                                        println("Data changed in item {i} on chart {name}");
+                                    valueUpdated: function(index:Integer, value:Double){
+                                        var p = fun.getPoints().get(index);
+                                        p.setY(data.y[index]);
+                                        constraintsManager.update(fun, p);
+                                        data.fireChartDataChanged(i, index, value);
                                     }
                                 }
                                 symbol = CharPointSymbol{
@@ -110,7 +109,7 @@ public class ChartUI extends CustomNode {
                     title: bind name;
                     onMouseEntered: function(e:MouseEvent){
                         if(factor == INITIAL_FACTOR_VALUE){
-                            getEstimatedScaleFactor(chart.xAxis, chart.insets.top, true);
+                            getEstimatedScaleFactor(chart.xAxis, chart.insets.left, true);
                             factor = getEstimatedScaleFactor(chart.yAxis, chart.insets.top, false);
                         }
                     }
@@ -119,7 +118,30 @@ public class ChartUI extends CustomNode {
                         chartY = e.y;
                     }
                 }
-    }    
+    }
+
+    public function updateLocalBounds(){
+        for(i in [0..<sizeof data.x]){
+            updateLocalBound(i);
+        }
+        println("Updated local bounds of {name}");
+    }
+
+
+    public function updateLocalBound(index:Integer):Void{
+          var p:Point = fun.getPoints().get(index);
+//          data.lowers[index] -= 0.1;
+//          data.uppers[index] += 0.05;
+          data.lowers[index] = constraintsManager.getConstraintFor(p).getLowerBound();
+          data.uppers[index] = constraintsManager.getConstraintFor(p).getUpperBound();
+//        data.lowers = for(p in fun.getPoints()){
+//            (constraintsManager.getConstraintFor(p) as Constraint).getLowerBound();
+//        }
+//        data.uppers = for(p in fun.getPoints()){
+//            (constraintsManager.getConstraintFor(p) as Constraint).getUpperBound();
+//        }
+    }
+
 
     override function create(): Node {
         //printNodeBounds("Chart in create()", chart);
@@ -182,6 +204,33 @@ package class ChartUIData {
     public var y: Double[];
     public var lowers: Double[];
     public var uppers: Double[];
+
+    var chartListeners: ChartListener[];
+
+    public function fireChartDataChanged(funIndex:Integer, pointIndex:Integer, value:Double){
+        for(listener in chartListeners){
+            listener.dataChanged(
+            ChartEvent{
+                functionIndex:funIndex
+                pointIndex: pointIndex
+                newValue:value
+            });
+        }
+    }
+
+    public function addChartListener(listener:ChartListener){
+        if(Sequences.indexOf(chartListeners, listener)==-1){
+            insert listener into chartListeners;
+        }
+    }
+
+    public function removeChartListener(listener:ChartListener){
+           delete listener from chartListeners;
+    }
+
+    public function getChartListeners(): ChartListener[]{
+        return chartListeners;
+    }
 }
 
 package class CharPointData extends LineChart.Data     {
@@ -189,7 +238,7 @@ package class CharPointData extends LineChart.Data     {
     public  var lowerBound: Double;
     public-init var index: Integer;
 
-    protected var valueUpdated: function():Void;
+    protected var valueUpdated: function(itemIndex:Integer, value:Double):Void;
 
     postinit{
         //println("CharPointData created with index {index}");
@@ -294,7 +343,9 @@ package class CharPointSymbol extends CustomNode {
 
                     onMouseReleased:function( e: MouseEvent) {
                         if(valueChanged){
-                            item.valueUpdated()
+                            valueChanged = false;
+                            println("{new Date().toString()} Value changed in function {name}, calling item.valueUpdated()...");
+                            item.valueUpdated(item.index, item.yValue);                            
                         }
                     }
 
