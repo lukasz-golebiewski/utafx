@@ -82,7 +82,7 @@ public class GUIController {
                     refRank: refRank;
                     functions: functs;
                     alternatives: alterns;
-                    columnNames: ["Name", view.criteriaPanel.getCriteriaNames(), "Value"];
+                    columnNames: ["Name", view.criteriaPanel.getCriteriaNames(), "Utillity"];
                 }
         view.addSolutionUI(solution);
     }
@@ -170,7 +170,7 @@ public class GUIController {
                 prefManager.export(prefs, fc.selectedFile.getAbsolutePath());
                 println("File {fc.selectedFile.getAbsolutePath()} saved.")
             }catch(e:IOException){
-                println("Could not eport preferences: {e.getMessage()}")
+                println("Could not export preferences: {e.getMessage()}")
             }
         }
     }
