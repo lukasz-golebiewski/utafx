@@ -231,8 +231,8 @@ package class CharPointSymbol extends CustomNode {
                 rectangle = Rectangle {
                     width: 10
                     height: bind (item.upperBound-item.lowerBound)/factor*1.0;
-                    arcWidth: 0
-                    arcHeight: 0
+                    arcWidth: 10
+                    arcHeight: 10
                     fill: bind rectFill;
                     translateX: bind -1.0 * rectangle.width / 2;
                     translateY: bind if(item.upperBound>data.y[item.index]){
