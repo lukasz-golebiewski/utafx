@@ -23,6 +23,7 @@ public class ReferenceRankUI extends CustomNode {
 
     public var allItems: uta.Alternative[];
     public var available = allItems;
+    var showLogs = false;
     var treeView: TreeView;
     var itemAdded = false;
     var addButton: Button;
@@ -31,10 +32,10 @@ public class ReferenceRankUI extends CustomNode {
     var rr: RRTreeItem[];
     //var maxRank = 0;
     var currentRank = 0 on replace old {
-                println("Old rank: {old},  new rank: {currentRank} position: {currentPosition}");
+                if (showLogs) println("Old rank: {old},  new rank: {currentRank} position: {currentPosition}");
             }
     var currentPosition = 0 on replace old {
-            println("Old position: {old},  new position: {currentPosition}")
+            if (showLogs) println("Old position: {old},  new position: {currentPosition}")
             }
     //new approach
     public var model: ReferenceRankModel;
@@ -42,7 +43,7 @@ public class ReferenceRankUI extends CustomNode {
     var comboBox2: ChoiceBox;
 
     public function reset() {
-        println("Reseting ReferenceRank...");
+        if (showLogs) println("Reseting ReferenceRank...");
         model.rankings = [];
         model.availNames = model.alternativeNames;
         //available = allItems;
@@ -50,7 +51,7 @@ public class ReferenceRankUI extends CustomNode {
         //maxRank = 0;
         currentRank = 0;
         currentPosition = 0;
-        println("Reseted ReferenceRank");
+        if (showLogs) println("Reseted ReferenceRank");
     }
 
     //Adds new alternative to the currently selected ranking
@@ -117,7 +118,7 @@ public class ReferenceRankUI extends CustomNode {
 
         //MessageBox.showOptionsDialog(dialog, "Add", "Add Alternative", ["OK", "Cancel"], [accept, doNothing]);
         //var result = MessageBox.showInputDialog(dialog, "Dupa", "Pokaz dupe");
-        //println("{result}");
+        //if (showLogs) println("{result}");
         treeView.requestFocus();
     }
 
@@ -145,8 +146,8 @@ public class ReferenceRankUI extends CustomNode {
         if (item != null) {
             model.removeItem(item);
             insertToTreeView2(item.altName, currentRank - 1);           
-            println("moveUp: current rank: {newRank}");
-            println("moveUp: current position: {newPosition}");
+            if (showLogs) println("moveUp: current rank: {newRank}");
+            if (showLogs) println("moveUp: current position: {newPosition}");
             currentRank = newRank;
             currentPosition = newPosition;
         }
@@ -162,8 +163,8 @@ public class ReferenceRankUI extends CustomNode {
         if (item != null) {
             model.removeItem(item);
             insertToTreeView2(item.altName, newRank);
-            println("moveUp: current rank: {newRank}");
-            println("moveUp: current position: {newPosition}");
+            if (showLogs) println("moveUp: current rank: {newRank}");
+            if (showLogs) println("moveUp: current position: {newPosition}");
             currentRank = newRank;
             currentPosition = newPosition;
         }
@@ -234,7 +235,7 @@ public class ReferenceRankUI extends CustomNode {
             var ranking = model.rankings[i - 1];
             for (child in ranking.children) {
                 rankPojo.add(child.data, i);
-                println(rankPojo.toString());
+                if (showLogs) println(rankPojo.toString());
             }
         }
         return rankPojo;
@@ -302,7 +303,7 @@ package class RRTreeItem extends TreeItem {
     protected var position: Integer;// = bind Sequences.indexOf(this, this.parent.children);
     public override var expanded = true;
     public var alternative: Alternative on replace {
-                //println("Rank = {rank}, position = {position}, Alternative changed");
+                //if (showLogs) println("Rank = {rank}, position = {position}, Alternative changed");
                 if (alternative != null) {
                     data = alternative.getName();
                 }

@@ -20,9 +20,10 @@ import java.util.Date;
 public class TableUI extends SwingComponent {
 
     def COLUMN_WIDTH = 80;
+    public var showLogs = false;
     public var tHeight: Integer = 200;
     public var tWidth: Integer = 300 on replace {
-                println("{new Date()}: (tWidth on replace) Table width replaced with: {tWidth}");
+                if(showLogs) println("{new Date()}: (tWidth on replace) Table width replaced with: {tWidth}");
                 pane.setPreferredSize(new Dimension(tWidth, tHeight));
             }
     override var width = bind tWidth;
@@ -38,21 +39,21 @@ public class TableUI extends SwingComponent {
                     nativeModel.addRow(for (cell in [row.cells, TableCell {}]) cell.text);
                 }
                 table.setModel(nativeModel);
-                println("{new Date()}: (columns on replace) New model has been set");
+                if(showLogs) println("{new Date()}: (columns on replace) New model has been set");
                 reregisterModelChangeListeners();
                 tWidth = (sizeof columns) * COLUMN_WIDTH;
             };
     public var rows: TableRow[] on replace oldValue[lo..hi] = newVals {
                 for (index in [hi..lo step -1]) {
                     nativeModel.removeRow(index);
-                    println("{new Date()}: TableUI: removed row {index}")
+                    if(showLogs) println("{new Date()}: TableUI: removed row {index}")
                 }
 
                 for (row in newVals) {
                     nativeModel.addRow(for (cell in row.cells) cell.text);
-                    println("TableUI: added row")
+                    if(showLogs) println("TableUI: added row")
                 }
-                println("{new Date()}: TableUI: rows on replace completed")
+                if(showLogs) println("{new Date()}: TableUI: rows on replace completed")
             };
 
     public function getValueAt(row: Integer, col: Integer): Object {
@@ -64,20 +65,20 @@ public class TableUI extends SwingComponent {
     };
 
     function reregisterModelChangeListeners() {
-        println("Re-registering {sizeof tmListeners} table model listener");
+        if(showLogs) println("Re-registering {sizeof tmListeners} table model listener");
         for (tml in tmListeners) {
-            println("Re-registering table model listener");
+            if(showLogs) println("Re-registering table model listener");
             addTableModelListener(tml);
         }
     }
 
     public override function createJComponent() {
-        println("{new Date()} JComponent creation started");
+        if(showLogs) println("{new Date()} JComponent creation started");
         table = new JTable();
         registerSelectionListener();
         pane = new JScrollPane(table);
         pane.setPreferredSize(new Dimension(tWidth, tHeight));
-        println("{new Date()} JComponent created");
+        if(showLogs) println("{new Date()} JComponent created");
         return pane;
     }
 
@@ -87,10 +88,10 @@ public class TableUI extends SwingComponent {
         ListSelectionListener {
             public override function valueChanged(e: ListSelectionEvent) {
                 selectedRow = table.getSelectedRow();
-                println("{new Date()}: Selected row: {selectedRow}");
+                if(showLogs) println("{new Date()}: Selected row: {selectedRow}");
             }
         });
-        println("{new Date()} Selection listener registered");
+        if(showLogs) println("{new Date()} Selection listener registered");
     }
 
     public function addSelectionListener(listener: ListSelectionListener) {

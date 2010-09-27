@@ -30,6 +30,8 @@ import javafx.util.Sequences;
 public class ChartUI extends CustomNode {
 
     def INITIAL_FACTOR_VALUE = 0;
+    var showLogs = false;
+
     public var name:String;
     public-read var chart: LineChart;
 
@@ -51,13 +53,28 @@ public class ChartUI extends CustomNode {
     var chartX:Number;
     var chartY:Number;
 
-    //var factorOld:Double = INITIAL_FACTOR_VALUE;
     var factor:Double = INITIAL_FACTOR_VALUE;
+
+
+
+//    var calcFactorReady:Boolean = bind chart.visible on replace {
+//        if(calcFactorReady and factor==INITIAL_FACTOR_VALUE){
+//            if(showLogs) println("Chart is now visible, calculating factor...");
+//            factor = getEstimatedScaleFactor(chart.yAxis, chart.insets.top, false);
+//            if(showLogs) println("Calculated factor: {factor}");
+//            if(factor<0){
+//                factor = INITIAL_FACTOR_VALUE;
+//            }
+//        }
+//    };
+
+    
+
     //var distanceToXAxis:Double;
 
     init {
         updateLocalBounds();
-        println("Updated bounds of {name} function");
+        if(showLogs) println("Updated bounds of {name} function");
     
         chart = LineChart {
                     xAxis: NumberAxis {
@@ -83,7 +100,7 @@ public class ChartUI extends CustomNode {
                             var symbol: CharPointSymbol;
                             name: "Characteristic points"
                             data: for (i in [0..<sizeof data.x]) {
-                                //println("Processing index {i}");
+                                //if(showLogs) println("Processing index {i}");
                                 cpd = CharPointData {
                                     xValue: bind data.x[i]
                                     yValue: bind data.y[i]
@@ -124,7 +141,7 @@ public class ChartUI extends CustomNode {
         for(i in [0..<sizeof data.x]){
             updateLocalBound(i);
         }
-        println("Updated local bounds of {name}");
+        if(showLogs) println("Updated local bounds of {name}");
     }
 
 
@@ -147,8 +164,7 @@ public class ChartUI extends CustomNode {
         //printNodeBounds("Chart in create()", chart);
         //chart.chartBackgroundStrokeWidth = 50;
         var c:Container = Container{
-            content:[
-                chart,
+            content: bind chart
 //                Label{
 //                    text: bind "X: {chartX} Y: {chartY}";
 //                    layoutX: 30
@@ -192,8 +208,7 @@ public class ChartUI extends CustomNode {
 //                    layoutX: 30
 //                    layoutY: 450
 //                }
-
-            ]
+            
         }
     }
 
@@ -241,7 +256,7 @@ package class CharPointData extends LineChart.Data     {
     protected var valueUpdated: function(itemIndex:Integer, value:Double):Void;
 
     postinit{
-        //println("CharPointData created with index {index}");
+        //if(showLogs) println("CharPointData created with index {index}");
     }
 
 
@@ -249,13 +264,13 @@ package class CharPointData extends LineChart.Data     {
 }
 
 function printNodeBounds(name:String, node: Node): Void {
-    //println("==== {name} bounds info ====");
-    //println("Node.scene [x,y] = [{node.scene.x}, {node.scene.y}]");
-    //println("Node class: {node.getClass()}");
-    //println("Bounds in local: {node.boundsInLocal}");
-    //println("Layout bounds: {node.layoutBounds}");
-    //println("Bounds in parent: {node.boundsInParent}");
-    //println("Bounds in scene: {node.localToScene(node.boundsInLocal)}\n");
+    //if(showLogs) println("==== {name} bounds info ====");
+    //if(showLogs) println("Node.scene [x,y] = [{node.scene.x}, {node.scene.y}]");
+    //if(showLogs) println("Node class: {node.getClass()}");
+    //if(showLogs) println("Bounds in local: {node.boundsInLocal}");
+    //if(showLogs) println("Layout bounds: {node.layoutBounds}");
+    //if(showLogs) println("Bounds in parent: {node.boundsInParent}");
+    //if(showLogs) println("Bounds in scene: {node.localToScene(node.boundsInLocal)}\n");
 }
 
 package class CharPointSymbol extends CustomNode {
@@ -263,6 +278,7 @@ package class CharPointSymbol extends CustomNode {
     var rectangle:Rectangle;
     var circle: Node;    
     public-init var item: CharPointData;
+    var showLogs = true;
 
     var x1: Number;
     var y1: Number;
@@ -274,6 +290,8 @@ package class CharPointSymbol extends CustomNode {
     var rectFill:Paint = Color.GREENYELLOW;
 
     var valueChanged:Boolean;
+    var valueBefore:Double;
+    var valueAfter:Double;
 
     override function create():Node{
 
@@ -299,52 +317,55 @@ package class CharPointSymbol extends CustomNode {
                             x2 = e.x;
                             y2 = e.y;
                             delta = y2 - y1;
-//                            //println("Circle dragged: {e}");
-//                            //println("Current position: [{x2},{y2}]");
-                            ////println("Item index: {item.index}");
+                            if(showLogs) println("start: [{x1},{y1}]  end: [{x2},{y2}]  delta: {delta}");
+
+                            if(Math.abs(delta)>rectangle.height){
+                                return;
+                            }
+
+//                            //if(showLogs) println("Circle dragged: {e}");
+                            
+                            ////if(showLogs) println("Item index: {item.index}");
                             //                            
                             var circleMovedBounds = circle.boundsInParent;
                             var circleMovedX = circleMovedBounds.minX + circleMovedBounds.width/2;
-                            var circleMovedY = circleMovedBounds.minY + circleMovedBounds.height/2 + delta;
-
-                            var valueBefore = data.y[item.index];
-                            var valueAfter = valueBefore;
+                            var circleMovedY = circleMovedBounds.minY + circleMovedBounds.height/2 + delta;                           
                             
                             if(rectangle.boundsInParent.contains(circleMovedX, circleMovedY)){
-                                ////println("Rectangle contains: [{x2}, {y2}]");
+                                ////if(showLogs) println("Rectangle contains: [{x2}, {y2}]");
                                 delta = y2 - y1;
-                                ////println("Delta: {delta}");
+                                ////if(showLogs) println("Delta: {delta}");
                                 if (delta > 0) {
-                                    ////println("We dragged circle down, lowering yValue");
-                                    ////println("Value correction: {factor*delta}");
+                                    ////if(showLogs) println("We dragged circle down, lowering yValue");
+                                    ////if(showLogs) println("Value correction: {factor*delta}");
                                     //item.yValue -= factor * delta;
                                     data.y[item.index]-= factor * delta;
                                 } else {
-                                    ////println("We dragged circle up, highering yValue");
-                                    ////println("Value correction: {factor*delta}");
+                                    ////if(showLogs) println("We dragged circle up, highering yValue");
+                                    ////if(showLogs) println("Value correction: {factor*delta}");
                                     data.y[item.index]-= factor * delta;
                                     //item.yValue -= factor * delta;
                                 }                                
                             } else {
-
-                                ////println("Dragged out of costraints");
+                                if(showLogs) println("Dragged out of costraints");
                                 if(delta>0){
+                                    if(showLogs) println("Setting current value to lowerbound");
                                     data.y[item.index]= item.lowerBound;
                                 } else {
+                                    if(showLogs) println("Setting current value to upperBound");
                                     data.y[item.index]= item.upperBound;
                                 }
 
-                                ////println("Start[{x1}, {y1}]\nEnd  [{x2}, {y2}]");
-                            }
-                            valueAfter = data.y[item.index];
-                            valueChanged = (valueBefore!=valueAfter);
-
+                                ////if(showLogs) println("Start[{x1}, {y1}]\nEnd  [{x2}, {y2}]");
+                            }                            
                     }
 
                     onMouseReleased:function( e: MouseEvent) {
+                        valueAfter = data.y[item.index];
+                        valueChanged = (valueBefore!=valueAfter);
                         if(valueChanged){
                             valueChanged = false;
-                            println("{new Date().toString()} Value changed in function {name}, calling item.valueUpdated()...");
+                            if(showLogs) println("{new Date().toString()} Value changed in function {name}, calling item.valueUpdated()...");
                             item.valueUpdated(item.index, item.yValue);                            
                         }
                     }
@@ -353,21 +374,22 @@ package class CharPointSymbol extends CustomNode {
                     }
 
                     onMouseExited:function( e: MouseEvent) {
-                        ////println("Circle exited {e}");
+                        ////if(showLogs) println("Circle exited {e}");
                     }
 
                     onMousePressed:function( e: MouseEvent) {
-                        ////println("Circle {item.index} pressed {e}");
+                        ////if(showLogs) println("Circle {item.index} pressed {e}");
                         //printNodeBounds("Rectangle", rectangle);
                         //printNodeBounds("Circle", circle);
+                        valueBefore = data.y[item.index];
                         x1 = e.x;
                         y1 = e.y;
                         //if (factorOld == INITIAL_FACTOR_VALUE) {
                             //distanceToXAxis = chart.xAxis.boundsInParent.minY - (circle.parent.boundsInParent.minY + circle.parent.boundsInParent.height / 2);
                             //factorOld = Math.abs(item.yValue/(1.0 * distanceToXAxis));
-                            ////println("      Old factor: {factorOld}");
+                            ////if(showLogs) println("      Old factor: {factorOld}");
                             //factor = getEstimatedScaleFactor(chart.yAxis, false);
-                            ////println("Distance to X axis: {distanceToXAxis}");
+                            ////if(showLogs) println("Distance to X axis: {distanceToXAxis}");
                             //printNodeBounds("Symbol (circle+rectangle)", this);
                             //printNodeBounds("Y Axis", chart.yAxis);
                         //}
@@ -398,7 +420,7 @@ function getMax(array: Number[]): Number {
 
 function printEstimatedScaleFactors(c:ChartUI){
 
-    //println("======= Estimated factors =======");
+    //if(showLogs) println("======= Estimated factors =======");
     getEstimatedScaleFactor(c.chart.xAxis, c.chart.insets.left, true);
     getEstimatedScaleFactor(c.chart.yAxis, c.chart.insets.top, false);
 }
@@ -415,15 +437,15 @@ function getEstimatedScaleFactor(va:ValueAxis, margin:Number, xAxis:Boolean): Nu
     var valueDiff = maxValue - minValue;
     var f:Number;
     if(xAxis){
-        //println("X Axis width: {width-margin}");
-        //println("Value diff: {valueDiff}");
+        //if(showLogs) println("X Axis width: {width-margin}");
+        //if(showLogs) println("Value diff: {valueDiff}");
         f = valueDiff/(width-margin)*1.0;
-        //println("Estimated factor: {f}");
+        //if(showLogs) println("Estimated factor: {f}");
     } else {
-        //println("Y Axis height: {height-margin}");
-        //println("Value diff: {valueDiff}");
+        //if(showLogs) println("Y Axis height: {height-margin}");
+        //if(showLogs) println("Value diff: {valueDiff}");
         f = valueDiff/(height-margin)*1.0;
-        //println("Estimated factor: {f}");
+        //if(showLogs) println("Estimated factor: {f}");
     }
     return f;
 }
@@ -431,11 +453,11 @@ function getEstimatedScaleFactor(va:ValueAxis, margin:Number, xAxis:Boolean): Nu
 
 
 function printChartInfo(s:String, chart:LineChart){
-    //println("Chart.width: {chart.width}, Chart.height: {chart.height}");
-    //println("Chart.chartBackgroundStrokeWidth: {chart.chartBackgroundStrokeWidth}");
-    //println("Chart.horizontalGridLineStrokeWidth: {chart.horizontalGridLineStrokeWidth}");
-    //println("Chart.insets: {chart.insets}");
-    //println("Chart.layoutInfo: {chart.layoutInfo}");
+    //if(showLogs) println("Chart.width: {chart.width}, Chart.height: {chart.height}");
+    //if(showLogs) println("Chart.chartBackgroundStrokeWidth: {chart.chartBackgroundStrokeWidth}");
+    //if(showLogs) println("Chart.horizontalGridLineStrokeWidth: {chart.horizontalGridLineStrokeWidth}");
+    //if(showLogs) println("Chart.insets: {chart.insets}");
+    //if(showLogs) println("Chart.layoutInfo: {chart.layoutInfo}");
     printNodeBounds("Chart", chart);
     printNodeBounds("Chart.xAxis", chart.xAxis);
     printNodeBounds("Chart.yAxis", chart.yAxis);

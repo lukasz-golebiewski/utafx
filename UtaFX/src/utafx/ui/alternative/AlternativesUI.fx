@@ -41,6 +41,8 @@ def outerBorderFill = LinearGradient {
 public class AlternativesUI extends CustomNode {
 
     public var model: AlternativesModel;
+
+    var showLogs = false;
     
     var table = TableUI {
            columns: bind for (cname in model.columnNames) {
@@ -59,7 +61,7 @@ public class AlternativesUI extends CustomNode {
                 var type = e.getType();
                 var sType = if (type == e.INSERT) "INSERT" else if (type == e.DELETE) "DELETE" else if (type == e.UPDATE) "UPDATE" else "TYPE-{type}";
 
-                println("{new Date()}: Table changed: firstrow={row} lastRow={lastRow} column={col} type={sType}");
+                if (showLogs) println("{new Date()}: Table changed: firstrow={row} lastRow={lastRow} column={col} type={sType}");
 
                 if (type == e.INSERT) {
                     for (i in [row..lastRow]) {
@@ -80,16 +82,16 @@ public class AlternativesUI extends CustomNode {
                         }
                     }
                 }
-                println("AlternativeNames: {model.alternativeNames}");
+                if (showLogs) println("AlternativeNames: {model.alternativeNames}");
 
                 if (row > -1 and col > -1) {
                     var value = tm.getValueAt(row, col);
-                    println("{new Date()}: Table changed at [{row}, {col}] = {value}");
+                    if (showLogs) println("{new Date()}: Table changed at [{row}, {col}] = {value}");
 
                 }
             }
         });
-        println("{new Date()} TableModel listener registered");
+        if (showLogs) println("{new Date()} TableModel listener registered");
     }
 
     public function add() {
@@ -120,7 +122,7 @@ public class AlternativesUI extends CustomNode {
     }
 
     public function getPOJO(): uta.Alternative[] {
-        //println("Executed alternativesUI.getPOJO()");
+        //if (showLogs) println("Executed alternativesUI.getPOJO()");
         var alternativesPOJO: Alternative[]=[];
 
         for (row in model.rows) {
@@ -134,7 +136,7 @@ public class AlternativesUI extends CustomNode {
             a.setName(name);
             a.setValues(values);
             //a.setCriteria(criteriaPOJO);
-            println("{a.getName()} {Arrays.toString(a.getValues())}");
+            if (showLogs) println("{a.getName()} {Arrays.toString(a.getValues())}");
             insert a into alternativesPOJO;
         }
         return alternativesPOJO;

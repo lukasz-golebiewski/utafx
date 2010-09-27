@@ -41,6 +41,7 @@ def outerBorderFill = LinearGradient {
 public class CriteriaUI extends CustomNode {
 
     var typesCombo = new JComboBox();
+    var showLogs = false;
     public var model = CriteriaModel {
                 columnNames: ["Name", "Type", "Segments"];
                 rows: []
@@ -63,7 +64,7 @@ public class CriteriaUI extends CustomNode {
                 var type = e.getType();
                 var sType = if (type == e.INSERT) "INSERT" else if (type == e.DELETE) "DELETE" else if (type == e.UPDATE) "UPDATE" else "TYPE-{type}";
 
-                println("{new Date()}: Table changed: firstrow={row} lastRow={lastRow} column={col} type={sType}");
+                if (showLogs) println("{new Date()}: Table changed: firstrow={row} lastRow={lastRow} column={col} type={sType}");
 
                 if (type == e.INSERT) {
                     for (i in [row..lastRow]) {
@@ -84,16 +85,16 @@ public class CriteriaUI extends CustomNode {
                         }
                     }
                 }
-                //println("CriteriaNames: {criteriaNames}");
+                //if (showLogs) println("CriteriaNames: {criteriaNames}");
 
                 if (row > -1 and col > -1) {
                     var value = tm.getValueAt(row, col);
-                    println("{new Date()}: Table changed at [{row}, {col}] = {value}");
+                    if (showLogs) println("{new Date()}: Table changed at [{row}, {col}] = {value}");
 
                 }
             }
         });
-        println("{new Date()} TableModel listener registered");
+        if (showLogs) println("{new Date()} TableModel listener registered");
     }
 
     /**
@@ -127,7 +128,7 @@ public class CriteriaUI extends CustomNode {
     }
 
     public function getPOJO(): uta.Criterion[] {
-        println("Executed getPOJO");
+        if (showLogs) println("Executed getPOJO");
         var criteriaPOJO: uta.Criterion[];
 
         for (row in model.rows) {
@@ -144,7 +145,7 @@ public class CriteriaUI extends CustomNode {
             var seg = Integer.parseInt("{table.getValueAt(i, 2)}");
             var c: uta.Criterion = new uta.Criterion(name, type == 1, seg);
             insert c into criteriaPOJO;
-            println("{c.getName()} {c.isGain()} {c.getNoOfSegments()}");
+            if (showLogs) println("{c.getName()} {c.isGain()} {c.getNoOfSegments()}");
         }
         return criteriaPOJO;
     }

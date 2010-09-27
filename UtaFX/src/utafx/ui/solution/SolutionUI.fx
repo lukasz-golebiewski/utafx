@@ -14,6 +14,7 @@ import uta.Ranking;
 import uta.ConstraintsManager;
 import utafx.ui.solution.ChartEvent;
 import utafx.ui.solution.ChartUI.ChartUIData;
+import utafx.control.GUIController;
 
 /**
  * @author Pawcik
@@ -23,10 +24,13 @@ public class SolutionUI extends CustomNode {
     public var functions: LinearFunction[];
     public var alternatives: Alternative[];
     public var columnNames: String[];
-    public var refRank: Ranking;
     public var constraintManager: ConstraintsManager;
     public var freezedKendall:Boolean = false;
     public var charts: ChartUI[];
+    public var refRank: Ranking;
+    public var guiController: GUIController;
+
+    var showLogs = false;
 
     public-read var finalRank: FinalRankUI;
 
@@ -45,10 +49,17 @@ public class SolutionUI extends CustomNode {
                         chartData.addChartListener(ChartListener{
                            override public function dataChanged (e : ChartEvent) : Void {
                                //update bounds of all charts
-                               println("Updating bounds of {sizeof charts}");
+                               if (showLogs) println("Updating bounds of {sizeof charts}");
                                for(chart in charts){
                                     chart.updateLocalBounds();
                                }
+                           }
+                        });
+                        chartData.addChartListener(ChartListener{
+                           override public function dataChanged (e : ChartEvent) : Void {
+                               //update reference rank od final rank
+                               if (showLogs) println("Updating bounds of {sizeof charts} charts");
+                               finalRank.refRank = guiController.getReferenceRankData();
                            }
                         });
                         //insert chartData into charts;
@@ -69,9 +80,9 @@ public class SolutionUI extends CustomNode {
                 finalRank = FinalRankUI {
                     alterns: bind alternatives;
                     functions: bind functions;
-                    refRank: bind refRank;
+                    refRank: refRank;
                     model: AlternativesModel {
-                        columnNames: bind columnNames;
+                        columnNames: bind ["Name", columnNames, "Utillity"]
                     }
                 }
             ]

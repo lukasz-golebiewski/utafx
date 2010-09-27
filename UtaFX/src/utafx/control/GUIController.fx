@@ -38,6 +38,7 @@ public class GUIController {
     public var view: MainView;
     var prefManager = PreferenceManager{};
     var kendallFreezed = false;
+    var showLogs = false;
     
 
     public function createCriteria(): CriteriaUI {
@@ -62,13 +63,23 @@ public class GUIController {
         }
     }
 
+    public function getReferenceRankData(): Ranking{
+        var refRank: Ranking = view.referenceRankPanel.getPOJO();
+        var criterias: Criterion[] = view.criteriaPanel.getPOJO();
+        var alterns: Alternative[] = view.alternativesPanel.getPOJO();
+        var linker = ReferenceLinker{};
+        alterns = linker.interconnectReferences(criterias, alterns);
+        refRank = linker.interconnectReferences(alterns, refRank);
+        return refRank;
+    }
+
+
     public function solve(): Void {
         
         var refRank: Ranking = view.referenceRankPanel.getPOJO();
         var criterias: Criterion[] = view.criteriaPanel.getPOJO();
         var alterns: Alternative[] = view.alternativesPanel.getPOJO();
         var linker = ReferenceLinker{};
-        
         alterns = linker.interconnectReferences(criterias, alterns);
         refRank = linker.interconnectReferences(alterns, refRank);
         
@@ -79,7 +90,7 @@ public class GUIController {
         var functs: LinearFunction[] = solver.solve(refRank, criterias, alterns);
         //functs = solver.solve(rank, criterias, alterns);
         for (f in functs) {
-            println("CharPoints: {Arrays.toString(f.getCharacteristicPoints())} \nand values: {Arrays.toString(f.getValues())}");
+            if (showLogs) println("CharPoints: {Arrays.toString(f.getCharacteristicPoints())} \nand values: {Arrays.toString(f.getValues())}");
         }
 
         var manager: ConstraintsManager = new ConstraintsManagerFactory(kendallFreezed).createConstraintsManager(functs, null, null);
@@ -88,8 +99,9 @@ public class GUIController {
                     refRank: refRank;
                     functions: functs;
                     alternatives: alterns;
-                    columnNames: ["Name", view.criteriaPanel.getCriteriaNames(), "Utillity"];
-                    constraintManager: bind manager;
+                    columnNames: view.criteriaPanel.getCriteriaNames()
+                    constraintManager: manager;
+                    guiController: bind this;
                 }
         view.addSolutionUI(solution);
     }
@@ -175,9 +187,9 @@ public class GUIController {
             prefs.setRefRank(refRank);
             try{
                 prefManager.export(prefs, fc.selectedFile.getAbsolutePath());
-                println("File {fc.selectedFile.getAbsolutePath()} saved.")
+                if (showLogs) println("File {fc.selectedFile.getAbsolutePath()} saved.")
             }catch(e:IOException){
-                println("Could not export preferences: {e.getMessage()}")
+                if (showLogs) println("Could not export preferences: {e.getMessage()}")
             }
         }
     }
@@ -186,7 +198,8 @@ public class GUIController {
         var options = ["OK", "Cancel"];
         var userOption = MessageBox.showConfirmDialog(view.scene, "This will clear criterias and all referenced data.\n Continue?", "Clear Criteria", options);
         if(userOption == options[0]){
-            view.criteriaPanel.model.clear();
+            clearDataControls();
+            //view.criteriaPanel.model.clear();
         }
     }
 
