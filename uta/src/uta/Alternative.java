@@ -29,7 +29,19 @@ public class Alternative implements Comparable<Alternative> {
 
 	@Override
 	public int compareTo(Alternative o) {
-		return (new Integer(this.hashCode()).compareTo(o.hashCode()));
+		return (Integer.valueOf(this.hashCode()).compareTo(o.hashCode()));
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		return super.equals(o);
 	}
 
 	public String getName() {
