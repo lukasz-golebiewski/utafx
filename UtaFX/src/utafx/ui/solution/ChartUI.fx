@@ -73,7 +73,7 @@ public class ChartUI extends CustomNode {
     //var distanceToXAxis:Double;
 
     init {
-        updateLocalBounds();
+        update();
         if(showLogs) println("Updated bounds of {name} function");
     
         chart = LineChart {
@@ -137,11 +137,18 @@ public class ChartUI extends CustomNode {
                 }
     }
 
-    public function updateLocalBounds(){
+    public function update(){
         for(i in [0..<sizeof data.x]){
+            updatePoint(i);
             updateLocalBound(i);
         }
         if(showLogs) println("Updated local bounds of {name}");
+    }
+
+
+    public function updatePoint(index:Integer) {
+        var p:Point = fun.getPoints().get(index);
+        data.y[index] = p.getY();
     }
 
 

@@ -51,7 +51,7 @@ public class SolutionUI extends CustomNode {
                                //update bounds of all charts
                                if (showLogs) println("Updating bounds of {sizeof charts}");
                                for(chart in charts){
-                                    chart.updateLocalBounds();
+                                    chart.update();                                    
                                }
                            }
                         });
