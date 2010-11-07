@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry exported="true" kind="con" path="com.exadel.ide.javafx.launching.JFXRE_CONTAINER/javafx-sdk"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/UtaFX"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/fest-javafx-desktop"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/fest-javafx-scripts"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/fest-javafxc-maven-plugin"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/fest-ui-testing"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/fest-util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/uta"/>
-	<classpathentry kind="con" path="com.exadel.ide.javafx.launching.JFXRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/fest"/>
 	<classpathentry kind="lib" path="lib/JFXtras-Common-0.7rc2.1.jar"/>
 	<classpathentry kind="lib" path="lib/JFXtras-Controls-0.7rc2.jar"/>
 	<classpathentry kind="lib" path="lib/JFXtras-Test-0.7rc1.jar"/>
+	<classpathentry kind="lib" path="lib/JemmyAWTInput.jar"/>
+	<classpathentry kind="lib" path="lib/JemmyBrowser.jar"/>
+	<classpathentry kind="lib" path="lib/JemmyCore.jar"/>
+	<classpathentry kind="lib" path="lib/JemmyFX.jar"/>
+	<classpathentry kind="lib" path="lib/JemmyFXBrowser.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

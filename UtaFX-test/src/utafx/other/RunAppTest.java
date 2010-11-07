@@ -1,4 +1,4 @@
-package utafx;
+package utafx.other;
 
 import java.io.InputStreamReader;
 import java.util.Date;
