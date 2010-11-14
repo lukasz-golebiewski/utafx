@@ -35,6 +35,8 @@ def outerBorderFill = LinearGradient {
             ]
         };
 
+def INFO_LABEL_HEIGHT = 20;
+
 /**
  * @author Pawcik
  */
@@ -42,6 +44,7 @@ public class CriteriaUI extends CustomNode {
 
     var typesCombo = new JComboBox();
     var showLogs = false;
+    
     public var model = CriteriaModel {
                 columnNames: ["Name", "Type", "Segments"];
                 rows: []
@@ -52,6 +55,7 @@ public class CriteriaUI extends CustomNode {
                     TableColumn { text: cname };
                 }
                 rows: bind model.rows
+                //width: bind layoutBounds.width;
             } 
    
     postinit {
@@ -162,7 +166,7 @@ public class CriteriaUI extends CustomNode {
         table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(typesCombo));
         VBox {
             spacing: 0
-            padding: Insets { left: 30 }
+            //padding: Insets { left: 100 right:30}
             content: [
                 Container {
                     var rect: Rectangle;
@@ -171,7 +175,7 @@ public class CriteriaUI extends CustomNode {
                         rect = Rectangle {
                                     fill: outerBorderFill
                                     width: bind table.width
-                                    height: 20
+                                    height: bind INFO_LABEL_HEIGHT;
                                 }
 
                         label = Label {
@@ -210,18 +214,18 @@ public class CriteriaUI extends CustomNode {
                                         text: "Remove"
                                         action: remove
                                     }
-                            def pojoCheck = Button {
-                                        text: "Pojo"
-                                        action: function() {
-                                            getPOJO()
-                                        }
-                                    }
+//                            def pojoCheck = Button {
+//                                        text: "Pojo"
+//                                        action: function() {
+//                                            getPOJO()
+//                                        }
+//                                    }
                             content: [
                                 addButton,
                                 removeButton,
-                                pojoCheck
+                                //pojoCheck
                             ]
-                            layoutX: bind (table.width - addButton.boundsInLocal.width - removeButton.boundsInLocal.width - pojoCheck.boundsInLocal.width - 10) / 2
+                            layoutX: bind (table.width - addButton.boundsInLocal.width - removeButton.boundsInLocal.width)/2;// - pojoCheck.boundsInLocal.width - 10) / 2
                         }
                     ]
                 }
