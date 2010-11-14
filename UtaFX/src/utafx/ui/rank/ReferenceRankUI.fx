@@ -15,6 +15,24 @@ import utafx.ui.window.Window;
 import javafx.scene.layout.Container;
 import uta.Alternative;
 import uta.Ranking;
+import utafx.control.GUIController;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.control.Label;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
+import javafx.geometry.VPos;
+import javafx.geometry.Insets;
+
+def outerBorderFill = LinearGradient {
+            startX: 0.0 startY: 0.0 endX: 0.0 endY: 1.0
+            stops: [
+                Stop { offset: 0.0 color: Color.web("#F4F4F4") },
+                Stop { offset: 0.5 color: Color.web("#BCBCBC") }
+            ]
+        };
+def INFO_LABEL_HEIGHT = 20;
 
 /**
  * @author Pawcik
@@ -27,6 +45,9 @@ public class ReferenceRankUI extends CustomNode {
     var treeView: TreeView;
     var itemAdded = false;
     var addButton: Button;
+    var removeButton: Button;
+    var moveUpBtn: Button;
+    var moveDownBtn: Button;
     var acceptButton: Button;
     var cancelButton: Button;
     var rr: RRTreeItem[];
@@ -35,12 +56,13 @@ public class ReferenceRankUI extends CustomNode {
                 if (showLogs) println("Old rank: {old},  new rank: {currentRank} position: {currentPosition}");
             }
     var currentPosition = 0 on replace old {
-            if (showLogs) println("Old position: {old},  new position: {currentPosition}")
+                if (showLogs) println("Old position: {old},  new position: {currentPosition}")
             }
     //new approach
     public var model: ReferenceRankModel;
     var availNames = model.alternativeNames;
-    var comboBox2: ChoiceBox;
+    public var comboBox2: ChoiceBox;
+    public var guiController: GUIController;
 
     public function reset() {
         if (showLogs) println("Reseting ReferenceRank...");
@@ -96,6 +118,7 @@ public class ReferenceRankUI extends CustomNode {
                                                 var index = comboBox2.selectedIndex;
                                                 var selectedName = model.availNames[index];
                                                 insertToTreeView2(selectedName, currentRank);
+                                                guiController.updateSolution();
                                                 window.hide();
                                             }
                                         },
@@ -133,7 +156,8 @@ public class ReferenceRankUI extends CustomNode {
         //    //        }
         //model.removeFromTreeModel(s);
         model.removeItem(currentRank, currentPosition);
-        //last ranking was removed        
+        guiController.updateSolution();
+    //last ranking was removed
     }
 
     function moveUp() {
@@ -141,15 +165,16 @@ public class ReferenceRankUI extends CustomNode {
             return;
         }
         var item = model.rankings[currentRank - 1].children[currentPosition] as RRTreeItem;
-        var newRank = currentRank-1;
-        var newPosition = sizeof model.rankings[newRank-1].children;
+        var newRank = currentRank - 1;
+        var newPosition = sizeof model.rankings[newRank - 1].children;
         if (item != null) {
             model.removeItem(item);
-            insertToTreeView2(item.altName, currentRank - 1);           
+            insertToTreeView2(item.altName, currentRank - 1);
             if (showLogs) println("moveUp: current rank: {newRank}");
             if (showLogs) println("moveUp: current position: {newPosition}");
             currentRank = newRank;
             currentPosition = newPosition;
+            guiController.updateSolution();
         }
     }
 
@@ -157,8 +182,8 @@ public class ReferenceRankUI extends CustomNode {
         if (currentRank >= sizeof model.rankings) {
             return;
         }
-        var newRank = currentRank+1;
-        var newPosition = sizeof model.rankings[newRank-1].children;
+        var newRank = currentRank + 1;
+        var newPosition = sizeof model.rankings[newRank - 1].children;
         var item = model.rankings[currentRank - 1].children[currentPosition] as RRTreeItem;
         if (item != null) {
             model.removeItem(item);
@@ -167,6 +192,7 @@ public class ReferenceRankUI extends CustomNode {
             if (showLogs) println("moveUp: current position: {newPosition}");
             currentRank = newRank;
             currentPosition = newPosition;
+            guiController.updateSolution();
         }
     }
 
@@ -194,7 +220,6 @@ public class ReferenceRankUI extends CustomNode {
     public function insertToTreeView2(name: String, r: Integer): Void {
         insertToTreeView2(name, r, false);
     }
-
 
     public function insertToTreeView2(name: String, r: Integer, head: Boolean): Void {
         var allRanks = sizeof model.rankings;
@@ -242,24 +267,32 @@ public class ReferenceRankUI extends CustomNode {
     }
 
     override function create(): Node {
+        var rect: Rectangle;
         VBox {
-            spacing: 10
+            spacing: 0
             content: [
+                Container {
+                    var label: Label;
+                    content: [
+                        rect = Rectangle {
+                                    fill: outerBorderFill
+                                    width: bind treeView.width - treeView.boundsInLocal.minX;
+                                    layoutX: bind treeView.boundsInLocal.minX;
+                                    height: bind INFO_LABEL_HEIGHT;
+                                }
+
+                        label = Label {
+                                    textAlignment: TextAlignment.CENTER
+                                    text: "Define your criterias"
+                                    vpos: VPos.CENTER
+                                    hpos: HPos.CENTER
+                                    layoutX: bind (rect.boundsInLocal.width - label.boundsInLocal.width) / 2
+                                    layoutY: 5
+                                }
+                    ]
+                }
                 treeView = TreeView {
                             showRoot: true
-                            height: 200
-                            //                            override var cellFactory = function() : TreeCell {
-                            //                                def cell:TreeCell = TreeCell {
-                            //                                    node: Label {
-                            //                                        text: bind if (cell.item instanceof Alternative){
-                            //                                            (cell.item as Alternative).getName()
-                            //                                            } else {
-                            //                                                cell.item.toString();
-                            //                                            }
-                            //                                        visible: bind (cell.item != null)
-                            //                                    }
-                            //                                }
-                            //                            }
                             root: RRTreeItem {
                                 rank: 0;
                                 expanded: true;
@@ -269,30 +302,40 @@ public class ReferenceRankUI extends CustomNode {
                             pannable: true
                             layoutInfo: LayoutInfo { width: 400, hgrow: Priority.ALWAYS }
                         },
-                HBox {
-                    hpos: HPos.CENTER
-                    spacing: 20
+                Container {
                     content: [
-                        addButton = Button {
-                                    text: "Add"
-                                    action: add
-                                },
-                        Button {
-                            text: "Remove"
-                            action: remove
+                        Rectangle {
+                            width: bind rect.width
+                            height: 30
+                            fill: outerBorderFill
                         },
-                        Button {
-                            text: "Move Up"
-                            action: moveUp
-                        },
-                        Button {
-                            text: "Move Down"
-                            action: moveDown
-                        },
+                        HBox {
+                            hpos: HPos.CENTER
+                            spacing: 20
+                            padding: Insets { top: 5, bottom: 5, left: 0, right: 0 }
+                            //layoutY: 10
+                            content: [
+                                addButton = Button {
+                                            text: "Add"
+                                            action: add
+                                        },
+                                removeButton = Button {
+                                            text: "Remove"
+                                            action: remove
+                                        },
+                                moveUpBtn = Button {
+                                            text: "Move Up"
+                                            action: moveUp
+                                        },
+                                moveDownBtn = Button {
+                                            text: "Move Down"
+                                            action: moveDown
+                                        },
+                            ]
+                            layoutX: bind (rect.width - addButton.boundsInLocal.width - removeButton.boundsInLocal.width - moveUpBtn.boundsInLocal.width - moveDownBtn.boundsInLocal.width -3*20) / 2;
+                        }
                     ]
-                }
-            ]
-        }
+                }] }
     }
 
 }

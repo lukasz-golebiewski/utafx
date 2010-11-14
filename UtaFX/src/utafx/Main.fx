@@ -13,6 +13,7 @@ import java.lang.String;
 import utafx.Constants;
 import javafx.scene.layout.LayoutInfo;
 import utafx.ui.MainView;
+import org.apache.log4j.Logger;
 
 /**
  * @author Pawcik
@@ -25,13 +26,16 @@ var lazyLoad:Container;
 
 var mainView:MainView;
 
+def LOG: Logger = Logger.getLogger("utafx.Main");
 
 public function run() {
+    LOG.info("==============================================");
+    LOG.debug("Starting UtaFX");
     Stage {
         title: "UtaFX - UTA methods in JavaFX"
         scene: scene = Scene {
-                    width: 800
-                    height: 600
+                    width: 1024
+                    height: 768
                     stylesheets: [Constants.STYLESHEET_APP, Constants.STYLESHEET_PATH[0]]
                     content: [
                 Rectangle{
@@ -55,6 +59,7 @@ public function run() {
             ]
         }
     }
+    LOG.debug("Creating main view in background thread");
     FX.deferAction(function(){
        mainView = MainView{
             layoutX: APP_PADDING, layoutY: APP_PADDING
@@ -62,7 +67,9 @@ public function run() {
                         width: bind scene.width - APP_PADDING*2;
                         height: bind scene.height - APP_PADDING*2;
                     }
-       }
-       insert mainView into scene.content
+       }       
+       insert mainView into scene.content;
+       LOG.debug("Main view created and added to container");
     });
+    LOG.debug("UtaFX started and running");
 }

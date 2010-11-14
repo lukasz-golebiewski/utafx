@@ -146,8 +146,7 @@ public class AlternativesUI extends CustomNode {
         //table.table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(typesCombo));
         //table.table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(segmentsSlider));
         //table.table.setPreferredSize(new Dimension(200, 200));
-        VBox {
-            hpos: HPos.CENTER
+        VBox {            
             spacing: 0
             content: [
                 Container {
@@ -193,28 +192,31 @@ public class AlternativesUI extends CustomNode {
                         }
 
                         HBox {
+                            var addButton:Button;;
+                            var removeButton:Button;
                             padding: Insets { top: 5, bottom: 5, left: 0, right: 0 }
                             spacing: 10
-                            layoutX: 100
+                            //layoutX: 100
                             hpos: HPos.CENTER
                             content: [
-                                Button {
+                                addButton = Button {
                                     text: "Add"
                                     action: add
-                                    layoutX: 200
+                                    //layoutX: 200
                                 }
-                                Button {
+                                removeButton = Button {
                                     text: "Remove"
                                     action: remove
-                                    layoutX: 350
+                                    //layoutX: 350
                                 }
-                                Button {
-                                    text: "POJO"
-                                    action: function() {
-                                        getPOJO()
-                                    }
-                                }
+//                                Button {
+//                                    text: "POJO"
+//                                    action: function() {
+//                                        getPOJO()
+//                                    }
+//                                }
                             ]
+                            layoutX: bind (table.width - addButton.boundsInLocal.width - removeButton.boundsInLocal.width)/2;
                         }
                     ]
                 }

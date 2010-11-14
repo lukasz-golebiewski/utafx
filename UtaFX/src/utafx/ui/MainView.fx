@@ -27,7 +27,7 @@ public class MainView extends VBox {
     
     var controller: GUIController;
     //container for criterias, alternatives, etc.
-    public var dynamicContent: Container;
+    public var userDataContent: Container;
     public var criteriaPanel: CriteriaUI;
     public var alternativesPanel: AlternativesUI;
     public var referenceRankPanel: ReferenceRankUI;
@@ -60,10 +60,10 @@ public class MainView extends VBox {
                         fitToWidth: true
                         pannable: false
                         //cursor: Cursor.WAIT
-                        node: bind dynamicContent
+                        node: bind userDataContent
                     },
                 ];
-        dynamicContent = VBox {
+        userDataContent = VBox {
                     spacing: DYNAMIC_CONTENT_VSPACING;
         }
     }
@@ -78,7 +78,7 @@ public class MainView extends VBox {
             //padding: Insets {left:10, top:10}
             //hpos: HPos.CENTER
             content: bind node
-        } into dynamicContent.content;
+        } into userDataContent.content;
         //criteriaAdded = true;
     }
 
@@ -86,7 +86,7 @@ public class MainView extends VBox {
         alternativesPanel = node;
         insert HBox {
             content: bind node
-        } into dynamicContent.content;
+        } into userDataContent.content;
     }
 
     public function addReferenceRank(node: ReferenceRankUI) {
@@ -94,7 +94,7 @@ public class MainView extends VBox {
         insert HBox {
             //hpos: HPos.CENTER
             content: bind node
-        } into dynamicContent.content;
+        } into userDataContent.content;
     }
 
     public function addSolutionUI(node: SolutionUI) {
@@ -102,7 +102,7 @@ public class MainView extends VBox {
         //insert HBox {
             //hpos: HPos.CENTER
             //content: bind node}
-        into dynamicContent.content;
+        into userDataContent.content;
     }
 
 }
