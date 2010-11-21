@@ -57,12 +57,17 @@ public class FinalRankUI extends CustomNode {
     var table: TableUI;
     var kendallRate: Tile;
     var kendallCheckBox: CheckBox;
-    var preserveKendallRate = bind kendallCheckBox.selected;
     var valueBox: HBox;
-    var sortedRank: Ranking;
+    public var sortedRank: Ranking;
     var kendallValue: Double;
     var solver: UtaStarSolver = new UtaStarSolver();
     var rankUtils = new RankingUtils();
+    public var solutionUI: SolutionUI;
+
+    var preserveKendallRate = bind kendallCheckBox.selected on replace {
+           solutionUI.freezedKendall = kendallCheckBox.selected;
+    }
+
     //each time this reference change, all related data will be updated
     public var refRank: Ranking on replace {
                 update();

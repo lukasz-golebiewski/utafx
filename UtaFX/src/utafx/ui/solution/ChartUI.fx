@@ -48,7 +48,9 @@ public class ChartUI extends CustomNode {
     public-init var yAxisMinAuto:Boolean=false;
     public-init var yAxisMaxAuto:Boolean=false;
 
-    public var constraintsManager: ConstraintsManager;
+    public var constraintsManager: ConstraintsManager on replace {
+        update();
+    }
 
     var chartX:Number;
     var chartY:Number;

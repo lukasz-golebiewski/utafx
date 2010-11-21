@@ -15,6 +15,7 @@ import uta.ConstraintsManager;
 import utafx.ui.solution.ChartEvent;
 import utafx.ui.solution.ChartUI.ChartUIData;
 import utafx.control.GUIController;
+import uta.ConstraintsManagerFactory;
 
 /**
  * @author Pawcik
@@ -24,11 +25,16 @@ public class SolutionUI extends CustomNode {
     public var functions: LinearFunction[];
     public var alternatives: Alternative[];
     public var columnNames: String[];
-    public var constraintManager: ConstraintsManager;
-    public var freezedKendall:Boolean = false;
+    public var constraintManager: ConstraintsManager;    
     public var charts: ChartUI[];
     public var refRank: Ranking;
     public var guiController: GUIController;
+
+    public var freezedKendall:Boolean=false on replace{
+        constraintManager = new ConstraintsManagerFactory(freezedKendall).createConstraintsManager(functions, refRank,
+			finalRank.sortedRank);
+    }
+
 
     var showLogs = false;
 
@@ -84,6 +90,7 @@ public class SolutionUI extends CustomNode {
                     model: AlternativesModel {
                         columnNames: bind ["Name", columnNames, "Utillity"]
                     }
+                    solutionUI: bind this;
                 }
             ]
         }
