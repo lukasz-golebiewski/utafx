@@ -11,7 +11,15 @@ import org.matheclipse.generic.interfaces.Pair;
 
 public class RankingUtils {
 
-	public double getKendallsCoefficient(Ranking<Alternative> referenceRank, Ranking<Alternative> finalRank) {
+    private static final Comparator<Alternative> COMPARATOR = new Comparator<Alternative>() {
+
+        @Override
+        public int compare(Alternative o1, Alternative o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
+
+        public double getKendallsCoefficient(Ranking<Alternative> referenceRank, Ranking<Alternative> finalRank) {
 		return getCoefficient(referenceRank, finalRank);
 	}
 
@@ -23,10 +31,9 @@ public class RankingUtils {
 	 */
 	public double getCoefficient(Ranking<Alternative> rankRef, Ranking<Alternative> rankFromUtil) {
 		List<Alternative> alternatives = rankRef.getAlternatives();
-		List<Alternative> alternativesFromUtil = rankFromUtil.getAlternatives();
-
-		Collections.sort(alternatives);
-		Collections.sort(alternativesFromUtil);
+		List<Alternative> alternativesFromUtil = rankFromUtil.getAlternatives();        
+		Collections.sort(alternatives, COMPARATOR);
+		Collections.sort(alternativesFromUtil, COMPARATOR);
 
 		int matrixSize = alternatives.size();
 
