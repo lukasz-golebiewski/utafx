@@ -10,16 +10,17 @@ public class Alternative implements Comparable<Alternative> {
 	private double[] values;
 
 	public Alternative() {
-	}
-
-	public Alternative(double[] values, Criterion... criteria) {
-		this.criteria = Arrays.asList(criteria);
-		this.values = values;
+		this.name = Integer.toString(hashCode());
 	}
 
 	public Alternative(double[] values, List<Criterion> criteria) {
+		this();
 		this.criteria = criteria;
 		this.values = values;
+	}
+
+	public Alternative(double[] values, Criterion... criteria) {
+		this(values, Arrays.asList(criteria));
 	}
 
 	public double getValueOn(Criterion criterion) {
