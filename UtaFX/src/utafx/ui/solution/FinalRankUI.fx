@@ -144,6 +144,7 @@ public class FinalRankUI extends CustomNode {
 
     function updateTable() {
         table = TableUI {
+            		id : "finalRankTable"
                     columns: bind for (c in model.columnNames) {
                         TableColumn {
                             text: c
