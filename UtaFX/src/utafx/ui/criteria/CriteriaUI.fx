@@ -180,7 +180,7 @@ public class CriteriaUI extends CustomNode {
 
                         label = Label {
                                     textAlignment: TextAlignment.CENTER
-                                    text: "Define your criterias"
+                                    text: "Define criteria"
                                     vpos: VPos.CENTER
                                     hpos: HPos.CENTER
                                     layoutX: bind (rect.boundsInLocal.width - label.boundsInLocal.width) / 2

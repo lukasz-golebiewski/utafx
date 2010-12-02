@@ -283,7 +283,7 @@ public class ReferenceRankUI extends CustomNode {
 
                         label = Label {
                                     textAlignment: TextAlignment.CENTER
-                                    text: "Define your criterias"
+                                    text: "Define reference rank"
                                     vpos: VPos.CENTER
                                     hpos: HPos.CENTER
                                     layoutX: bind (rect.boundsInLocal.width - label.boundsInLocal.width) / 2

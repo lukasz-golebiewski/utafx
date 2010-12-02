@@ -379,7 +379,8 @@ package class CharPointSymbol extends CustomNode {
                         }
                     }
 
-                    onMouseEntered:function( e: MouseEvent) {                        
+                    onMouseEntered:function( e: MouseEvent) {
+                        
                     }
 
                     onMouseExited:function( e: MouseEvent) {

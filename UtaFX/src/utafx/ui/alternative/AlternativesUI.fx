@@ -41,17 +41,15 @@ def outerBorderFill = LinearGradient {
 public class AlternativesUI extends CustomNode {
 
     public var model: AlternativesModel;
-
     var showLogs = false;
-    
     var table = TableUI {
-           columns: bind for (cname in model.columnNames) {
-                 TableColumn { text: cname };
-           }
-           rows: bind model.rows
-     }
+                columns: bind for (cname in model.columnNames) {
+                    TableColumn { text: cname };
+                }
+                rows: bind model.rows
+            }
 
-     postinit {
+    postinit {
         table.addTableModelListener(TableModelListener {
             public override function tableChanged(e: TableModelEvent): Void {
                 var tm = e.getSource() as TableModel;
@@ -123,7 +121,7 @@ public class AlternativesUI extends CustomNode {
 
     public function getPOJO(): uta.Alternative[] {
         //if (showLogs) println("Executed alternativesUI.getPOJO()");
-        var alternativesPOJO: Alternative[]=[];
+        var alternativesPOJO: Alternative[] = [];
 
         for (row in model.rows) {
             var i = indexof row;
@@ -146,27 +144,27 @@ public class AlternativesUI extends CustomNode {
         //table.table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(typesCombo));
         //table.table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(segmentsSlider));
         //table.table.setPreferredSize(new Dimension(200, 200));
-        VBox {            
+        VBox {
             spacing: 0
             content: [
                 Container {
-                    var rect:Rectangle
-                    var label:Label;
+                    var rect: Rectangle
+                    var label: Label;
                     content: [
                         rect = Rectangle {
-                            fill: outerBorderFill
-                            width: bind table.width
-                            height: 20
-                        }
+                                    fill: outerBorderFill
+                                    width: bind table.width
+                                    height: 20
+                                }
 
                         label = Label {
-                            textAlignment: TextAlignment.CENTER
-                            text: "Define your possible choices"
-                            vpos: VPos.CENTER
-                            hpos: HPos.CENTER
-                            layoutX: bind (rect.boundsInLocal.width - label.boundsInLocal.width) / 2
-                            layoutY: 5
-                        }
+                                    textAlignment: TextAlignment.CENTER
+                                    text: "Define alternatives"
+                                    vpos: VPos.CENTER
+                                    hpos: HPos.CENTER
+                                    layoutX: bind (rect.boundsInLocal.width - label.boundsInLocal.width) / 2
+                                    layoutY: 5
+                                }
                     ]
                 }
 
@@ -192,31 +190,31 @@ public class AlternativesUI extends CustomNode {
                         }
 
                         HBox {
-                            var addButton:Button;;
-                            var removeButton:Button;
+                            var addButton: Button;;
+                            var removeButton: Button;
                             padding: Insets { top: 5, bottom: 5, left: 0, right: 0 }
                             spacing: 10
                             //layoutX: 100
                             hpos: HPos.CENTER
                             content: [
                                 addButton = Button {
-                                    text: "Add"
-                                    action: add
-                                    //layoutX: 200
-                                }
+                                            text: "Add"
+                                            action: add
+                                        //layoutX: 200
+                                        }
                                 removeButton = Button {
-                                    text: "Remove"
-                                    action: remove
-                                    //layoutX: 350
-                                }
-//                                Button {
-//                                    text: "POJO"
-//                                    action: function() {
-//                                        getPOJO()
-//                                    }
-//                                }
+                                            text: "Remove"
+                                            action: remove
+                                        //layoutX: 350
+                                        }
+                            //                                Button {
+                            //                                    text: "POJO"
+                            //                                    action: function() {
+                            //                                        getPOJO()
+                            //                                    }
+                            //                                }
                             ]
-                            layoutX: bind (table.width - addButton.boundsInLocal.width - removeButton.boundsInLocal.width)/2;
+                            layoutX: bind (table.width - addButton.boundsInLocal.width - removeButton.boundsInLocal.width) / 2;
                         }
                     ]
                 }

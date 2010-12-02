@@ -1,0 +1,2 @@
+<CustomComponent version="1" className="utafx.ui.alternative.AlternativesUI" extends="javafx.scene.CustomNode">
+</CustomComponent>
