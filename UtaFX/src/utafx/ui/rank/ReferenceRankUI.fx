@@ -60,7 +60,6 @@ public class ReferenceRankUI extends CustomNode {
             }
     //new approach
     public var model: ReferenceRankModel;
-    var availNames = model.alternativeNames;
     public var comboBox2: ChoiceBox;
     public var guiController: GUIController;
 

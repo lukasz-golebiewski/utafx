@@ -50,7 +50,7 @@ public class CriteriaUI extends CustomNode {
                 rows: []
                 criteriaNames: []
             };
-    var table = TableUI {
+    public var table = TableUI {
                 columns: bind for (cname in model.columnNames) {
                     TableColumn { text: cname };
                 }

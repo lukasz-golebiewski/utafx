@@ -41,7 +41,7 @@ def outerBorderFill = LinearGradient {
 public class AlternativesUI extends CustomNode {
 
     public var model: AlternativesModel;
-    var showLogs = false;
+    var showLogs = true;
     var table = TableUI {
                 columns: bind for (cname in model.columnNames) {
                     TableColumn { text: cname };

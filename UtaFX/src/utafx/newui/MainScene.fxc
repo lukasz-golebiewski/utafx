@@ -176,7 +176,7 @@
         <Reference name="vgap" value="prop2:7,NOT_SET,4,null,4,null,14,anim:,,flt:6.0,4,null,"/>
     </Instance>
     <Instance classID="CustomNodeModel" instanceID="CustomNodeModel1">
-        <Reference name="instanceName" value="str:customNode2"/>
+        <Reference name="instanceName" value="str:criteriaUI"/>
         <Reference name="visible" value="prop2:7,NOT_SET,4,null,4,null,17,anim:,,bool:false,24,inst:StateVariableModel1,16,inst:StateModel2,16,anim:,,bool:true,"/>
         <Reference name="managed" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel2,16,anim:,,bool:true,"/>
         <Reference name="layoutInfoHPos" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel2,16,anim:,,hpos:LEFT,"/>
@@ -188,7 +188,7 @@
         <Reference name="customClass" value="inst:CustomClassModel2"/>
     </Instance>
     <Instance classID="CustomNodeModel" instanceID="CustomNodeModel2">
-        <Reference name="instanceName" value="str:customNode"/>
+        <Reference name="instanceName" value="str:referenceRankUI"/>
         <Reference name="visible" value="prop2:7,NOT_SET,4,null,4,null,17,anim:,,bool:false,24,inst:StateVariableModel1,16,inst:StateModel2,16,anim:,,bool:true,"/>
         <Reference name="layoutX" value="prop2:7,NOT_SET,4,null,4,null,15,anim:,,flt:55.0,24,inst:StateVariableModel1,16,inst:StateModel2,14,anim:,,flt:0.0,"/>
         <Reference name="layoutY" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,flt:485.0,24,inst:StateVariableModel1,16,inst:StateModel2,16,anim:,,flt:281.0,"/>
@@ -201,7 +201,7 @@
         <Reference name="customClass" value="inst:CustomClassModel1"/>
     </Instance>
     <Instance classID="CustomNodeModel" instanceID="CustomNodeModel3">
-        <Reference name="instanceName" value="str:customNode3"/>
+        <Reference name="instanceName" value="str:alternativesUI"/>
         <Reference name="visible" value="prop2:7,NOT_SET,4,null,4,null,17,anim:,,bool:false,24,inst:StateVariableModel1,16,inst:StateModel2,16,anim:,,bool:true,"/>
         <Reference name="layoutX" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,flt:511.0,4,null,"/>
         <Reference name="layoutY" value="prop2:7,NOT_SET,4,null,4,null,15,anim:,,flt:32.0,4,null,"/>

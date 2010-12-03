@@ -3,7 +3,6 @@
  *
  * Created on Nov 30, 2010, 10:58:34 PM
  */
-
 package utafx.newui;
 
 /**
@@ -65,20 +64,20 @@ public class MainScene {
         vpos: javafx.geometry.VPos.CENTER
     }
     
-    def __layoutInfo_customNode2: javafx.scene.layout.LayoutInfo = javafx.scene.layout.LayoutInfo {
+    def __layoutInfo_criteriaUI: javafx.scene.layout.LayoutInfo = javafx.scene.layout.LayoutInfo {
     }
-    public-read def customNode2: utafx.ui.criteria.CriteriaUI = utafx.ui.criteria.CriteriaUI {
+    public-read def criteriaUI: utafx.ui.criteria.CriteriaUI = utafx.ui.criteria.CriteriaUI {
         visible: false
-        layoutInfo: __layoutInfo_customNode2
+        layoutInfo: __layoutInfo_criteriaUI
     }
     
-    def __layoutInfo_customNode: javafx.scene.layout.LayoutInfo = javafx.scene.layout.LayoutInfo {
+    def __layoutInfo_referenceRankUI: javafx.scene.layout.LayoutInfo = javafx.scene.layout.LayoutInfo {
     }
-    public-read def customNode: utafx.ui.rank.ReferenceRankUI = utafx.ui.rank.ReferenceRankUI {
+    public-read def referenceRankUI: utafx.ui.rank.ReferenceRankUI = utafx.ui.rank.ReferenceRankUI {
         visible: false
         layoutX: 55.0
         layoutY: 485.0
-        layoutInfo: __layoutInfo_customNode
+        layoutInfo: __layoutInfo_referenceRankUI
     }
     
     def __layoutInfo_criteriaAndRefRankFlow: javafx.scene.layout.LayoutInfo = javafx.scene.layout.LayoutInfo {
@@ -86,12 +85,12 @@ public class MainScene {
     public-read def criteriaAndRefRankFlow: javafx.scene.layout.Flow = javafx.scene.layout.Flow {
         visible: false
         layoutInfo: __layoutInfo_criteriaAndRefRankFlow
-        content: [ customNode2, customNode, ]
+        content: [ criteriaUI, referenceRankUI, ]
         hgap: 6.0
         vgap: 6.0
     }
     
-    public-read def customNode3: utafx.ui.alternative.AlternativesUI = utafx.ui.alternative.AlternativesUI {
+    public-read def alternativesUI: utafx.ui.alternative.AlternativesUI = utafx.ui.alternative.AlternativesUI {
         visible: false
         layoutX: 511.0
         layoutY: 32.0
@@ -121,18 +120,18 @@ public class MainScene {
                             tile.layoutY = 717.0;
                             __layoutInfo_tile.height = 20.0;
                             flow.managed = true;
-                            customNode2.visible = false;
-                            customNode2.managed = true;
-                            customNode.visible = false;
-                            customNode.layoutX = 55.0;
-                            customNode.layoutY = 485.0;
+                            criteriaUI.visible = false;
+                            criteriaUI.managed = true;
+                            referenceRankUI.visible = false;
+                            referenceRankUI.layoutX = 55.0;
+                            referenceRankUI.layoutY = 485.0;
                             criteriaAndRefRankFlow.visible = false;
                             criteriaAndRefRankFlow.layoutX = 0.0;
                             criteriaAndRefRankFlow.layoutY = 0.0;
                             __layoutInfo_criteriaAndRefRankFlow.width = 389.0;
                             __layoutInfo_criteriaAndRefRankFlow.height = 684.0;
                             criteriaAndRefRankFlow.vertical = false;
-                            customNode3.visible = false;
+                            alternativesUI.visible = false;
                         }
                     }
                 ]
@@ -147,22 +146,22 @@ public class MainScene {
                             tile.layoutX = 417.0;
                             tile.layoutY = 729.0;
                             flow.managed = true;
-                            customNode2.visible = true;
-                            customNode2.managed = true;
-                            __layoutInfo_customNode2.hpos = javafx.geometry.HPos.LEFT;
-                            __layoutInfo_customNode2.vpos = javafx.geometry.VPos.TOP;
-                            customNode.visible = true;
-                            customNode.layoutX = 0.0;
-                            customNode.layoutY = 281.0;
-                            __layoutInfo_customNode.hpos = javafx.geometry.HPos.LEFT;
-                            __layoutInfo_customNode.vpos = javafx.geometry.VPos.BOTTOM;
+                            criteriaUI.visible = true;
+                            criteriaUI.managed = true;
+                            __layoutInfo_criteriaUI.hpos = javafx.geometry.HPos.LEFT;
+                            __layoutInfo_criteriaUI.vpos = javafx.geometry.VPos.TOP;
+                            referenceRankUI.visible = true;
+                            referenceRankUI.layoutX = 0.0;
+                            referenceRankUI.layoutY = 281.0;
+                            __layoutInfo_referenceRankUI.hpos = javafx.geometry.HPos.LEFT;
+                            __layoutInfo_referenceRankUI.vpos = javafx.geometry.VPos.BOTTOM;
                             criteriaAndRefRankFlow.visible = true;
                             criteriaAndRefRankFlow.layoutX = 18.0;
                             criteriaAndRefRankFlow.layoutY = 32.0;
                             __layoutInfo_criteriaAndRefRankFlow.width = 447.0;
                             __layoutInfo_criteriaAndRefRankFlow.height = 641.0;
                             criteriaAndRefRankFlow.vertical = true;
-                            customNode3.visible = true;
+                            alternativesUI.visible = true;
                         }
                     }
                 ]
@@ -171,7 +170,7 @@ public class MainScene {
     }
     
     public function getDesignRootNodes (): javafx.scene.Node[] {
-        [ flow, criteriaAndRefRankFlow, customNode3, ]
+        [ flow, criteriaAndRefRankFlow, alternativesUI, ]
     }
     
     public function getDesignScene (): javafx.scene.Scene {
@@ -179,10 +178,20 @@ public class MainScene {
     }
     // </editor-fold>//GEN-END:main
 
+    var controller: MainSceneController;
+
+    init { controller = MainSceneController {
+                    criteriaUI: this.criteriaUI;
+                    alternativesUI: this.alternativesUI;
+                    referenceRankUI: this.referenceRankUI;
+                }
+    }
 }
 
+
+    
 function run (): Void {
-    var design = MainScene {};
+    var design = MainScene {};    
 
     javafx.stage.Stage {
         title: "MainScene"
