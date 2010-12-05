@@ -70,7 +70,8 @@ public class FinalRankUI extends CustomNode {
 
     //each time this reference change, all related data will be updated
     public var refRank: Ranking on replace {
-                update();
+                if(functions != null)
+                 update();
             }
 
     init {        

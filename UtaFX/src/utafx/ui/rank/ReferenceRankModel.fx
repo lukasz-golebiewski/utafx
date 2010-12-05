@@ -7,6 +7,7 @@ package utafx.ui.rank;
 import javafx.util.Sequences;
 import com.javafx.preview.control.TreeItemBase;
 import utafx.ui.rank.ReferenceRankUI.RRTreeItem;
+import java.util.Collections;
 
 /**
  * @author Pawcik
@@ -26,7 +27,8 @@ public class ReferenceRankModel {
                     }
                 }
                 for (nv in newValues) {
-                    insert nv into availNames;
+                    if(Sequences.indexOf(availNames, nv) == -1)
+                        insert nv into availNames;
                 }
             }
 

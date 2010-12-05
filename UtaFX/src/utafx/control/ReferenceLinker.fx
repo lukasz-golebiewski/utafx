@@ -19,7 +19,7 @@ public class ReferenceLinker {
     /**
         Sets the criterias array on each alternative from second array        
     */
-    package function interconnectReferences(criterias: Criterion[], alterns: Alternative[]): Alternative[]{
+    public function interconnectReferences(criterias: Criterion[], alterns: Alternative[]): Alternative[]{
         for(a in alterns){
             a.setCriteria(criterias);
         }
@@ -30,7 +30,7 @@ public class ReferenceLinker {
         Converts the given ranking, which must be a String->Number mapping,
         into the Alternative->Number mapping.
     */
-    package function interconnectReferences(alterns: Alternative[], refRank: uta.Ranking): uta.Ranking {
+    public function interconnectReferences(alterns: Alternative[], refRank: uta.Ranking): uta.Ranking {
         var newRank = new Ranking();
         var index;
         for(name in refRank.getAlternatives()){

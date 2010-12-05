@@ -223,7 +223,7 @@ public class ChartUI extends CustomNode {
 
 }
 
-package class ChartUIData {
+public class ChartUIData {
     public var x: Double[];
     public var y: Double[];
     public var lowers: Double[];
