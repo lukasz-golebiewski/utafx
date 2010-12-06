@@ -29,7 +29,7 @@ import com.sun.javafx.runtime.sequence.Sequences;
 import javafx.scene.layout.HBox;
 
 /**
- * @author masklin
+ * @author LG
  */
 public class MainSceneController {
 
@@ -59,13 +59,12 @@ public class MainSceneController {
     public function onNextState(currentState: Integer) {
         if (currentState == 2) {
             solve();
-
         }
     }
 
     public function solve() {
-        Sequences.deleteAll(chartsHBox.content);
-        Sequences.deleteAll(charts);
+        delete chartsHBox.content;
+        delete charts;
         var refRank: Ranking = referenceRankUI.getPOJO();
         var criterias: Criterion[] = criteriaUI.getPOJO();
         var alterns: Alternative[] = alternativesUI.getPOJO();
@@ -77,16 +76,16 @@ public class MainSceneController {
         var solver: UtaStarSolver = new UtaStarSolver();
         var functs: LinearFunction[] = solver.solve(refRank, criterias, alterns);
 
-//        for (f in functs) {
-        //LOG.info("CharPoints: {Arrays.toString(f.getCharacteristicPoints())} \nand values: {Arrays.toString(f.getValues())}");
-        //if (showLogs) println("CharPoints: {Arrays.toString(f.getCharacteristicPoints())} \nand values: {Arrays.toString(f.getValues())}");
-//        }
         var manager: ConstraintsManager = new ConstraintsManagerFactory(false).createConstraintsManager(functs, null, null);
         finalRankUI.alterns = alterns;
         finalRankUI.functions = functs;
-        finalRankUI.model = alternativesUI.model;
+        //finalRankUI.model = alternativesUI.model;
+        finalRankUI.model = AlternativesModel {
+                        columnNames: bind ["Name", criteriaUI.model.criteriaNames, "Utillity"]
+                    };
         finalRankUI.refRank = refRank;
         finalRankUI.update();
+
 
         constraintManager = new ConstraintsManagerFactory(false).createConstraintsManager(finalRankUI.functions, getReferenceRankData(),
                 finalRankUI.sortedRank);

@@ -20,7 +20,7 @@ import java.util.Date;
 public class TableUI extends SwingComponent {
 
     def COLUMN_WIDTH = 80;
-    public var showLogs = false;
+    public var showLogs = true;
     public var tHeight: Integer = 200;
     public var tWidth: Integer = 300 on replace {
                 if(showLogs) println("{new Date()}: (tWidth on replace) Table width replaced with: {tWidth}");
