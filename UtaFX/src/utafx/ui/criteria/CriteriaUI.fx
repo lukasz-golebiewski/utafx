@@ -17,7 +17,7 @@ import javafx.scene.layout.Container;
 import javafx.geometry.VPos;
 import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
-import uta.Criterion;
+import uta.api.Criterion;
 import utafx.ui.generic.table.TableColumn;
 import utafx.ui.generic.table.TableRow;
 import utafx.ui.generic.table.TableCell;
@@ -131,9 +131,9 @@ public class CriteriaUI extends CustomNode {
         }
     }
 
-    public function getPOJO(): uta.Criterion[] {
+    public function getPOJO(): uta.api.Criterion[] {
         if (showLogs) println("Executed getPOJO");
-        var criteriaPOJO: uta.Criterion[];
+        var criteriaPOJO: uta.api.Criterion[];
 
         for (row in model.rows) {
             var i = indexof row;
@@ -147,7 +147,7 @@ public class CriteriaUI extends CustomNode {
                     };
 
             var seg = Integer.parseInt("{table.getValueAt(i, 2)}");
-            var c: uta.Criterion = new uta.Criterion(name, type == 1, seg);
+            var c: uta.api.Criterion = new uta.api.Criterion(name, type == 1, seg);
             insert c into criteriaPOJO;
             if (showLogs) println("{c.getName()} {c.isGain()} {c.getNoOfSegments()}");
         }

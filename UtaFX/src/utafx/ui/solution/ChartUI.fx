@@ -4,7 +4,7 @@
  */
 package utafx.ui.solution;
 
-import uta.LinearFunction;
+import uta.api.LinearFunction;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.part.NumberAxis;
 import javafx.scene.CustomNode;
@@ -19,9 +19,9 @@ import javafx.util.Math;
 import javafx.scene.paint.Paint;
 import javafx.scene.chart.part.PlotSymbol;
 import javafx.scene.chart.part.ValueAxis;
-import uta.ConstraintsManager;
+import uta.constraint.ConstraintsManager;
 import java.util.Date;
-import uta.Point;
+import uta.api.Point;
 import javafx.util.Sequences;
 
 /**

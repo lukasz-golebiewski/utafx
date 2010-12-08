@@ -7,9 +7,8 @@ package utafx.ui.solution;
 import javafx.scene.CustomNode;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import uta.Alternative;
-import uta.LinearFunction;
-import uta.UtaStarSolver;
+import uta.api.Alternative;
+import uta.api.LinearFunction;
 import javafx.geometry.HPos;
 import javafx.scene.layout.Container;
 import javafx.scene.shape.Rectangle;
@@ -26,13 +25,15 @@ import utafx.ui.generic.table.TableUI;
 import utafx.ui.generic.table.TableColumn;
 import javafx.scene.control.TextBox;
 import javafx.scene.control.CheckBox;
-import uta.RankingUtils;
+import uta.utils.RankingUtils;
 import utafx.ui.alternative.AlternativesModel;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Tile;
-import uta.Ranking;
+import uta.api.Ranking;
 import javafx.geometry.Insets;
+import uta.api.IUtaSolver;
+import uta.utils.UtaSolverFactory;
 
 def outerBorderFill = LinearGradient {
             startX: 0.0 startY: 0.0 endX: 0.0 endY: 1.0
@@ -60,7 +61,7 @@ public class FinalRankUI extends CustomNode {
     var valueBox: HBox;
     public var sortedRank: Ranking;
     var kendallValue: Double;
-    var solver: UtaStarSolver = new UtaStarSolver();
+    var solver: IUtaSolver = new UtaSolverFactory().createSolver();
     var rankUtils = new RankingUtils();
     public var solutionUI: SolutionUI;
 
@@ -152,7 +153,7 @@ public class FinalRankUI extends CustomNode {
                         }
                     }
                     rows: for (a in sortedRank.getAlternatives()) {
-                        var aCast = a as uta.Alternative;
+                        var aCast = a as uta.api.Alternative;
                         var size = sizeof model.columnNames;
                         TableRow {
                             cells: for (c in model.columnNames) {
@@ -161,7 +162,7 @@ public class FinalRankUI extends CustomNode {
                                     text: if (index == 0) {
                                         aCast.getName()
                                     } else if (index == (size - 1)) {
-                                        "{solver.getGeneralUtil(functions, aCast)}";
+                                        "{aCast.getGeneralUtil(functions)}";
                                     } else {
                                         "{aCast.getValues()[index-1]}";
                                     }

@@ -8,11 +8,10 @@ import utafx.ui.alternative.AlternativesUI;
 import utafx.ui.criteria.CriteriaUI;
 import utafx.ui.MainView;
 import utafx.ui.rank.ReferenceRankUI;
-import uta.UtaStarSolver;
-import uta.Ranking;
-import uta.LinearFunction;
-import uta.Alternative;
-import uta.Criterion;
+import uta.api.Ranking;
+import uta.api.LinearFunction;
+import uta.api.Alternative;
+import uta.api.Criterion;
 import utafx.ui.solution.SolutionUI;
 import java.util.Arrays;
 import utafx.ui.pref.ImportUI;
@@ -27,9 +26,11 @@ import utafx.ui.pref.jaxb.ObjectFactory;
 import java.io.IOException;
 import utafx.ui.rank.ReferenceRankModel;
 import utafx.ui.window.MessageBox;
-import uta.ConstraintsManagerFactory;
-import uta.ConstraintsManager;
+import uta.constraint.ConstraintsManagerFactory;
+import uta.constraint.ConstraintsManager;
 import org.apache.log4j.Logger;
+import uta.utils.UtaSolverFactory;
+import uta.api.IUtaSolver;
 
 /**
  * @author Pawcik
@@ -115,7 +116,7 @@ public class GUIController {
         //for (a in rank.getAlternatives()) {
         //    (a as uta.Alternative).setCriteria(criterias);
         //}
-        var solver: UtaStarSolver = new UtaStarSolver();
+        var solver: IUtaSolver = new UtaSolverFactory().createSolver();
         var functs: LinearFunction[] = solver.solve(refRank, criterias, alterns);
         //functs = solver.solve(rank, criterias, alterns);
         for (f in functs) {

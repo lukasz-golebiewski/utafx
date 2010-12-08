@@ -6,6 +6,8 @@
 package utafx.ui.alternative;
 
 import utafx.ui.generic.table.TableRow;
+import uta.api.Alternative;
+import uta.api.Criterion;
 
 /**
  * @author Pawcik
@@ -14,8 +16,8 @@ import utafx.ui.generic.table.TableRow;
 public class AlternativesModel {
     public var columnNames: String[];
     public var rows: TableRow[];
-    public var alternatives:uta.Alternative[];
-    public var criteriaPOJO: uta.Criterion[];
+    public var alternatives:uta.api.Alternative[];
+    public var criteriaPOJO: uta.api.Criterion[];
     //new approach
     public var alternativeNames:String[];
 

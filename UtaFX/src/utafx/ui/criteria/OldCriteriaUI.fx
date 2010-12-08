@@ -23,8 +23,8 @@ import javafx.scene.layout.Container;
 import javafx.geometry.VPos;
 import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
-import uta.Alternative;
-import uta.Criterion;
+import uta.api.Alternative;
+import uta.api.Criterion;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 
@@ -91,9 +91,9 @@ public class OldCriteriaUI extends CustomNode {
         }
     }
 
-    public function getPOJO(): uta.Criterion[] {
+    public function getPOJO(): uta.api.Criterion[] {
         println("Executed getPOJO");
-        var criteriaPOJO: uta.Criterion[];
+        var criteriaPOJO: uta.api.Criterion[];
 
         for (row in table.rows) {
             var i = indexof row;
@@ -107,7 +107,7 @@ public class OldCriteriaUI extends CustomNode {
                     };
 
             var seg = Integer.parseInt("{table.model.getValueAt(i, 2)}");
-            var c: uta.Criterion = new uta.Criterion(name, true, seg);
+            var c: uta.api.Criterion = new uta.api.Criterion(name, true, seg);
             insert c into criteriaPOJO;
             println("{c.getName()} {c.isGain()} {c.getNoOfSegments()}");
         }

@@ -13,8 +13,8 @@ import javafx.geometry.HPos;
 import javafx.scene.control.ChoiceBox;
 import utafx.ui.window.Window;
 import javafx.scene.layout.Container;
-import uta.Alternative;
-import uta.Ranking;
+import uta.api.Alternative;
+import uta.api.Ranking;
 import utafx.control.GUIController;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
@@ -39,7 +39,7 @@ def INFO_LABEL_HEIGHT = 20;
  */
 public class ReferenceRankUI extends CustomNode {
 
-    public var allItems: uta.Alternative[];
+    public var allItems: uta.api.Alternative[];
     public var available = allItems;
     var showLogs = false;
     var treeView: TreeView;

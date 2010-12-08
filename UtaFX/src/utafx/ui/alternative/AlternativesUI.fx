@@ -4,7 +4,7 @@ import javafx.scene.CustomNode;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.paint.Color;
-import uta.Alternative;
+import uta.api.Alternative;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import java.util.Arrays;
-import uta.Criterion;
+import uta.api.Criterion;
 import utafx.ui.generic.table.TableCell;
 import utafx.ui.generic.table.TableColumn;
 import utafx.ui.generic.table.TableRow;
@@ -119,7 +119,7 @@ public class AlternativesUI extends CustomNode {
         }
     }
 
-    public function getPOJO(): uta.Alternative[] {
+    public function getPOJO(): uta.api.Alternative[] {
         //if (showLogs) println("Executed alternativesUI.getPOJO()");
         var alternativesPOJO: Alternative[] = [];
 
@@ -130,7 +130,7 @@ public class AlternativesUI extends CustomNode {
                     for (j in [1..<sizeof model.columnNames]) {
                         Double.parseDouble("{table.getValueAt(i, j)}");
                     }
-            var a = new uta.Alternative();
+            var a = new uta.api.Alternative();
             a.setName(name);
             a.setValues(values);
             //a.setCriteria(criteriaPOJO);

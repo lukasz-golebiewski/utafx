@@ -7,15 +7,14 @@ package utafx.ui.solution;
 import javafx.scene.CustomNode;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import uta.LinearFunction;
-import uta.Alternative;
+import uta.api.LinearFunction;
+import uta.api.Alternative;
 import utafx.ui.alternative.AlternativesModel;
-import uta.Ranking;
-import uta.ConstraintsManager;
-import utafx.ui.solution.ChartEvent;
-import utafx.ui.solution.ChartUI.ChartUIData;
+import uta.api.Ranking;
+import uta.constraint.ConstraintsManager;
 import utafx.control.GUIController;
-import uta.ConstraintsManagerFactory;
+import uta.constraint.ConstraintsManagerFactory;
+import utafx.ui.solution.ChartUI.ChartUIData;
 
 /**
  * @author Pawcik
@@ -49,7 +48,7 @@ public class SolutionUI extends CustomNode {
                         var c = f.getCriterion();
                         var chartUI: ChartUI;
                         var chartData = ChartUIData {
-                                x: currentFun.getCharacteristicPoints()
+                                x: currentFun.getCharacteristicPoints();
                                 y: currentFun.getValues();
                         }
                         chartData.addChartListener(ChartListener{

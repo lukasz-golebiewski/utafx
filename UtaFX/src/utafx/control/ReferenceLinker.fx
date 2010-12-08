@@ -5,9 +5,9 @@
 
 package utafx.control;
 
-import uta.Criterion;
-import uta.Alternative;
-import uta.Ranking;
+import uta.api.Criterion;
+import uta.api.Alternative;
+import uta.api.Ranking;
 import java.lang.Exception;
 
 /**
@@ -30,7 +30,7 @@ public class ReferenceLinker {
         Converts the given ranking, which must be a String->Number mapping,
         into the Alternative->Number mapping.
     */
-    public function interconnectReferences(alterns: Alternative[], refRank: uta.Ranking): uta.Ranking {
+    public function interconnectReferences(alterns: Alternative[], refRank: uta.api.Ranking): uta.api.Ranking {
         var newRank = new Ranking();
         var index;
         for(name in refRank.getAlternatives()){

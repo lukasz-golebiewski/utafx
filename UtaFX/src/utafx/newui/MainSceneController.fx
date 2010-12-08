@@ -11,13 +11,12 @@ import javax.swing.event.TableModelListener;
 import javax.swing.event.TableModelEvent;
 import utafx.ui.alternative.AlternativesModel;
 import utafx.ui.rank.ReferenceRankModel;
-import uta.Ranking;
-import uta.Criterion;
-import uta.Alternative;
-import uta.UtaStarSolver;
-import uta.LinearFunction;
-import uta.ConstraintsManager;
-import uta.ConstraintsManagerFactory;
+import uta.api.Ranking;
+import uta.api.Criterion;
+import uta.api.Alternative;
+import uta.api.LinearFunction;
+import uta.constraint.ConstraintsManager;
+import uta.constraint.ConstraintsManagerFactory;
 import utafx.ui.solution.FinalRankUI;
 import utafx.control.ReferenceLinker;
 import javafx.scene.layout.Flow;
@@ -27,6 +26,8 @@ import utafx.ui.solution.ChartListener;
 import utafx.ui.solution.ChartEvent;
 import com.sun.javafx.runtime.sequence.Sequences;
 import javafx.scene.layout.HBox;
+import uta.api.IUtaSolver;
+import uta.utils.UtaSolverFactory;
 
 /**
  * @author LG
@@ -73,7 +74,7 @@ public class MainSceneController {
         alterns = linker.interconnectReferences(criterias, alterns);
         refRank = linker.interconnectReferences(alterns, refRank);
 
-        var solver: UtaStarSolver = new UtaStarSolver();
+        var solver: IUtaSolver = new UtaSolverFactory().createSolver();
         var functs: LinearFunction[] = solver.solve(refRank, criterias, alterns);
 
         var manager: ConstraintsManager = new ConstraintsManagerFactory(false).createConstraintsManager(functs, null, null);

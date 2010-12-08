@@ -12,8 +12,9 @@ import utafx.ui.alternative.AlternativesUI;
 import utafx.ui.pref.jaxb.Alternatives;
 import utafx.ui.rank.ReferenceRankUI;
 import utafx.ui.pref.jaxb.RefRank;
-import uta.Alternative;
-import uta.Ranking;
+import uta.api.Alternative;
+import uta.api.Ranking;
+import uta.api.Criterion;
 
 /**
  * This class acts like a bridge between the FX classes and JAXB generated classes.
@@ -22,7 +23,7 @@ preferences.
  */
 public class JAXBSupport {
 
-    public function convert(data: uta.Criterion[]): Criteria {
+    public function convert(data: uta.api.Criterion[]): Criteria {
         var returnObject: Criteria;
         if (data != null) {
             var factory = ObjectFactory {};
@@ -43,7 +44,7 @@ public class JAXBSupport {
         return returnObject;
     }
 
-    public function convert(data: uta.Alternative[]): Alternatives {
+    public function convert(data: uta.api.Alternative[]): Alternatives {
         var returnObject: Alternatives;
         if (data != null) {
             var factory = ObjectFactory {};
@@ -66,7 +67,7 @@ public class JAXBSupport {
         return returnObject;
     }
 
-    public function convert(refRankData: Ranking, alterns: uta.Alternative[]): RefRank {
+    public function convert(refRankData: Ranking, alterns: uta.api.Alternative[]): RefRank {
         var returnObject: RefRank;
         if (refRankData != null) {
             var factory = ObjectFactory {};
@@ -81,7 +82,7 @@ public class JAXBSupport {
         return returnObject;
     }
 
-    function getIndexOf(alternativeName: String, all: uta.Alternative[]) {
+    function getIndexOf(alternativeName: String, all: uta.api.Alternative[]) {
         for (a in all) {
             if (a.getName() == alternativeName) {
                 return indexof a;
