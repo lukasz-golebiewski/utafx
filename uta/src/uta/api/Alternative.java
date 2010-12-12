@@ -34,15 +34,20 @@ public class Alternative implements Comparable<Alternative> {
 	}
 
 	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o == null)
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
-		return super.equals(o);
+		if (getClass() != obj.getClass())
+			return false;
+		Alternative other = (Alternative) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
 
 	public String getName() {

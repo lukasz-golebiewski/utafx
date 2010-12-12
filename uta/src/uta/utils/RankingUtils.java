@@ -34,7 +34,10 @@ public class RankingUtils {
 	 */
 	public double getCoefficient(Ranking<Alternative> rankRef, Ranking<Alternative> rankFromUtil) {
 		List<Alternative> alternatives = rankRef.getAlternatives();
-		List<Alternative> alternativesFromUtil = rankFromUtil.getAlternatives();        
+		List<Alternative> alternativesFromUtil = rankFromUtil.getAlternatives();
+
+		stripRank(rankFromUtil, alternatives, alternativesFromUtil);
+
 		Collections.sort(alternatives, COMPARATOR);
 		Collections.sort(alternativesFromUtil, COMPARATOR);
 
@@ -58,6 +61,22 @@ public class RankingUtils {
 
 		return result;
 
+	}
+
+        /**
+         * Removes irrelevant (not existing in reference rank) alternatives from final rank.
+         * @param rankFromUtil
+         * @param alternatives
+         * @param alternativesFromUtil
+         */
+	private void stripRank(Ranking<Alternative> rankFromUtil,
+			List<Alternative> alternatives,
+			List<Alternative> alternativesFromUtil) {
+		List<Alternative> copyOfalternativesFromUtil = rankFromUtil.getAlternatives();
+		for (Alternative alt : copyOfalternativesFromUtil) {
+			if (!alternatives.contains(alt))
+				alternativesFromUtil.remove(alt);
+		}
 	}
 
 	private void populateMatrix(Ranking<Alternative> rank, List<Alternative> alternatives, double[][] matrix) {
