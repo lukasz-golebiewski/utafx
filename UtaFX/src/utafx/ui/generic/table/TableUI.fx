@@ -67,8 +67,8 @@ public class TableUI extends SwingComponent {
     function reregisterModelChangeListeners() {
         if(showLogs) println("Re-registering {sizeof tmListeners} table model listener");
         for (tml in tmListeners) {
-            if(showLogs) println("Re-registering table model listener");
-            addTableModelListener(tml);
+            if(showLogs) println("Re-registering table model listener");            
+            table.getModel().addTableModelListener(tml);
         }
     }
 
