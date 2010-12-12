@@ -39,18 +39,18 @@
     </Instance>
     <Instance classID="StateModel" instanceID="StateModel1">
         <Reference name="stateName" value="str:State1"/>
-        <Reference name="defaultInterpolator" value="interpolator:LINEAR"/>
+        <Reference name="defaultInterpolator" value="null"/>
         <Reference name="defaultDuration" value="int:0"/>
     </Instance>
     <Instance classID="StateModel" instanceID="StateModel2">
         <Reference name="stateName" value="str:State 2"/>
-        <Reference name="defaultInterpolator" value="interpolator:LINEAR"/>
-        <Reference name="defaultDuration" value="int:2000"/>
+        <Reference name="defaultInterpolator" value="null"/>
+        <Reference name="defaultDuration" value="int:0"/>
     </Instance>
     <Instance classID="StateModel" instanceID="StateModel3">
         <Reference name="stateName" value="str:State 3"/>
-        <Reference name="defaultInterpolator" value="interpolator:LINEAR"/>
-        <Reference name="defaultDuration" value="null"/>
+        <Reference name="defaultInterpolator" value="null"/>
+        <Reference name="defaultDuration" value="int:0"/>
     </Instance>
     <Instance classID="FontModel" instanceID="FontModel1">
         <Reference name="instanceName" value="str:font"/>
@@ -126,6 +126,7 @@
             <Item value="inst:CustomNodeModel4"/>
             <Item value="inst:ScrollViewModel1"/>
             <Item value="inst:LabelModel1"/>
+            <Item value="inst:MenuBarModel1"/>
         </List>
         <Reference name="width" value="prop2:7,NOT_SET,4,null,4,null,17,anim:,,flt:1024.0,4,null,"/>
         <Reference name="height" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,flt:768.0,4,null,"/>
@@ -240,7 +241,7 @@
         <Reference name="instanceName" value="str:finalRankUI"/>
         <Reference name="visible" value="prop2:7,NOT_SET,4,null,4,null,17,anim:,,bool:false,24,inst:StateVariableModel1,16,inst:StateModel3,16,anim:,,bool:true,"/>
         <Reference name="layoutX" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,flt:274.0,24,inst:StateVariableModel1,16,inst:StateModel3,15,anim:,,flt:38.0,"/>
-        <Reference name="layoutY" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,flt:322.0,24,inst:StateVariableModel1,16,inst:StateModel3,16,anim:,,flt:430.0,"/>
+        <Reference name="layoutY" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,flt:322.0,24,inst:StateVariableModel1,16,inst:StateModel3,16,anim:,,flt:450.0,"/>
         <Reference name="gridLayoutInfoHLocation" value="int:0"/>
         <Reference name="gridLayoutInfoVLocation" value="int:0"/>
         <Reference name="clip" value="null"/>
@@ -253,7 +254,7 @@
         <Reference name="disable" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel3,17,anim:,,bool:false,"/>
         <Reference name="opacity" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel3,14,anim:,,flt:1.0,"/>
         <Reference name="layoutX" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel3,15,anim:,,flt:10.0,"/>
-        <Reference name="layoutY" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel3,15,anim:,,flt:10.0,"/>
+        <Reference name="layoutY" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel3,15,anim:,,flt:30.0,"/>
         <Reference name="layoutInfoWidth" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel3,17,anim:,,flt:1000.0,"/>
         <Reference name="layoutInfoHeight" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel3,16,anim:,,flt:410.0,"/>
         <Reference name="gridLayoutInfoHLocation" value="int:0"/>
@@ -293,6 +294,144 @@
         <Reference name="tooltip" value="null"/>
         <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,27,anim:,,str:Welcome to UtaFX,4,null,"/>
         <Reference name="font" value="prop2:7,NOT_SET,4,null,4,null,22,anim:,,inst:FontModel1,4,null,"/>
+        <Reference name="graphic" value="null"/>
+    </Instance>
+    <Instance classID="MenuBarModel" instanceID="MenuBarModel1">
+        <Reference name="instanceName" value="str:menuBar"/>
+        <Reference name="visible" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,bool:true,24,inst:StateVariableModel1,16,inst:StateModel1,16,anim:,,bool:true,16,inst:StateModel2,16,anim:,,bool:true,16,inst:StateModel3,16,anim:,,bool:true,"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <List name="menus">
+            <Item value="inst:MenuModel1"/>
+            <Item value="inst:MenuModel2"/>
+            <Item value="inst:MenuModel3"/>
+        </List>
+    </Instance>
+    <Instance classID="MenuModel" instanceID="MenuModel1">
+        <Reference name="instanceName" value="str:fileMenu"/>
+        <Reference name="visible" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel3,16,anim:,,bool:true,"/>
+        <Reference name="disable" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel1,17,anim:,,bool:false,16,inst:StateModel3,17,anim:,,bool:false,"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,15,anim:,,str:File,4,null,"/>
+        <Reference name="graphic" value="null"/>
+        <List name="items">
+            <Item value="inst:MenuItemModel1"/>
+            <Item value="inst:MenuItemModel2"/>
+            <Item value="inst:SeparatorModel1"/>
+            <Item value="inst:MenuItemModel3"/>
+        </List>
+    </Instance>
+    <Instance classID="MenuItemModel" instanceID="MenuItemModel1">
+        <Reference name="instanceName" value="str:importMenuItem"/>
+        <Reference name="disable" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel1,16,anim:,,bool:true,16,inst:StateModel3,16,anim:,,bool:true,"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="onKeyPressed" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel2,11,anim:,,null,"/>
+        <Reference name="onMouseClicked" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel2,39,anim:,,str:importMenuItemOnMouseClicked,"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,17,anim:,,str:Import,24,inst:StateVariableModel1,16,inst:StateModel2,17,anim:,,str:Import,"/>
+        <Reference name="graphic" value="null"/>
+    </Instance>
+    <Instance classID="MenuItemModel" instanceID="MenuItemModel2">
+        <Reference name="instanceName" value="str:exportMenuItem"/>
+        <Reference name="disable" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel1,16,anim:,,bool:true,16,inst:StateModel3,16,anim:,,bool:true,"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,17,anim:,,str:Export,24,inst:StateVariableModel1,16,inst:StateModel2,17,anim:,,str:Export,"/>
+        <Reference name="graphic" value="null"/>
+    </Instance>
+    <Instance classID="SeparatorModel" instanceID="SeparatorModel1">
+        <Reference name="instanceName" value="str:separator"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+    </Instance>
+    <Instance classID="MenuItemModel" instanceID="MenuItemModel3">
+        <Reference name="instanceName" value="str:exitMenuItem"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="onMouseClicked" value="prop2:7,NOT_SET,4,null,4,null,37,anim:,,str:exitMenuItemOnMouseClicked,24,inst:StateVariableModel1,16,inst:StateModel2,37,anim:,,str:exitMenuItemOnMouseClicked,"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,15,anim:,,str:Exit,4,null,"/>
+        <Reference name="graphic" value="null"/>
+    </Instance>
+    <Instance classID="MenuModel" instanceID="MenuModel2">
+        <Reference name="instanceName" value="str:toolsMenu"/>
+        <Reference name="disable" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel1,16,anim:,,bool:true,"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,15,anim:,,str:Edit,24,inst:StateVariableModel1,16,inst:StateModel1,16,anim:,,str:Tools,16,inst:StateModel2,16,anim:,,str:Tools,16,inst:StateModel3,16,anim:,,str:Tools,"/>
+        <Reference name="font" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel1,11,anim:,,null,"/>
+        <Reference name="accelerator" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel1,11,anim:,,null,"/>
+        <Reference name="graphic" value="null"/>
+        <List name="items">
+            <Item value="inst:MenuItemModel4"/>
+        </List>
+    </Instance>
+    <Instance classID="MenuItemModel" instanceID="MenuItemModel4">
+        <Reference name="instanceName" value="str:utaImplMenuItem"/>
+        <Reference name="visible" value="prop2:7,NOT_SET,4,null,4,null,17,anim:,,bool:false,24,inst:StateVariableModel1,16,inst:StateModel2,16,anim:,,bool:true,16,inst:StateModel3,16,anim:,,bool:true,"/>
+        <Reference name="disable" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel3,16,anim:,,bool:true,"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="onMouseClicked" value="prop2:7,NOT_SET,4,null,4,null,40,anim:,,str:utaImplMenuItemOnMouseClicked,4,null,"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,24,anim:,,str:Choose solver,24,inst:StateVariableModel1,16,inst:StateModel2,24,anim:,,str:Choose solver,"/>
+        <Reference name="font" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel1,11,anim:,,null,"/>
+        <Reference name="graphic" value="null"/>
+    </Instance>
+    <Instance classID="MenuModel" instanceID="MenuModel3">
+        <Reference name="instanceName" value="str:helpMenu"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,15,anim:,,str:Help,24,inst:StateVariableModel1,16,inst:StateModel3,15,anim:,,str:Help,"/>
+        <Reference name="graphic" value="null"/>
+        <List name="items">
+            <Item value="inst:MenuItemModel5"/>
+        </List>
+    </Instance>
+    <Instance classID="MenuItemModel" instanceID="MenuItemModel5">
+        <Reference name="instanceName" value="str:aboutMenuItem"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,str:About,4,null,"/>
         <Reference name="graphic" value="null"/>
     </Instance>
 </Model>

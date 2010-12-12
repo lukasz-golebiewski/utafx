@@ -41,7 +41,7 @@ public class ReferenceRankUI extends CustomNode {
 
     public var allItems: uta.api.Alternative[];
     public var available = allItems;
-    var showLogs = false;
+    var showLogs = true;
     var treeView: TreeView;
     var itemAdded = false;
     var addButton: Button;

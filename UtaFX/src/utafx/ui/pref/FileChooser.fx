@@ -45,7 +45,7 @@ public class FileChooser extends SwingScrollableComponent {
             }
         }
     }
-    var nativeFC: JFileChooser;
+    public-read var nativeFC: JFileChooser;
 
     override function createJComponent(): JComponent {
         nativeFC = new JFileChooser();            

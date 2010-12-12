@@ -28,6 +28,16 @@ import com.sun.javafx.runtime.sequence.Sequences;
 import javafx.scene.layout.HBox;
 import uta.api.IUtaSolver;
 import uta.utils.UtaSolverFactory;
+import utafx.ui.pref.FileChooser;
+import utafx.ui.pref.PreferenceManager;
+import utafx.ui.pref.ImportUI;
+import utafx.ui.pref.jaxb.Preferences;
+import utafx.ui.generic.table.TableRow;
+import utafx.ui.generic.table.TableCell;
+import javax.swing.filechooser.FileFilter;
+import java.lang.UnsupportedOperationException;
+import java.lang.String;
+import java.io.File;
 
 /**
  * @author LG
@@ -41,6 +51,8 @@ public class MainSceneController {
     package var chartsHBox: HBox;
     var charts: ChartUI[];
     var constraintManager: ConstraintsManager;
+    var prefManager = PreferenceManager {};
+    var solverFactory = new UtaSolverFactory();
 
     init {
         alternativesUI.model = AlternativesModel {
@@ -64,8 +76,8 @@ public class MainSceneController {
     }
 
     public function solve() {
-        delete chartsHBox.content;
-        delete charts;
+        delete  chartsHBox.content;
+        delete  charts;
         var refRank: Ranking = referenceRankUI.getPOJO();
         var criterias: Criterion[] = criteriaUI.getPOJO();
         var alterns: Alternative[] = alternativesUI.getPOJO();
@@ -74,7 +86,7 @@ public class MainSceneController {
         alterns = linker.interconnectReferences(criterias, alterns);
         refRank = linker.interconnectReferences(alterns, refRank);
 
-        var solver: IUtaSolver = new UtaSolverFactory().createSolver();
+        var solver: IUtaSolver = solverFactory.createSolver();
         var functs: LinearFunction[] = solver.solve(refRank, criterias, alterns);
 
         var manager: ConstraintsManager = new ConstraintsManagerFactory(false).createConstraintsManager(functs, null, null);
@@ -82,11 +94,10 @@ public class MainSceneController {
         finalRankUI.functions = functs;
         //finalRankUI.model = alternativesUI.model;
         finalRankUI.model = AlternativesModel {
-                        columnNames: bind ["Name", criteriaUI.model.criteriaNames, "Utillity"]
-                    };
+                    columnNames: bind ["Name", criteriaUI.model.criteriaNames, "Utillity"]
+                };
         finalRankUI.refRank = refRank;
         finalRankUI.update();
-
 
         constraintManager = new ConstraintsManagerFactory(false).createConstraintsManager(finalRankUI.functions, getReferenceRankData(),
                 finalRankUI.sortedRank);
@@ -147,6 +158,84 @@ public class MainSceneController {
         refRank = linker.interconnectReferences(alterns, refRank);
         //        LOG.debug("Finished getReferenceRankData. New data:\n{refRank}");
         return refRank;
+    }
+
+    function clearDataControls() {
+        delete  criteriaUI.model.criteriaNames;
+    }
+
+    public function importPreferences() {
+        var fc = FileChooser {
+                    title: "Import Preferences"
+                    command: "Import"
+                    workingDir: prefManager.importLastDir
+                    open: true
+                    show: true
+                }
+        if (fc.selectedFile != null) {
+            clearDataControls();
+            prefManager.importLastDir = fc.selectedFile.getParentFile();
+            var preferences: Preferences = prefManager.doImport(fc.selectedFile);
+            var importedCriteria = preferences.getCriteria();
+
+            criteriaUI.model.rows =
+                    for (c in importedCriteria.getCriterion()) {
+                        TableRow {
+                            var type = "{c.getType().toString().charAt(0)}{c.getType().toString().toLowerCase().substring(1)}";
+                            cells: [
+                                TableCell { text: c.getName() },
+                                TableCell { text: type },
+                                TableCell { text: "{c.getSegments()}" }
+                            ]
+                        }
+                    }
+
+            alternativesUI.model.rows =
+                    for (a in preferences.getAlternatives().getAlternative()) {
+                        TableRow {
+                            var values = a.getValues().getValue();
+                            cells: [
+                                TableCell { text: a.getName() },
+                                for (v in values) {
+                                    TableCell { text: "{v.getValue()}" }
+                                }
+                            ]
+                        }
+                    }
+
+            var items = preferences.getRefRank().getItem();
+
+            for (rr in items) {
+                var name = alternativesUI.model.alternativeNames[rr.getId()];
+                var r = rr.getRank();
+                referenceRankUI.insertToTreeView2(name, r)
+            }
+        }
+    }
+
+    public function changeSolverImpl() {
+        var fc = FileChooser {
+                    title: "Choose a JAR archive"
+                    command: "Choose"
+                    workingDir: prefManager.importLastDir
+                    open: true
+                //show: true
+                }
+        fc.nativeFC.setAcceptAllFileFilterUsed(false);
+        fc.nativeFC.setFileFilter(FileFilter {
+            override public function getDescription(): String {
+                "JAR archive";
+            }
+
+            override public function accept(arg0: File): Boolean {
+                return arg0.isDirectory() or arg0.getName().endsWith(".jar");
+            }
+        });
+        fc.show = true;
+        if (fc.selectedFile != null) {
+            solverFactory.setSolverJarPath(fc.selectedFile.getAbsolutePath());
+        }
+
     }
 
 }
