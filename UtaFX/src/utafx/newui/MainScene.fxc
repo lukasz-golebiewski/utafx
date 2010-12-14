@@ -132,7 +132,7 @@
         <Reference name="height" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,flt:768.0,4,null,"/>
         <Reference name="camera" value="prop2:7,NOT_SET,4,null,4,null,11,anim:,,null,24,inst:StateVariableModel1,16,inst:StateModel3,11,anim:,,null,"/>
         <Reference name="cursor" value="prop2:7,NOT_SET,4,null,4,null,11,anim:,,null,24,inst:StateVariableModel1,16,inst:StateModel3,11,anim:,,null,"/>
-        <Reference name="fill" value="prop2:7,NOT_SET,4,null,4,null,18,anim:,,color:WHITE,4,null,"/>
+        <Reference name="fill" value="prop2:7,NOT_SET,4,null,4,null,11,anim:,,null,4,null,"/>
         <Reference name="generateSceneInstance" value="bool:true"/>
         <Reference name="generateGetDesignSceneFunction" value="bool:true"/>
         <Reference name="generateLayoutXYForRootLevelComponents" value="bool:true"/>

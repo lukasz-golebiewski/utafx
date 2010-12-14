@@ -189,7 +189,7 @@ public class MainScene {
         content: getDesignRootNodes ()
         camera: null
         cursor: null
-        fill: javafx.scene.paint.Color.WHITE
+        fill: null
     }
     
     public-read def currentState: org.netbeans.javafx.design.DesignState = org.netbeans.javafx.design.DesignState {

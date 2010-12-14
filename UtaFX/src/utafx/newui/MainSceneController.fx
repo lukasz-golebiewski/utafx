@@ -44,15 +44,20 @@ import java.io.File;
  */
 public class MainSceneController {
 
+    def solverFactory = new UtaSolverFactory();
+    def prefManager = PreferenceManager {};
+
     package var criteriaUI: CriteriaUI;
     package var alternativesUI: AlternativesUI;
     package var referenceRankUI: ReferenceRankUI;
     package var finalRankUI: FinalRankUI;
     package var chartsHBox: HBox;
     var charts: ChartUI[];
-    var constraintManager: ConstraintsManager;
-    var prefManager = PreferenceManager {};
-    var solverFactory = new UtaSolverFactory();
+    var constraintsManager: ConstraintsManager;
+    var freezedKendall = bind finalRankUI.preserveKendallRate on replace {
+                constraintsManager = new ConstraintsManagerFactory(freezedKendall).createConstraintsManager(finalRankUI.functions, getReferenceRankData(),
+                        finalRankUI.sortedRank);
+            }
 
     init {
         alternativesUI.model = AlternativesModel {
@@ -63,11 +68,6 @@ public class MainSceneController {
                     alternativeNames: bind alternativesUI.model.alternativeNames
                 }
     }
-
-    public var freezedKendall: Boolean = false on replace {
-                constraintManager = new ConstraintsManagerFactory(freezedKendall).createConstraintsManager(finalRankUI.functions, getReferenceRankData(),
-                        finalRankUI.sortedRank);
-            }
 
     public function onNextState(currentState: Integer) {
         if (currentState == 2) {
@@ -99,7 +99,7 @@ public class MainSceneController {
         finalRankUI.refRank = refRank;
         finalRankUI.update();
 
-        constraintManager = new ConstraintsManagerFactory(false).createConstraintsManager(finalRankUI.functions, getReferenceRankData(),
+        constraintsManager = new ConstraintsManagerFactory(false).createConstraintsManager(finalRankUI.functions, getReferenceRankData(),
                 finalRankUI.sortedRank);
 
         for (f in functs) {
@@ -135,7 +135,7 @@ public class MainSceneController {
                         yAxisMin: 0.0
                         yAxisMax: 1.0
                         name: c.getName()
-                        constraintsManager: bind constraintManager;
+                        constraintsManager: bind constraintsManager;
                     }
             insert chartUI into charts;
             insert chartUI into chartsHBox.content;

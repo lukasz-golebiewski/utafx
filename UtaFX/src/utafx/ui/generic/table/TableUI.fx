@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class TableUI extends SwingComponent {
 
-    def COLUMN_WIDTH = 80;
+    def COLUMN_WIDTH = 100;
     public var showLogs = true;
     public var tHeight: Integer = 200;
     public var tWidth: Integer = 300 on replace {

@@ -65,7 +65,7 @@ public class FinalRankUI extends CustomNode {
     var rankUtils = new RankingUtils();
     public var solutionUI: SolutionUI;
 
-    var preserveKendallRate = bind kendallCheckBox.selected on replace {
+    public-read var preserveKendallRate = bind kendallCheckBox.selected on replace {
            solutionUI.freezedKendall = kendallCheckBox.selected;
     }
 
@@ -85,7 +85,7 @@ public class FinalRankUI extends CustomNode {
                                     //height: 50
                                     content: [
                                         Label {
-                                            text: bind "Kendall Rate: {kendallValue}"
+                                            text: bind "Kendall's coefficient: {kendallValue}"
                                         }
 //                                        TextBox {
 //                                            lines: 1
@@ -98,7 +98,7 @@ public class FinalRankUI extends CustomNode {
                                 }
                         kendallCheckBox = CheckBox {
                                     selected: false
-                                    text: "Preserve Kendall Rate"
+                                    text: "Freeze Kendall's coefficient"
                                 },
                     ]
                 };
