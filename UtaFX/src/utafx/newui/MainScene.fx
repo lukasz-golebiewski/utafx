@@ -183,6 +183,25 @@ public class MainScene {
         font: font
     }
     
+    public-read def image: javafx.scene.image.Image = javafx.scene.image.Image {
+        url: "{__DIR__}leaf.jpg"
+        backgroundLoading: false
+        placeholder: null
+    }
+    
+    def __layoutInfo_imageView: javafx.scene.layout.LayoutInfo = javafx.scene.layout.LayoutInfo {
+        margin: null
+    }
+    public-read def imageView: javafx.scene.image.ImageView = javafx.scene.image.ImageView {
+        opacity: 0.1
+        cursor: null
+        layoutX: 0.0
+        layoutY: 0.0
+        layoutInfo: __layoutInfo_imageView
+        effect: null
+        image: image
+    }
+    
     public-read def scene: javafx.scene.Scene = javafx.scene.Scene {
         width: 1024.0
         height: 768.0
@@ -389,7 +408,7 @@ public class MainScene {
     }
     
     public function getDesignRootNodes (): javafx.scene.Node[] {
-        [ flow, criteriaAndRefRankFlow, alternativesUI, finalRankUI, chartsScrollView, label, menuBar, ]
+        [ flow, criteriaAndRefRankFlow, alternativesUI, finalRankUI, chartsScrollView, label, menuBar, imageView, ]
     }
     
     public function getDesignScene (): javafx.scene.Scene {
@@ -432,7 +451,8 @@ function run (): Void {
     var design = MainScene {};    
 
     javafx.stage.Stage {
-        title: "MainScene"
+        title: "UtaFX"
+        resizable: false
         scene: design.getDesignScene ()
     }
 }
