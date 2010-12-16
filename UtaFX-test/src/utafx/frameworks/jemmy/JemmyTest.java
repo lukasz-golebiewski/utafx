@@ -15,6 +15,7 @@ import org.jemmy.fx.FXRoot;
 import org.jemmy.interfaces.Parent;
 import org.jemmy.lookup.Lookup;
 import org.jemmy.lookup.LookupCriteria;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.jemmy.JemmyProperties;
@@ -41,6 +42,11 @@ public class JemmyTest {
   public static void beforeClass() {
     // needed to avoid deadlocks:
     JemmyProperties.setCurrentDispatchingModel(JemmyProperties.ROBOT_MODEL_MASK);
+  }
+
+  @After
+  public void after() {
+    FXRoot.ROOT.lookup().get().get$stage().set$visible(false);
   }
 
   /**

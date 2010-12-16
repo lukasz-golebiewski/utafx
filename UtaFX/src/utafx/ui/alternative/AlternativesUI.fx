@@ -199,11 +199,13 @@ public class AlternativesUI extends CustomNode {
                             content: [
                                 addButton = Button {
                                             text: "Add"
+                                            id : "Add alternative"
                                             action: add
                                         //layoutX: 200
                                         }
                                 removeButton = Button {
                                             text: "Remove"
+                                            id : "Remove alternative"
                                             action: remove
                                         //layoutX: 350
                                         }

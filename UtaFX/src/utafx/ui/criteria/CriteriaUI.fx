@@ -42,8 +42,8 @@ def INFO_LABEL_HEIGHT = 20;
  */
 public class CriteriaUI extends CustomNode {
 
-    var typesCombo = new JComboBox();
-    var showLogs = false;
+	var typesCombo = new JComboBox();
+    var showLogs = false;    
     
     public var model = CriteriaModel {
                 columnNames: ["Name", "Type", "Segments"];
@@ -208,10 +208,12 @@ public class CriteriaUI extends CustomNode {
                             hpos: HPos.CENTER
                             def addButton = Button {
                                         text: "Add"
+                                        id : "Add criterion"
                                         action: add
                                     }
                             def removeButton = Button {
                                         text: "Remove"
+                                        id : "Remove criterion"
                                         action: remove
                                     }
 //                            def pojoCheck = Button {

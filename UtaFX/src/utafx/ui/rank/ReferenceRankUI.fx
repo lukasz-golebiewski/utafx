@@ -316,6 +316,7 @@ public class ReferenceRankUI extends CustomNode {
                             content: [
                                 addButton = Button {
                                             text: "Add"
+                                            id: "Add alt to rank"
                                             action: add
                                         },
                                 removeButton = Button {
