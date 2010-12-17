@@ -8,7 +8,6 @@
   <packaging>jar</packaging>
 
   <name>data-converters</name>
-  <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,6 +19,26 @@
       <artifactId>junit</artifactId>
       <version>4.7</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.poi</groupId>
+    	<artifactId>poi</artifactId>
+    	<version>3.5-FINAL</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>utafx</groupId>
+    	<artifactId>uta-preferences</artifactId>
+    	<version>1.0</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>log4j</groupId>
+    	<artifactId>log4j</artifactId>
+    	<version>1.2.16</version>
+    	<scope>compile</scope>
     </dependency>
   </dependencies>
 </project>
