@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import utafx.data.converter.impl.CsvDataConverter;
+import utafx.data.converter.impl.Excel2007DataConverter;
+import utafx.data.converter.impl.ExcelDataConverter;
 import utafx.data.exception.ConversionException;
 import utafx.data.exception.UnsupportedFormatException;
 import utafx.data.selection.SelectionArea;
@@ -22,19 +25,25 @@ public class PreferenceConverter {
 
     private void initializeConverters() {
 	converters = new HashMap<ConvertType, DataConverter>();
-
-	DataConverter xlsCon = new ExcelDataConverter(area);
-	converters.put(new ConvertType(FileFormat.XLS, FileFormat.XML), xlsCon);
-	converters
-		.put(new ConvertType(FileFormat.XLSX, FileFormat.XML), xlsCon);
+	addConverter(new ExcelDataConverter(area));
+	addConverter(new Excel2007DataConverter(area));
+	addConverter(new CsvDataConverter());
     }
 
-    private String[] extensions = { ".xls", ".xlsx", ".csv", ".ods", ".xml" };
+    private void addConverter(DataConverter converter) {
+	if (converter != null) {
+	    converters.put(converter.getConversionType(), converter);
+	}
+    }
 
     /**
-     * Converts given input file to output file. This method is used for the
-     * bidiectional conversion, thus file extensions will be checked for source
-     * and target conversion types.
+     * Converts given input file to output file. This method can be used for any
+     * conversion, thus file extensions will be checked for source and target
+     * conversion types.
+     * <p>
+     * If there is no converter that could handle specified input and output
+     * types, {@link UnsupportedFormatException} will be thrown.
+     * </p>
      * 
      * @param inputPath
      *            path to input file
@@ -73,7 +82,7 @@ public class PreferenceConverter {
 	return inputPath.substring(inputPath.lastIndexOf(".") + 1);
     }
 
-    public String[] getSupportedFormats() {
-	return extensions;
+    public ConvertType[] getSupportedConversions() {
+	return converters.keySet().toArray(new ConvertType[converters.size()]);
     }
 }

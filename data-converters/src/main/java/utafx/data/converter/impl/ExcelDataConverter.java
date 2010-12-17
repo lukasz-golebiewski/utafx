@@ -1,9 +1,10 @@
-package utafx.data.converter;
+package utafx.data.converter.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,7 +17,12 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
+import utafx.data.converter.ConvertType;
+import utafx.data.converter.DataConverter;
+import utafx.data.converter.FileFormat;
 import utafx.data.exception.ConversionException;
 import utafx.data.pref.jaxb.AltValues;
 import utafx.data.pref.jaxb.Alternative;
@@ -33,7 +39,7 @@ import utafx.data.selection.CellAddress;
 import utafx.data.selection.SelectionArea;
 
 /**
- * Converts Microsoft Excel files to UtaFX preferences file (Xml).
+ * Converts Microsoft Excel (97-2003) files to UtaFX preferences file (XML).
  * 
  * @author <a href="mailto:marzec12@poczta.onet.pl">Pawel Solarski</a>
  */
@@ -50,13 +56,20 @@ public class ExcelDataConverter implements DataConverter {
      * description is stored
      */
     private int descColumnIndex = -1;
+    private final ConvertType conversionType = new ConvertType(FileFormat.XLS,
+	    FileFormat.XML);
     private static final Logger LOG = Logger
 	    .getLogger(ExcelDataConverter.class);
+    private static final double MINIMUM_MATCH_RATE = 0.9;
 
     /**
-     * Converts data from sheet at given position, based on selection area
+     * Creates new converter, that will process the data from given sheet index,
+     * limited to the provided area selection
      * 
+     * @param sheetNo
+     *            sheet number
      * @param area
+     *            data selection area
      */
     public ExcelDataConverter(int sheetNo, SelectionArea sa) {
 	if (sheetNo < 0) {
@@ -68,9 +81,13 @@ public class ExcelDataConverter implements DataConverter {
     }
 
     /**
-     * Converts data from first named sheet, based on selection area
+     * Creates new converter, that will process the data from given sheet name,
+     * limited to the provided area selection
      * 
+     * @param sheetName
+     *            sheet name
      * @param area
+     *            selection area
      */
     public ExcelDataConverter(String sheetName, SelectionArea area) {
 	this.sheetName = sheetName;
@@ -79,19 +96,21 @@ public class ExcelDataConverter implements DataConverter {
     }
 
     /**
-     * Converts data from first sheet, based on selection area
+     * Creates new converter, that will process the data from sheet index 0,
+     * limited to the provided area selection
      * 
      * @param area
+     *            selection area
      */
     public ExcelDataConverter(SelectionArea area) {
 	this(0, area);
     }
 
     /**
-     * Converts data from first sheet based on area that will be dynamically
-     * obtained from the source. The selection area will start at the first not
-     * empty cell (moving from top-left direction), up to last not empty cell
-     * (bottom-right direction).
+     * Creates new converter, that will process data from sheet index 0, based
+     * on area that will be dynamically obtained from the source. The selection
+     * area will start at the first not empty cell (moving from top-left
+     * direction), up to last not empty cell (bottom-right direction).
      * <p>
      * Cell is considered empty if it is null or contains only white spaces
      * </p>
@@ -142,11 +161,112 @@ public class ExcelDataConverter implements DataConverter {
     }
 
     private CellAddress getEndAddress(CellAddress start, HSSFSheet sheet) {
-	return null;
+	int startRow = start.getRow();
+	int startCol = start.getColumn();
+	HSSFRow row = sheet.getRow(startRow);
+	int endCol = getLastNonEmptyCellAddress(row).getColumn();
+	int endRow = startRow;
+	for (int index = startRow + 1; index <= sheet.getLastRowNum(); index++) {
+	    Row r = sheet.getRow(index);
+	    Cell cell = r.getCell(startCol);
+	    if (!isEmptyCell(cell)) {
+		endRow = cell.getRowIndex();
+	    }
+	}
+	if (endRow > startRow) {
+	    return new CellAddress(endRow, endCol);
+	} else {
+	    return null;
+	}
+    }
+
+    private boolean isEmptyCell(Cell cell) {
+	return cell == null || cell.toString() == null
+		|| cell.toString().trim().isEmpty();
     }
 
     private CellAddress getStartAddress(HSSFSheet sheet) {
+	Iterator<Row> rowIter = sheet.iterator();
+	while (rowIter.hasNext()) {
+	    Row row = rowIter.next();
+	    if (isCriteriaTypeRow(row)) {
+		LOG.info("Found criteria types in row=" + (row.getRowNum() + 1));
+		if (rowIter.hasNext()) {
+		    return getFirstNonEmptyCellAddress(rowIter.next());
+		} else {
+		    LOG.error("Criteria names should be placed in row="
+			    + row.getRowNum() + 2);
+		    return null;
+		}
+	    }
+	}
 	return null;
+    }
+
+    private CellAddress getFirstNonEmptyCellAddress(Row row) {
+	Iterator<Cell> iter = row.cellIterator();
+	while (iter.hasNext()) {
+	    Cell c = iter.next();
+	    if (c != null) {
+		String value = c.toString();
+		if (value != null && !value.trim().isEmpty()) {
+		    return new CellAddress(c.getRowIndex(), c.getColumnIndex());
+		}
+	    }
+	}
+	return null;
+    }
+
+    private CellAddress getLastNonEmptyCellAddress(Row row) {
+	Iterator<Cell> iter = row.cellIterator();
+	Cell last = null;
+	while (iter.hasNext()) {
+	    Cell c = iter.next();
+	    if (c != null) {
+		String value = c.toString();
+		if (value != null && !value.trim().isEmpty()) {
+		    last = c;
+		}
+	    }
+	}
+	return last != null ? new CellAddress(last.getRowIndex(),
+		last.getColumnIndex()) : null;
+    }
+
+    private boolean isCriteriaTypeRow(Row row) {
+	int start = getFirstNonEmptyCellAddress(row).getColumn();
+	int end = getLastNonEmptyCellAddress(row).getColumn();
+	if (start == -1 || end == -1) {
+	    return false;
+	}
+	boolean[] matches = new boolean[end - start + 1];
+	for (int index = start; index <= end; index++) {
+	    Cell cell = row.getCell(index);
+	    if (cell != null && isCriteriaCell(cell)) {
+		matches[index - start] = true;
+	    }
+	}
+	return countAndDecide(matches);
+    }
+
+    private boolean countAndDecide(boolean[] matches) {
+	int matched = 0;
+	for (boolean m : matches) {
+	    if (m)
+		matched++;
+	}
+	return (1.0 * matched / matches.length >= MINIMUM_MATCH_RATE);
+    }
+
+    private boolean isCriteriaCell(Cell cell) {
+	String value = cell.getStringCellValue();
+	if (value != null) {
+	    value = value.trim().toLowerCase();
+	    if (value.startsWith("g") || value.startsWith("c")) {
+		return true;
+	    }
+	}
+	return false;
     }
 
     private void save(Preferences pref, OutputStream output)
@@ -256,6 +376,8 @@ public class ExcelDataConverter implements DataConverter {
 	for (int r = startRow; r <= endRow; r++) {
 	    Alternative a = readAlternative(sheet, r);
 	    a.setId(id++);
+	    LOG.info(String.format("Found alternative (row %d): %s", r+1,
+		    getAlternativeStr(a)));
 	    alterns.getAlternative().add(a);
 	    int rank = -1;
 	    if ((rank = getRank(sheet, r)) != -1) {
@@ -263,6 +385,17 @@ public class ExcelDataConverter implements DataConverter {
 	    }
 	}
 	return alterns;
+    }
+
+    private String getAlternativeStr(Alternative a) {
+	StringBuilder sb = new StringBuilder();
+	sb.append(a.getName());
+	sb.append(" - ");
+	for (Value v : a.getValues().getValue()) {
+	    sb.append(v.getValue());
+	    sb.append(", ");
+	}
+	return sb.toString();
     }
 
     private int getRank(HSSFSheet sheet, int row) {
@@ -275,13 +408,12 @@ public class ExcelDataConverter implements DataConverter {
 		if (rank > 0) {
 		    if (rank != rankCell.getNumericCellValue()) {
 			LOG.warn(String.format(
-				"Rounded rank value at cell %s=%f to %d",
+				"Rounded rank value (cell %s=%f -> %d)",
 				new CellAddress(row, startCol - 1)
 					.getExcelFormat(), rankCell
 					.getNumericCellValue(), rank));
 		    } else {
-			LOG.info(String.format(
-				"Found rank value at cell %s=%d",
+			LOG.info(String.format("Found rank value (cell %s=%d)",
 				new CellAddress(row, startCol - 1)
 					.getExcelFormat(), rank));
 		    }
@@ -360,5 +492,9 @@ public class ExcelDataConverter implements DataConverter {
 
     public void setSheetName(String sheetName) {
 	this.sheetName = sheetName;
+    }
+
+    public ConvertType getConversionType() {
+	return conversionType;
     }
 }
