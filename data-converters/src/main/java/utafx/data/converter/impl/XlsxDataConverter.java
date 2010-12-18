@@ -17,12 +17,12 @@ import utafx.data.selection.SelectionArea;
  * 
  * @author <a href="mailto:marzec12@poczta.onet.pl">Pawel Solarski</a>
  */
-public class Excel2007DataConverter extends ExcelDataConverter {
+public class XlsxDataConverter extends XlsDataConverter {
 
     private final ConvertType conversionType = new ConvertType(FileFormat.XLSX,
 	    FileFormat.XML);
 
-    public Excel2007DataConverter(SelectionArea area) {
+    public XlsxDataConverter(SelectionArea area) {
 	super(area);
     }
 

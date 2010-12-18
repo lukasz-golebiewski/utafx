@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import utafx.data.converter.impl.CsvDataConverter;
-import utafx.data.converter.impl.Excel2007DataConverter;
-import utafx.data.converter.impl.ExcelDataConverter;
+import utafx.data.converter.impl.XlsDataConverter;
+import utafx.data.converter.impl.XlsxDataConverter;
 import utafx.data.exception.ConversionException;
 import utafx.data.exception.UnsupportedFormatException;
 import utafx.data.selection.SelectionArea;
@@ -25,8 +25,8 @@ public class PreferenceConverter {
 
     private void initializeConverters() {
 	converters = new HashMap<ConvertType, DataConverter>();
-	addConverter(new ExcelDataConverter(area));
-	addConverter(new Excel2007DataConverter(area));
+	addConverter(new XlsDataConverter(area));
+	addConverter(new XlsxDataConverter(area));
 	addConverter(new CsvDataConverter());
     }
 

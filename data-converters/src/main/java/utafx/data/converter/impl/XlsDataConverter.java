@@ -44,10 +44,10 @@ import utafx.data.util.WorkBookUtil;
  * 
  * @author <a href="mailto:marzec12@poczta.onet.pl">Pawel Solarski</a>
  */
-public class ExcelDataConverter implements DataConverter {
+public class XlsDataConverter implements DataConverter {
 
     private static final Logger LOG = Logger
-	    .getLogger(ExcelDataConverter.class);
+	    .getLogger(XlsDataConverter.class);
 
     private int sheetNumber;
     private String sheetName;
@@ -73,7 +73,7 @@ public class ExcelDataConverter implements DataConverter {
      * @param area
      *            data selection area
      */
-    public ExcelDataConverter(int sheetNo, SelectionArea sa) {
+    public XlsDataConverter(int sheetNo, SelectionArea sa) {
 	if (sheetNo < 0) {
 	    throw new IllegalArgumentException(
 		    "Sheet number cannot be negative");
@@ -91,7 +91,7 @@ public class ExcelDataConverter implements DataConverter {
      * @param area
      *            selection area
      */
-    public ExcelDataConverter(String sheetName, SelectionArea area) {
+    public XlsDataConverter(String sheetName, SelectionArea area) {
 	this.sheetName = sheetName;
 	this.selectionArea = area;
 	this.sheetNumber = -1;
@@ -104,7 +104,7 @@ public class ExcelDataConverter implements DataConverter {
      * @param area
      *            selection area
      */
-    public ExcelDataConverter(SelectionArea area) {
+    public XlsDataConverter(SelectionArea area) {
 	this(0, area);
     }
 
@@ -119,7 +119,7 @@ public class ExcelDataConverter implements DataConverter {
      * 
      * 
      */
-    public ExcelDataConverter() {
+    public XlsDataConverter() {
 	this(0, null);
     }
 
