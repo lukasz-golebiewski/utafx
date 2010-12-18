@@ -1,7 +1,15 @@
 package utafx.data.converter.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import utafx.data.converter.ConvertType;
 import utafx.data.converter.FileFormat;
+import utafx.data.exception.ConversionException;
 import utafx.data.selection.SelectionArea;
 
 /**
@@ -16,6 +24,17 @@ public class Excel2007DataConverter extends ExcelDataConverter {
 
     public Excel2007DataConverter(SelectionArea area) {
 	super(area);
+    }
+
+    @Override
+    public void convert(InputStream input, OutputStream output)
+	    throws ConversionException {
+	super.convert(input, output);
+    }
+
+    @Override
+    protected Workbook getWorkbook(InputStream input) throws IOException {
+	return new XSSFWorkbook(input);
     }
 
     @Override
