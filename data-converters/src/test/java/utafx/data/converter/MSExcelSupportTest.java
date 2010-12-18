@@ -13,8 +13,8 @@ import java.util.List;
 import org.junit.Test;
 
 import utafx.data.FileUtil;
-import utafx.data.converter.impl.Excel2007DataConverter;
-import utafx.data.converter.impl.ExcelDataConverter;
+import utafx.data.converter.impl.XlsDataConverter;
+import utafx.data.converter.impl.XlsxDataConverter;
 import utafx.data.pref.jaxb.Alternative;
 import utafx.data.pref.jaxb.Alternatives;
 import utafx.data.pref.jaxb.Criteria;
@@ -34,7 +34,7 @@ public class MSExcelSupportTest {
 	FileUtil.delete(outputFile);
 	SelectionArea sa = new SelectionArea(new CellAddress(2, "B"),
 		new CellAddress(11, "H"));
-	ExcelDataConverter converter = new ExcelDataConverter(sa);
+	XlsDataConverter converter = new XlsDataConverter(sa);
 	testExcelFile(inputFile, outputFile, sa, converter);
     }
 
@@ -98,7 +98,7 @@ public class MSExcelSupportTest {
 	FileUtil.delete(outputFile);
 	SelectionArea sa = new SelectionArea(new CellAddress(2, "B"),
 		new CellAddress(11, "H"));
-	DataConverter converter = new Excel2007DataConverter(sa);
+	DataConverter converter = new XlsxDataConverter(sa);
 	testExcelFile(inputFile, outputFile, sa, converter);
     }
 }
