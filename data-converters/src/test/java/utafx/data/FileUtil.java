@@ -13,4 +13,8 @@ public class FileUtil {
 	    }
 	}
     }
+
+    public static void createDirectory(String dir) {
+	new File(dir).mkdirs();	
+    }
 }
