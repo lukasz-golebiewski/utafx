@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +13,7 @@ import java.util.List;
 import org.junit.Test;
 
 import utafx.data.FileUtil;
+import utafx.data.converter.impl.Excel2007DataConverter;
 import utafx.data.converter.impl.ExcelDataConverter;
 import utafx.data.pref.jaxb.Alternative;
 import utafx.data.pref.jaxb.Alternatives;
@@ -32,10 +32,15 @@ public class MSExcelSupportTest {
 		.getFile();
 	String outputFile = "./tmp/simple_xls.xml";
 	FileUtil.delete(outputFile);
-	File fout = new File(outputFile);
 	SelectionArea sa = new SelectionArea(new CellAddress(2, "B"),
 		new CellAddress(11, "H"));
 	ExcelDataConverter converter = new ExcelDataConverter(sa);
+	testExcelFile(inputFile, outputFile, sa, converter);
+    }
+
+    private void testExcelFile(String inputFile, String outputFile,
+	    SelectionArea sa, DataConverter converter) throws Exception {
+	File fout = new File(outputFile);
 	converter.convert(new FileInputStream(inputFile), new FileOutputStream(
 		outputFile));
 
@@ -82,12 +87,18 @@ public class MSExcelSupportTest {
 			.getValue().get(j).getId());
 	    }
 	}
-
 	assertNotNull(pref.getRefRank());
     }
 
     @Test
-    public void testConverting_XLS_2007_To_Xml() {
-	fail("not done yet");
+    public void testConverting_XLS_2007_To_Xml() throws Exception {
+	String inputFile = ClassLoader.getSystemResource("xls/simple.xlsx")
+		.getFile();
+	String outputFile = "./tmp/simple_xlsx.xml";
+	FileUtil.delete(outputFile);
+	SelectionArea sa = new SelectionArea(new CellAddress(2, "B"),
+		new CellAddress(11, "H"));
+	DataConverter converter = new Excel2007DataConverter(sa);
+	testExcelFile(inputFile, outputFile, sa, converter);
     }
 }

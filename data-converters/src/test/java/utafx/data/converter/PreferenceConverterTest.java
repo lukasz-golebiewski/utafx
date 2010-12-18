@@ -6,6 +6,8 @@ import java.io.File;
 
 import org.junit.Test;
 
+import utafx.data.FileUtil;
+
 public class PreferenceConverterTest {
 
     @Test
@@ -15,8 +17,28 @@ public class PreferenceConverterTest {
     public void testConvertXls() throws Exception {
 	String inFile = ClassLoader.getSystemResource("xls/simple.xls").getFile();
 	PreferenceConverter pc = new PreferenceConverter();
-	String outFile = "./tmp/xls_simple.xml";
+	String outFile = "./tmp/xls_smoke.xml";
 	new File("./tmp").mkdirs();
+	File fout = new File(outFile);
+	if(fout.exists()){
+	    fout.delete();
+	}
+	pc.convert(inFile, outFile);	
+	assertTrue(fout.exists());
+	assertTrue(fout.length() > 0);	
+    }
+    
+    
+    @Test
+    /**
+     * smoke test to see if preference (XML) file will be generated from excel 2007 file 
+     */
+    public void testConvertXls2007() throws Exception {
+	String inFile = ClassLoader.getSystemResource("xls/simple.xlsx").getFile();
+	PreferenceConverter pc = new PreferenceConverter();
+	String outFile = "./tmp/xlsx_smoke.xml";
+	FileUtil.delete(outFile);
+	FileUtil.createDirectory("./tmp/");
 	File fout = new File(outFile);
 	if(fout.exists()){
 	    fout.delete();
@@ -33,19 +55,12 @@ public class PreferenceConverterTest {
     public void testConvertCsv() throws Exception {
 	String inFile = ClassLoader.getSystemResource("csv/simple.csv").getFile();
 	PreferenceConverter pc = new PreferenceConverter();
-	String outFile = "./tmp/csv_simple.xml";
+	String outFile = "./tmp/csv_smoke.xml";
+	FileUtil.delete(outFile);
 	new File("./tmp").mkdirs();
 	pc.convert(inFile, outFile);
 	assertTrue(new File(outFile).exists());
 	assertTrue(new File(outFile).length() > 0);
-    }
-
-    @Test
-    /**
-     * smoke test to see if preference (XML) file will be generated from OpenOfficeCalc file 
-     */
-    public void testConvertOoc() {
-	fail("not done yet");
     }
 
     @Test
@@ -55,20 +70,20 @@ public class PreferenceConverterTest {
     public void testConvertPref2Xls() {
 	fail("not done yet");
     }
+    
+    @Test
+    /**
+     * smoke test to see if excel file will be generated from preference file 
+     */
+    public void testConvertPref2Xls2007() {
+	fail("not done yet");
+    }
 
     @Test
     /**
      * smoke test to see if excel file will be generated from preference file 
      */
     public void testConvertPref2CSV() {
-	fail("not done yet");
-    }
-
-    @Test
-    /**
-     * smoke test to see if open office calc file will be generated from preference file 
-     */
-    public void testConvertPref2Ooc() {
 	fail("not done yet");
     }
 
