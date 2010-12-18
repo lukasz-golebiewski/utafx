@@ -15,7 +15,7 @@ public class CellAddress {
     private static final int MAX_COL_FIRST;
     private static final int MAX_COL_SECOND;
     private int row;
-    private int column;    
+    private int column;
 
     static {
 	String validStr = "abcdefghijklmnopqrstuvwxyz";
@@ -29,6 +29,8 @@ public class CellAddress {
     }
 
     /**
+     * Creates address based on indexes (0-based)
+     * 
      * @param row
      *            row number, must be &gt;=0
      * @param col
@@ -45,12 +47,12 @@ public class CellAddress {
     }
 
     /**
-     * Create coordinate based on excel format
+     * Creates address based on excel addressing format
      * 
      * @param row
      *            row number, must be &gt;=1
      * @param col
-     *            column name, must be in [A...IV] range
+     *            column name, must be in [A...IV] range (case insensitive)
      */
     public CellAddress(int row, String column) {
 	if (row > 0) {
@@ -60,6 +62,14 @@ public class CellAddress {
 	    throw new IllegalArgumentException(String.format(
 		    "Row must be have positive value : row=%d", row));
 	}
+    }
+
+    /**
+     * Creates cell with [0,0] address. This behaves exactly as
+     * {@link #CellAddress(int, int)} with 0 value as both arguments
+     */
+    public CellAddress() {
+	this(0, 0);
     }
 
     private int translateColumnName(String column) {
@@ -148,5 +158,15 @@ public class CellAddress {
 	    }
 	}
 	return null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (obj instanceof CellAddress) {
+	    CellAddress other = (CellAddress) obj;
+	    return (getRow() == other.getRow() && getColumn() == other
+		    .getColumn());
+	}
+	return false;
     }
 }

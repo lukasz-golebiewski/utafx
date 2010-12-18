@@ -35,10 +35,10 @@ public class MSExcelSupportTest {
 	SelectionArea sa = new SelectionArea(new CellAddress(2, "B"),
 		new CellAddress(11, "H"));
 	XlsDataConverter converter = new XlsDataConverter(sa);
-	testExcelFile(inputFile, outputFile, sa, converter);
+	testXmlFile(inputFile, outputFile, sa, converter);
     }
 
-    private void testExcelFile(String inputFile, String outputFile,
+    private void testXmlFile(String inputFile, String outputFile,
 	    SelectionArea sa, DataConverter converter) throws Exception {
 	File fout = new File(outputFile);
 	converter.convert(new FileInputStream(inputFile), new FileOutputStream(
@@ -87,6 +87,7 @@ public class MSExcelSupportTest {
 			.getValue().get(j).getId());
 	    }
 	}
+	//TODO: add assertions for reference rank!
 	assertNotNull(pref.getRefRank());
     }
 
@@ -99,6 +100,6 @@ public class MSExcelSupportTest {
 	SelectionArea sa = new SelectionArea(new CellAddress(2, "B"),
 		new CellAddress(11, "H"));
 	DataConverter converter = new XlsxDataConverter(sa);
-	testExcelFile(inputFile, outputFile, sa, converter);
+	testXmlFile(inputFile, outputFile, sa, converter);
     }
 }

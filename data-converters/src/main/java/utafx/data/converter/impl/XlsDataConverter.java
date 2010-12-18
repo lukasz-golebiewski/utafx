@@ -46,8 +46,7 @@ import utafx.data.util.WorkBookUtil;
  */
 public class XlsDataConverter implements DataConverter {
 
-    private static final Logger LOG = Logger
-	    .getLogger(XlsDataConverter.class);
+    private static final Logger LOG = Logger.getLogger(XlsDataConverter.class);
 
     private int sheetNumber;
     private String sheetName;
@@ -56,12 +55,12 @@ public class XlsDataConverter implements DataConverter {
     private Preferences pref;
     private Map<Integer, Integer> refRankMap = new HashMap<Integer, Integer>();
     /**
-     * This member will hold the column index, where item name, number or
-     * description is stored
+     * This member will hold the column index, where first criteria is stored
      */
-    private int descColumnIndex = -1;
+    private int critFirstColumnIndex = -1;
     private final ConvertType conversionType = new ConvertType(FileFormat.XLS,
 	    FileFormat.XML);
+
     private static final double MINIMUM_MATCH_RATE = 0.9;
 
     /**
@@ -281,8 +280,9 @@ public class XlsDataConverter implements DataConverter {
 		LOG.warn(String
 			.format("Could not find criteria type for cell %s=%s. Criterion will not be used.",
 				currentAddress.getExcelFormat(), name));
-		descColumnIndex = col;
 		continue;
+	    } else if (critFirstColumnIndex == -1) {
+		critFirstColumnIndex = col;
 	    }
 	    String typeValue = typeCell.toString();
 	    CriteriaType type = CommonUtil.getType(typeValue);
@@ -372,7 +372,7 @@ public class XlsDataConverter implements DataConverter {
     private Alternative readAlternative(Sheet sheet, int rowIndex) {
 	int startCol = selectionArea.getStart().getColumn();
 	int endCol = selectionArea.getEnd().getColumn();
-
+	int altDescColumnIndex = critFirstColumnIndex-1; 
 	Row row = sheet.getRow(rowIndex);
 	Alternative a = new Alternative();
 	AltValues values = new AltValues();
@@ -380,7 +380,7 @@ public class XlsDataConverter implements DataConverter {
 	int critId = 0;
 	for (int c = startCol; c <= endCol; c++) {
 	    String cellValue = row.getCell(c).getStringCellValue();
-	    if (c == descColumnIndex) {
+	    if (c == altDescColumnIndex) {
 		a.setName(cellValue);
 	    } else {
 		Value v = new Value();

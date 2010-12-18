@@ -67,8 +67,15 @@ public class PreferenceConverterTest {
     /**
      * smoke test to see if excel file will be generated from preference file 
      */
-    public void testConvertPref2Xls() {
-	fail("not done yet");
+    public void testConvertPref2Xls() throws Exception{
+	String inFile = ClassLoader.getSystemResource("xml/simple.xml").getFile();
+	PreferenceConverter pc = new PreferenceConverter();
+	String outFile = "./tmp/xml_smoke.xls";
+	FileUtil.delete(outFile);
+	new File("./tmp").mkdirs();
+	pc.convert(inFile, outFile);
+	assertTrue(new File(outFile).exists());
+	assertTrue(new File(outFile).length() > 0);
     }
     
     @Test
