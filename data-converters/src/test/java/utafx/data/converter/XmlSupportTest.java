@@ -2,6 +2,7 @@ package utafx.data.converter;
 
 import static org.junit.Assert.fail;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class XmlSupportTest {
@@ -16,6 +17,7 @@ public class XmlSupportTest {
     }
     
     @Test
+    @Ignore
     public void testConverting_Xml_To_Ods() {
 	fail("not done yet");
     }
