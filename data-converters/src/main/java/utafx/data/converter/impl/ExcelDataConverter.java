@@ -8,9 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -23,6 +21,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import utafx.data.converter.ConvertType;
 import utafx.data.converter.DataConverter;
 import utafx.data.converter.FileFormat;
+import utafx.data.converter.PreferenceManager;
 import utafx.data.exception.ConversionException;
 import utafx.data.pref.jaxb.AltValues;
 import utafx.data.pref.jaxb.Alternative;
@@ -244,10 +243,9 @@ public class ExcelDataConverter implements DataConverter {
     }
 
     private void save(Preferences pref, OutputStream output)
-	    throws JAXBException {
-	JAXBContext context = JAXBContext.newInstance("utafx.data.pref.jaxb");
-	Marshaller marshaller = context.createMarshaller();
-	marshaller.marshal(pref, output);
+	    throws IOException, JAXBException {
+	PreferenceManager writer = new PreferenceManager();
+	writer.write(pref, output);
     }
 
     private Preferences readPreferences(Sheet sheet) {
@@ -288,7 +286,7 @@ public class ExcelDataConverter implements DataConverter {
 	    }
 	    String typeValue = typeCell.toString();
 	    CriteriaType type = CommonUtil.getType(typeValue);
-	    
+
 	    if (type == null) {
 		LOG.warn(String
 			.format("Incorrect criteria type for cell %s. Criterion %s will not be used.",
