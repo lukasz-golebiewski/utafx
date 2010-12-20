@@ -1,6 +1,6 @@
 package uta.star;
 
-import uta.utils.RankingUtils;
+import uta.api.RankingUtils;
 import uta.api.LinearFunction;
 import uta.api.Criterion;
 import uta.api.Alternative;

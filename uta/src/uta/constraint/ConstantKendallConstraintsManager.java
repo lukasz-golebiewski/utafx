@@ -6,7 +6,7 @@ import uta.api.Alternative;
 import uta.api.LinearFunction;
 import uta.api.Point;
 import uta.api.Ranking;
-import uta.utils.RankingUtils;
+import uta.api.RankingUtils;
 
 public class ConstantKendallConstraintsManager extends StandardConstraintsManager {
 
