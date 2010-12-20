@@ -7,6 +7,7 @@ import java.util.Iterator;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -93,5 +94,44 @@ public class WorkBookUtil {
 	    return values;
 	}
 	return null;
+    }
+
+    public static String[][] getPreview(String filePath, int sheetIndex)
+	    throws IOException {
+	Workbook wb = readExcel(filePath);
+	Sheet sheet = wb.getSheetAt(sheetIndex);
+	String[][] preview = null;
+	if (sheet != null) {
+	    int firstRow = sheet.getFirstRowNum();
+	    int lastCol = getLastCol(sheet);
+	    int lastRow = sheet.getLastRowNum();
+	    int rows = lastRow - firstRow + 1;
+
+	    if (firstRow > -1 && lastCol > -1) {
+		preview = new String[rows][lastCol + 1];
+		for (int i = 0; i < rows; i++) {
+		    Row r = sheet.getRow(i + firstRow);
+		    for (int col = 0; col < lastCol+1; col++) {
+			Cell cell = r.getCell(col);
+			if (!isEmptyCell(cell)) {
+			    preview[i][col] = cell.toString();
+			}
+		    }
+		}
+	    }
+	    return preview;
+	} else {
+	    throw new RuntimeException("No sheet found at index " + sheetIndex);
+	}
+    }
+
+    private static int getLastCol(Sheet sheet) {
+	int max = -1;
+	for (int ind = sheet.getFirstRowNum(); ind < sheet.getLastRowNum(); ind++) {
+	    max = Math.max(max,
+		    WorkBookUtil.getLastNonEmptyCellAddress(sheet.getRow(ind))
+			    .getColumn());
+	}
+	return max;
     }
 }

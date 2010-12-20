@@ -9,6 +9,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -184,5 +185,19 @@ public class WorkBookUtilTest {
 	Row row = createRow(sheet, 0, data);
 	String[] rowData = WorkBookUtil.getRowValues(row, false);
 	assertArrayEquals(new String[] { "", " ", "a", "b" }, rowData);
+    }
+    
+    @Test
+    public void testGetPreviewFromXlsFile() throws IOException {
+	String xlsFile = ClassLoader.getSystemResource("xls/simple.xls").getFile();
+	String[][] data = WorkBookUtil.getPreview(xlsFile, 0);
+	assertNotNull(data);
+	assertEquals(11, data.length);
+	assertNotNull(data[0].length);
+	assertEquals(8, data[0].length);
+	
+	for(int i=0; i<data.length; i++){
+	    System.out.println(Arrays.toString(data[i]));
+	}
     }
 }
