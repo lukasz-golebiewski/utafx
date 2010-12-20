@@ -1,5 +1,6 @@
 package uta.utils;
 
+import uta.api.RankingUtils;
 import uta.api.LinearFunction;
 import uta.api.Alternative;
 import uta.api.Ranking;
