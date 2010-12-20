@@ -186,7 +186,7 @@ public class CsvDataConverter implements DataConverter {
 	int id = 0;
 	for (int line = ALTERNS_DATA_LINE; line < data.length; line++) {
 	    int startIndex = CommonUtil
-		    .getFirstNotEmptyValueIndex(data[CRIT_NAMES_LINE]);
+		    .getFirstNotEmptyValueIndex(data[CRIT_TYPES_LINE])-1;
 	    Alternative a = createAlternative(startIndex, data[line]);
 	    if (a != null) {
 		a.setId(id++);
@@ -235,8 +235,8 @@ public class CsvDataConverter implements DataConverter {
 				r, line + 1, rankCol + 1));
 
 		    } catch (NumberFormatException e) {
-			LOG.info(String.format(
-				"Found rank value=\"%d\" (line %d, column %d)",
+			LOG.error(String.format(
+				"Found incorect rank value=\"%s\" (line %d, column %d)",
 				srank, line + 1, rankCol + 1));
 		    }
 	    }

@@ -201,10 +201,12 @@ public class XlsDataConverter implements DataConverter {
 	while (rowIter.hasNext()) {
 	    Row row = rowIter.next();
 	    if (isCriteriaTypeRow(row)) {
-		LOG.info("Found criteria types in row=" + (row.getRowNum() + 1));
+		int rowStart = row.getRowNum();
+		int colStart = WorkBookUtil.getFirstNonEmptyCellAddress(row)
+			.getColumn() - 1;
+		LOG.info("Found criteria types in row=" + (rowStart + 1));
 		if (rowIter.hasNext()) {
-		    return WorkBookUtil.getFirstNonEmptyCellAddress(rowIter
-			    .next());
+		    return new CellAddress(rowStart, colStart);
 		} else {
 		    LOG.error("Criteria names should be placed in row="
 			    + row.getRowNum() + 2);
@@ -261,8 +263,8 @@ public class XlsDataConverter implements DataConverter {
     // TODO: refactor
     private Criteria readCriteria(Sheet sheet) {
 	Criteria c = factory.createCriteria();
-	Row critNameRow = sheet.getRow(selectionArea.getStart().getRow());
-	Row critTypeRow = sheet.getRow(selectionArea.getStart().getRow() - 1);
+	Row critNameRow = sheet.getRow(selectionArea.getStart().getRow() + 1);
+	Row critTypeRow = sheet.getRow(selectionArea.getStart().getRow());
 	int startCol = selectionArea.getStart().getColumn();
 	int endCol = selectionArea.getEnd().getColumn();
 
@@ -278,7 +280,7 @@ public class XlsDataConverter implements DataConverter {
 	    Cell typeCell = critTypeRow.getCell(col);
 	    if (typeCell == null) {
 		LOG.warn(String
-			.format("Could not find criteria type for cell %s=%s. Criterion will not be used.",
+			.format("Could not find criteria type for cell %s=\"%s\". Criterion will not be used.",
 				currentAddress.getExcelFormat(), name));
 		continue;
 	    } else if (critFirstColumnIndex == -1) {
@@ -325,11 +327,11 @@ public class XlsDataConverter implements DataConverter {
     }
 
     private Alternatives readAlternatives(Sheet sheet) {
-	int startRow = selectionArea.getStart().getRow() + 1;
+	int startRow = selectionArea.getStart().getRow() + 2;
 	int endRow = selectionArea.getEnd().getRow();
 	Alternatives alterns = factory.createAlternatives();
 	int id = 0;
-	for (int r = startRow; r <= endRow; r++) {
+	for (int r = startRow; r < endRow + 1; r++) {
 	    Alternative a = readAlternative(sheet, r);
 	    a.setId(id++);
 	    alterns.getAlternative().add(a);
@@ -362,6 +364,7 @@ public class XlsDataConverter implements DataConverter {
 			LOG.info(String.format("Found rank value (cell %s=%d)",
 				new CellAddress(row, startCol - 1)
 					.getExcelFormat(), rank));
+			return rank;
 		    }
 		}
 	    }
@@ -372,7 +375,7 @@ public class XlsDataConverter implements DataConverter {
     private Alternative readAlternative(Sheet sheet, int rowIndex) {
 	int startCol = selectionArea.getStart().getColumn();
 	int endCol = selectionArea.getEnd().getColumn();
-	int altDescColumnIndex = critFirstColumnIndex-1; 
+	int altDescColumnIndex = critFirstColumnIndex - 1;
 	Row row = sheet.getRow(rowIndex);
 	Alternative a = new Alternative();
 	AltValues values = new AltValues();

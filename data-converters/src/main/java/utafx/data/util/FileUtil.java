@@ -1,4 +1,4 @@
-package utafx.data;
+package utafx.data.util;
 
 import java.io.File;
 import java.io.IOException;

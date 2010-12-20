@@ -25,6 +25,10 @@ public class XlsxDataConverter extends XlsDataConverter {
     public XlsxDataConverter(SelectionArea area) {
 	super(area);
     }
+    
+    public XlsxDataConverter() {
+	super();
+    }
 
     @Override
     public void convert(InputStream input, OutputStream output)

@@ -103,4 +103,8 @@ public class CommonUtil {
 	};
     }
 
+    public static String getTypeAndSegments(Criterion c) {
+	return String.format("%s, %d", c.getType().toString().toLowerCase().substring(0, 1), c.getSegments());
+    }
+
 }

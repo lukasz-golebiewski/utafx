@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +33,8 @@ public class CommonUtilTest {
 	    valueList.getValue().add(valueObject);
 	}
 	a.setValues(valueList);
-	assertEquals("id=\"12\", name=\"a1\", values: [\"v0\", \"v1\", \"v2\"]",
+	assertEquals(
+		"id=\"12\", name=\"a1\", values: [\"v0\", \"v1\", \"v2\"]",
 		CommonUtil.toString(a));
     }
 

@@ -7,8 +7,8 @@ import java.util.Collections;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -18,36 +18,39 @@ import utafx.data.converter.DataConverter;
 import utafx.data.converter.FileFormat;
 import utafx.data.converter.PreferenceManager;
 import utafx.data.exception.ConversionException;
+import utafx.data.pref.jaxb.Alternative;
 import utafx.data.pref.jaxb.Alternatives;
 import utafx.data.pref.jaxb.Criteria;
 import utafx.data.pref.jaxb.CriteriaType;
 import utafx.data.pref.jaxb.Criterion;
 import utafx.data.pref.jaxb.Preferences;
 import utafx.data.pref.jaxb.RefRank;
-import utafx.data.selection.CellAddress;
-import utafx.data.selection.SelectionArea;
+import utafx.data.pref.jaxb.RrItem;
+import utafx.data.pref.jaxb.Value;
 import utafx.data.util.CommonUtil;
 import utafx.data.util.WorkBookUtil;
 
 public class Xml2XlsDataConverter implements DataConverter {
 
-    private final Logger LOG = Logger.getLogger(Xml2XlsDataConverter.class);
+    //private final Logger LOG = Logger.getLogger(Xml2XlsDataConverter.class);
     private static final String DEFAULT_SHEET_NAME = "Preferences";
 
     private static final int REF_RANK_COLUMN_IDX = 0;
     private static final int ALT_NAMES_COLUMN_IDX = 1;
     private static final int CRIT_TYPES_ROW_IDX = 0;
     private static final int CRIT_NAMES_ROW_IDX = 1;
+    private static final int CRITERIA_START_COLUMN = 2;
+    private static final int ALT_VALUES_ROW_START_INDEX = 2;
 
     private final ConvertType conversionType = new ConvertType(FileFormat.XML,
 	    FileFormat.XLS);
 
     private String sheetName;
 
-    private SelectionArea selectionArea;
+    //private SelectionArea selectionArea;
 
     public Xml2XlsDataConverter() {
-	selectionArea = new SelectionArea(new CellAddress(1, 1));
+	//selectionArea = new SelectionArea(new CellAddress(1, 1));
     }
 
     public void convert(InputStream input, OutputStream output)
@@ -57,10 +60,11 @@ public class Xml2XlsDataConverter implements DataConverter {
 	    Preferences prefs = reader.read(input);
 	    Workbook wb = createXls(prefs);
 	    wb.write(output);
+	    output.close();
 	} catch (JAXBException e) {
-	    e.printStackTrace();
+	    throw new ConversionException("JAXB error occured", e);
 	} catch (IOException e) {
-	    e.printStackTrace();
+	    throw new ConversionException("I/O error occured", e);
 	}
     }
 
@@ -87,10 +91,12 @@ public class Xml2XlsDataConverter implements DataConverter {
 	Row typesRow = sheet.createRow(CRIT_TYPES_ROW_IDX);
 	Row namesRow = sheet.createRow(CRIT_NAMES_ROW_IDX);
 
+	// blank cell, this is ref rank column
 	namesRow.createCell(REF_RANK_COLUMN_IDX);
+	// blank cell, this is alternative names column
 	namesRow.createCell(ALT_NAMES_COLUMN_IDX);
 
-	int index = 2;
+	int index = CRITERIA_START_COLUMN;
 	for (Criterion criterion : criteria.getCriterion()) {
 	    createCritNameCell(namesRow, index, criterion);
 	    createCritTypeCell(typesRow, index, criterion);
@@ -110,25 +116,41 @@ public class Xml2XlsDataConverter implements DataConverter {
     }
 
     private void writeAlternatives(Sheet sheet, Alternatives alternatives) {
-	// TODO Auto-generated method stub
-
+	int index = ALT_VALUES_ROW_START_INDEX;
+	for (Alternative a : alternatives.getAlternative()) {
+	    Row aRow = sheet.createRow(index);
+	    WorkBookUtil.createStringCellWithValue(aRow, ALT_NAMES_COLUMN_IDX,
+		    a.getName());
+	    int vIndex = ALT_NAMES_COLUMN_IDX + 1;
+	    for (Value v : a.getValues().getValue()) {
+		WorkBookUtil.createStringCellWithValue(aRow, vIndex,
+			v.getValue());
+		vIndex++;
+	    }
+	    index++;
+	}
     }
 
     private void writeReferenceRank(Sheet sheet, RefRank refRank) {
-	// TODO Auto-generated method stub
-
-    }
-
-    private CellAddress getStart() {
-	if (selectionArea != null) {
-	    CellAddress start = selectionArea.getStart();
-	    if (start != null && start.getColumn() > 0 && start.getRow() > 0) {
-		return start;
-	    }
+	final int startRow = ALT_VALUES_ROW_START_INDEX;
+	final int col = REF_RANK_COLUMN_IDX;
+	for (RrItem item : refRank.getItem()) {
+	    int row = startRow + item.getId();
+	    Cell rrCell = sheet.getRow(row).createCell(col);
+	    rrCell.setCellValue(item.getRank());
 	}
-	// leave one row for criteria types, and one column for reference rank
-	return new CellAddress(1, 1);
     }
+
+    // private CellAddress getStart() {
+    // if (selectionArea != null) {
+    // CellAddress start = selectionArea.getStart();
+    // if (start != null && start.getColumn() > 0 && start.getRow() > 0) {
+    // return start;
+    // }
+    // }
+    // // leave one row for criteria types, and one column for reference rank
+    // return new CellAddress(1, 1);
+    // }
 
     public String getSheetName() {
 	return CommonUtil.isNotEmpty(sheetName) ? sheetName

@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import utafx.data.FileUtil;
 import utafx.data.converter.impl.CsvDataConverter;
 import utafx.data.pref.jaxb.Alternative;
 import utafx.data.pref.jaxb.Alternatives;
@@ -20,6 +19,7 @@ import utafx.data.pref.jaxb.Criteria;
 import utafx.data.pref.jaxb.CriteriaType;
 import utafx.data.pref.jaxb.Criterion;
 import utafx.data.pref.jaxb.Preferences;
+import utafx.data.util.FileUtil;
 
 public class CSVSupportTest {
     @Test
@@ -29,11 +29,19 @@ public class CSVSupportTest {
 	String outputFile = "./tmp/simple_csv.xml";
 	FileUtil.delete(outputFile);
 	DataConverter converter = new CsvDataConverter();
-	testCsvFile(inputFile, outputFile, converter);
+	testXmlFile(inputFile, outputFile, converter);
     }
 
-    private void testCsvFile(String inputFile, String outputFile,
-	    DataConverter converter) throws Exception{
+    /**
+     * Converts csv file to xml file and checks the generated xml file content
+     * 
+     * @param inputFile
+     * @param outputFile
+     * @param converter
+     * @throws Exception
+     */
+    void testXmlFile(String inputFile, String outputFile,
+	    DataConverter converter) throws Exception {
 	File fout = new File(outputFile);
 	converter.convert(new FileInputStream(inputFile), new FileOutputStream(
 		outputFile));

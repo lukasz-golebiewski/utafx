@@ -1,104 +1,109 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <preferences>
-    <criteria>
-        <criterion segments="2" type="gain" name="Kryterium1" id="0"/>
-        <criterion segments="2" type="cost" name="Kryterium2" id="1"/>
-        <criterion segments="1" type="gain" name="Kryterium3" id="2"/>
-        <criterion segments="2" type="cost" name="Kryterium4" id="3"/>
-        <criterion segments="3" type="gain" name="Kryterium5" id="4"/>
-        <criterion segments="4" type="cost" name="Kryterium6" id="5"/>
-    </criteria>
-    <alternatives>
-        <alternative id="0" name="Alternatywa 1">
-            <values>
-                <value id="0">Wartosc A11</value>
-                <value id="1">Wartosc A12</value>
-                <value id="2">Wartosc A13</value>
-                <value id="3">Wartosc A14</value>
-                <value id="4">Wartosc A15</value>
-                <value id="5">Wartosc A16</value>
-            </values>
-        </alternative>
-        <alternative id="1" name="Alternatywa 2">
-            <values>
-                <value id="0">Wartosc A21</value>
-                <value id="1">Wartosc A22</value>
-                <value id="2">Wartosc A23</value>
-                <value id="3">Wartosc A24</value>
-                <value id="4">Wartosc A25</value>
-                <value id="5">Wartosc A26</value>
-            </values>
-        </alternative>
-        <alternative id="2" name="Alternatywa 3">
-            <values>
-                <value id="0">Wartosc A31</value>
-                <value id="1">Wartosc A32</value>
-                <value id="2">Wartosc A33</value>
-                <value id="3">Wartosc A34</value>
-                <value id="4">Wartosc A35</value>
-                <value id="5">Wartosc A36</value>
-            </values>
-        </alternative>
-        <alternative id="3" name="Alternatywa 4">
-            <values>
-                <value id="0">Wartosc A41</value>
-                <value id="1">Wartosc A42</value>
-                <value id="2">Wartosc A43</value>
-                <value id="3">Wartosc A44</value>
-                <value id="4">Wartosc A45</value>
-                <value id="5">Wartosc A46</value>
-            </values>
-        </alternative>
-        <alternative id="4" name="Alternatywa 5">
-            <values>
-                <value id="0">Wartosc A51</value>
-                <value id="1">Wartosc A52</value>
-                <value id="2">Wartosc A53</value>
-                <value id="3">Wartosc A54</value>
-                <value id="4">Wartosc A55</value>
-                <value id="5">Wartosc A56</value>
-            </values>
-        </alternative>
-        <alternative id="5" name="Alternatywa 6">
-            <values>
-                <value id="0">Wartosc A61</value>
-                <value id="1">Wartosc A62</value>
-                <value id="2">Wartosc A63</value>
-                <value id="3">Wartosc A64</value>
-                <value id="4">Wartosc A65</value>
-                <value id="5">Wartosc A66</value>
-            </values>
-        </alternative>
-        <alternative id="6" name="Alternatywa 7">
-            <values>
-                <value id="0">Wartosc A71</value>
-                <value id="1">Wartosc A72</value>
-                <value id="2">Wartosc A73</value>
-                <value id="3">Wartosc A74</value>
-                <value id="4">Wartosc A75</value>
-                <value id="5">Wartosc A76</value>
-            </values>
-        </alternative>
-        <alternative id="7" name="Alternatywa 8">
-            <values>
-                <value id="0">Wartosc A81</value>
-                <value id="1">Wartosc A82</value>
-                <value id="2">Wartosc A83</value>
-                <value id="3">Wartosc A84</value>
-                <value id="4">Wartosc A85</value>
-                <value id="5">Wartosc A86</value>
-            </values>
-        </alternative>
-        <alternative id="8" name="Alternatywa 9">
-            <values>
-                <value id="0">Wartosc A91</value>
-                <value id="1">Wartosc A92</value>
-                <value id="2">Wartosc A93</value>
-                <value id="3">Wartosc A94</value>
-                <value id="4">Wartosc A95</value>
-                <value id="5">Wartosc A96</value>
-            </values>
-        </alternative>
-    </alternatives>
-    <refRank/>
+	<criteria>
+		<criterion segments="2" type="gain" name="Kryterium1" id="0" />
+		<criterion segments="2" type="cost" name="Kryterium2" id="1" />
+		<criterion segments="1" type="gain" name="Kryterium3" id="2" />
+		<criterion segments="2" type="cost" name="Kryterium4" id="3" />
+		<criterion segments="3" type="gain" name="Kryterium5" id="4" />
+		<criterion segments="4" type="cost" name="Kryterium6" id="5" />
+	</criteria>
+	<alternatives>
+		<alternative id="0" name="Alternatywa 1">
+			<values>
+				<value id="0">Wartosc A11</value>
+				<value id="1">Wartosc A12</value>
+				<value id="2">Wartosc A13</value>
+				<value id="3">Wartosc A14</value>
+				<value id="4">Wartosc A15</value>
+				<value id="5">Wartosc A16</value>
+			</values>
+		</alternative>
+		<alternative id="1" name="Alternatywa 2">
+			<values>
+				<value id="0">Wartosc A21</value>
+				<value id="1">Wartosc A22</value>
+				<value id="2">Wartosc A23</value>
+				<value id="3">Wartosc A24</value>
+				<value id="4">Wartosc A25</value>
+				<value id="5">Wartosc A26</value>
+			</values>
+		</alternative>
+		<alternative id="2" name="Alternatywa 3">
+			<values>
+				<value id="0">Wartosc A31</value>
+				<value id="1">Wartosc A32</value>
+				<value id="2">Wartosc A33</value>
+				<value id="3">Wartosc A34</value>
+				<value id="4">Wartosc A35</value>
+				<value id="5">Wartosc A36</value>
+			</values>
+		</alternative>
+		<alternative id="3" name="Alternatywa 4">
+			<values>
+				<value id="0">Wartosc A41</value>
+				<value id="1">Wartosc A42</value>
+				<value id="2">Wartosc A43</value>
+				<value id="3">Wartosc A44</value>
+				<value id="4">Wartosc A45</value>
+				<value id="5">Wartosc A46</value>
+			</values>
+		</alternative>
+		<alternative id="4" name="Alternatywa 5">
+			<values>
+				<value id="0">Wartosc A51</value>
+				<value id="1">Wartosc A52</value>
+				<value id="2">Wartosc A53</value>
+				<value id="3">Wartosc A54</value>
+				<value id="4">Wartosc A55</value>
+				<value id="5">Wartosc A56</value>
+			</values>
+		</alternative>
+		<alternative id="5" name="Alternatywa 6">
+			<values>
+				<value id="0">Wartosc A61</value>
+				<value id="1">Wartosc A62</value>
+				<value id="2">Wartosc A63</value>
+				<value id="3">Wartosc A64</value>
+				<value id="4">Wartosc A65</value>
+				<value id="5">Wartosc A66</value>
+			</values>
+		</alternative>
+		<alternative id="6" name="Alternatywa 7">
+			<values>
+				<value id="0">Wartosc A71</value>
+				<value id="1">Wartosc A72</value>
+				<value id="2">Wartosc A73</value>
+				<value id="3">Wartosc A74</value>
+				<value id="4">Wartosc A75</value>
+				<value id="5">Wartosc A76</value>
+			</values>
+		</alternative>
+		<alternative id="7" name="Alternatywa 8">
+			<values>
+				<value id="0">Wartosc A81</value>
+				<value id="1">Wartosc A82</value>
+				<value id="2">Wartosc A83</value>
+				<value id="3">Wartosc A84</value>
+				<value id="4">Wartosc A85</value>
+				<value id="5">Wartosc A86</value>
+			</values>
+		</alternative>
+		<alternative id="8" name="Alternatywa 9">
+			<values>
+				<value id="0">Wartosc A91</value>
+				<value id="1">Wartosc A92</value>
+				<value id="2">Wartosc A93</value>
+				<value id="3">Wartosc A94</value>
+				<value id="4">Wartosc A95</value>
+				<value id="5">Wartosc A96</value>
+			</values>
+		</alternative>
+	</alternatives>
+	<refRank>
+		<item rank="1" id="0" />
+		<item rank="2" id="2" />
+		<item rank="2" id="3" />
+		<item rank="3" id="6" />
+	</refRank>
 </preferences>

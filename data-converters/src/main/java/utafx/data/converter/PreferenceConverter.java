@@ -9,7 +9,9 @@ import java.util.Map;
 import utafx.data.converter.impl.CsvDataConverter;
 import utafx.data.converter.impl.XlsDataConverter;
 import utafx.data.converter.impl.XlsxDataConverter;
+import utafx.data.converter.impl.Xml2CsvDataConverter;
 import utafx.data.converter.impl.Xml2XlsDataConverter;
+import utafx.data.converter.impl.Xml2XlsxDataConverter;
 import utafx.data.exception.ConversionException;
 import utafx.data.exception.UnsupportedFormatException;
 import utafx.data.selection.SelectionArea;
@@ -30,6 +32,8 @@ public class PreferenceConverter {
 	addConverter(new XlsxDataConverter(area));
 	addConverter(new CsvDataConverter());
 	addConverter(new Xml2XlsDataConverter());
+	addConverter(new Xml2XlsxDataConverter());
+	addConverter(new Xml2CsvDataConverter());
     }
 
     private void addConverter(DataConverter converter) {
