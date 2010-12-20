@@ -25,7 +25,7 @@ import utafx.ui.generic.table.TableUI;
 import utafx.ui.generic.table.TableColumn;
 import javafx.scene.control.TextBox;
 import javafx.scene.control.CheckBox;
-import uta.utils.RankingUtils;
+import uta.api.RankingUtils;
 import utafx.ui.alternative.AlternativesModel;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -33,7 +33,7 @@ import javafx.scene.layout.Tile;
 import uta.api.Ranking;
 import javafx.geometry.Insets;
 import uta.api.IUtaSolver;
-import uta.utils.UtaSolverFactory;
+import uta.UtaSolverFactory;
 
 def outerBorderFill = LinearGradient {
             startX: 0.0 startY: 0.0 endX: 0.0 endY: 1.0

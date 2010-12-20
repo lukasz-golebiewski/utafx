@@ -29,7 +29,7 @@ import utafx.ui.window.MessageBox;
 import uta.constraint.ConstraintsManagerFactory;
 import uta.constraint.ConstraintsManager;
 import org.apache.log4j.Logger;
-import uta.utils.UtaSolverFactory;
+import uta.UtaSolverFactory;
 import uta.api.IUtaSolver;
 
 /**

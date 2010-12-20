@@ -27,7 +27,7 @@ import utafx.ui.solution.ChartEvent;
 import com.sun.javafx.runtime.sequence.Sequences;
 import javafx.scene.layout.HBox;
 import uta.api.IUtaSolver;
-import uta.utils.UtaSolverFactory;
+import uta.UtaSolverFactory;
 import utafx.ui.pref.FileChooser;
 import utafx.ui.pref.PreferenceManager;
 import utafx.ui.pref.ImportUI;
