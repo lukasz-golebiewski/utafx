@@ -30,8 +30,8 @@ public class XmlSupportTest {
 	String inputPath = ClassLoader.getSystemResource("xml/simple.xml")
 		.getFile();
 	String outputPath = "./tmp/simple_xml.csv";
-	PreferenceConverter pc = new PreferenceConverter();
-	pc.convert(inputPath, outputPath);
+	ConversionManager cm = new ConversionManager();
+	cm.convert(inputPath, outputPath);
 	CSVSupportTest csvTest = new CSVSupportTest();
 	csvTest.testXmlFile(outputPath, outputPath + ".xml",
 		new CsvDataConverter());

@@ -7,8 +7,8 @@ import java.io.OutputStream;
 import javax.xml.bind.JAXBException;
 
 import utafx.data.converter.ConvertType;
-import utafx.data.converter.DataConverter;
 import utafx.data.converter.FileFormat;
+import utafx.data.converter.PreferenceDataConverter;
 import utafx.data.converter.PreferenceManager;
 import utafx.data.exception.ConversionException;
 import utafx.data.pref.jaxb.Alternative;
@@ -21,7 +21,7 @@ import utafx.data.pref.jaxb.RrItem;
 import utafx.data.pref.jaxb.Value;
 import utafx.data.util.CommonUtil;
 
-public class Xml2CsvDataConverter implements DataConverter {
+public class Xml2CsvDataConverter implements PreferenceDataConverter {
 
     private final ConvertType type = new ConvertType(FileFormat.XML,
 	    FileFormat.CSV);
@@ -114,7 +114,7 @@ public class Xml2CsvDataConverter implements DataConverter {
 	int line = criteriaExists ? 2 : 0;
 	int col = 0;
 	for (RrItem item : refRank.getItem()) {
-	    data[line + item.getId()][col] = String.valueOf(item.getRank());	    
+	    data[line + item.getId()][col] = String.valueOf(item.getRank());
 	}
     }
 
@@ -159,6 +159,16 @@ public class Xml2CsvDataConverter implements DataConverter {
 
     public ConvertType getConversionType() {
 	return type;
+    }
+
+    public void convert(Preferences preferences, OutputStream output)
+	    throws ConversionException {
+	try {
+	    String[][] data = createCSV(preferences);
+	    save(data, output);
+	} catch (IOException e) {
+	    throw new ConversionException("I/O error occured", e);
+	}
     }
 
 }

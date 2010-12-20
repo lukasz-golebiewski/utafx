@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.prefs.Preferences;
 
 import utafx.data.converter.impl.CsvDataConverter;
 import utafx.data.converter.impl.XlsDataConverter;
@@ -16,13 +17,13 @@ import utafx.data.exception.ConversionException;
 import utafx.data.exception.UnsupportedFormatException;
 import utafx.data.selection.SelectionArea;
 
-public class PreferenceConverter {
+public class ConversionManager {
 
     private SelectionArea area;
 
     private Map<ConvertType, DataConverter> converters;
 
-    public PreferenceConverter() {
+    public ConversionManager() {
 	initializeConverters();
     }
 
@@ -76,6 +77,10 @@ public class PreferenceConverter {
 			    .getSourceFormat().toString(), ct
 			    .getDestinationFormat().toString()));
 	}
+    }
+    
+    public void convert(Preferences peferences, String outputPath){
+	
     }
 
     private ConvertType getConversionType(String inputPath, String outputPath) {

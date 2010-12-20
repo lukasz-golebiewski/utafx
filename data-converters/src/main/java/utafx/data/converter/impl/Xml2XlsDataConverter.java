@@ -14,8 +14,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import utafx.data.converter.ConvertType;
-import utafx.data.converter.DataConverter;
 import utafx.data.converter.FileFormat;
+import utafx.data.converter.PreferenceDataConverter;
 import utafx.data.converter.PreferenceManager;
 import utafx.data.exception.ConversionException;
 import utafx.data.pref.jaxb.Alternative;
@@ -30,9 +30,9 @@ import utafx.data.pref.jaxb.Value;
 import utafx.data.util.CommonUtil;
 import utafx.data.util.WorkBookUtil;
 
-public class Xml2XlsDataConverter implements DataConverter {
+public class Xml2XlsDataConverter implements PreferenceDataConverter {
 
-    //private final Logger LOG = Logger.getLogger(Xml2XlsDataConverter.class);
+    // private final Logger LOG = Logger.getLogger(Xml2XlsDataConverter.class);
     private static final String DEFAULT_SHEET_NAME = "Preferences";
 
     private static final int REF_RANK_COLUMN_IDX = 0;
@@ -47,10 +47,10 @@ public class Xml2XlsDataConverter implements DataConverter {
 
     private String sheetName;
 
-    //private SelectionArea selectionArea;
+    // private SelectionArea selectionArea;
 
     public Xml2XlsDataConverter() {
-	//selectionArea = new SelectionArea(new CellAddress(1, 1));
+	// selectionArea = new SelectionArea(new CellAddress(1, 1));
     }
 
     public void convert(InputStream input, OutputStream output)
@@ -59,13 +59,18 @@ public class Xml2XlsDataConverter implements DataConverter {
 	try {
 	    Preferences prefs = reader.read(input);
 	    Workbook wb = createXls(prefs);
-	    wb.write(output);
-	    output.close();
+	    saveAndClose(wb, output);
 	} catch (JAXBException e) {
 	    throw new ConversionException("JAXB error occured", e);
 	} catch (IOException e) {
 	    throw new ConversionException("I/O error occured", e);
 	}
+    }
+
+    private void saveAndClose(Workbook wb, OutputStream output)
+	    throws IOException {
+	wb.write(output);
+	output.close();
     }
 
     private Workbook createXls(Preferences prefs) {
@@ -168,5 +173,15 @@ public class Xml2XlsDataConverter implements DataConverter {
 
     public ConvertType getConversionType() {
 	return this.conversionType;
+    }
+
+    public void convert(Preferences preferences, OutputStream output)
+	    throws ConversionException {
+	try {
+	    Workbook wb = createXls(preferences);
+	    saveAndClose(wb, output);
+	} catch (IOException e) {
+	    throw new ConversionException("I/O error occured", e);
+	}
     }
 }
