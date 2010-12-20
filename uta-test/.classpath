@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="/uta/lib/jsr305.jar"/>
 	<classpathentry kind="lib" path="/uta/lib/log4j-1.2.11.jar"/>
 	<classpathentry kind="lib" path="/uta/lib/meconsole009.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/uta-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
