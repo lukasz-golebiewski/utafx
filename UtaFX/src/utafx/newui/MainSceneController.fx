@@ -38,6 +38,7 @@ import javax.swing.filechooser.FileFilter;
 import java.lang.UnsupportedOperationException;
 import java.lang.String;
 import java.io.File;
+import utafx.ui.check.ModelCheck;
 
 /**
  * @author LG
@@ -46,18 +47,11 @@ public class MainSceneController {
 
     def solverFactory = new UtaSolverFactory();
     def prefManager = PreferenceManager {};
-
     package var criteriaUI: CriteriaUI;
     package var alternativesUI: AlternativesUI;
     package var referenceRankUI: ReferenceRankUI;
     package var finalRankUI: FinalRankUI;
     package var chartsHBox: HBox;
-    var charts: ChartUI[];
-    var constraintsManager: ConstraintsManager;
-    var freezedKendall = bind finalRankUI.preserveKendallRate on replace {
-                constraintsManager = new ConstraintsManagerFactory(freezedKendall).createConstraintsManager(finalRankUI.functions, getReferenceRankData(),
-                        finalRankUI.sortedRank);
-            }
 
     init {
         alternativesUI.model = AlternativesModel {
@@ -68,6 +62,15 @@ public class MainSceneController {
                     alternativeNames: bind alternativesUI.model.alternativeNames
                 }
     }
+    
+    var charts: ChartUI[];
+    var constraintsManager: ConstraintsManager;
+    var freezedKendall = bind finalRankUI.preserveKendallRate on replace {
+                constraintsManager = new ConstraintsManagerFactory(freezedKendall).createConstraintsManager(finalRankUI.functions, getReferenceRankData(),
+                        finalRankUI.sortedRank);
+            }
+
+    
 
     public function onNextState(currentState: Integer) {
         if (currentState == 2) {

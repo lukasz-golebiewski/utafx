@@ -42,7 +42,7 @@ public class AlternativesUI extends CustomNode {
 
     public var model: AlternativesModel;
     var showLogs = true;
-    var table = TableUI {
+    public-read var table = TableUI {
                 columns: bind for (cname in model.columnNames) {
                     TableColumn { text: cname };
                 }
@@ -72,12 +72,14 @@ public class AlternativesUI extends CustomNode {
                     for (i in [row..lastRow]) {
                         delete model.alternativeNames[i] from model.alternativeNames;
                     }
-                } else if (col == 0) {
+                } else {
                     for (i in [row..lastRow]) {
                         var value = tm.getValueAt(i, col);
-                        if (value != model.alternativeNames[i]) {
-                            model.alternativeNames[i] = "{value}";
-                        }
+                        model.rows[i].cells[col].text = "{value}";
+                        if (col == 0) {
+                            if (value != model.alternativeNames[i]) {
+                                model.alternativeNames[i] = "{value}";
+                            } }
                     }
                 }
                 if (showLogs) println("AlternativeNames: {model.alternativeNames}");
@@ -199,13 +201,13 @@ public class AlternativesUI extends CustomNode {
                             content: [
                                 addButton = Button {
                                             text: "Add"
-                                            id : "Add alternative"
+                                            id: "Add alternative"
                                             action: add
                                         //layoutX: 200
                                         }
                                 removeButton = Button {
                                             text: "Remove"
-                                            id : "Remove alternative"
+                                            id: "Remove alternative"
                                             action: remove
                                         //layoutX: 350
                                         }

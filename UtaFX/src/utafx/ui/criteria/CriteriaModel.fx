@@ -18,5 +18,5 @@ public class CriteriaModel {
 
     public function clear(){
         delete rows;
-    }
+    }   
 }

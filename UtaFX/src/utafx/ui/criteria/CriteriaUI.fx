@@ -34,7 +34,6 @@ def outerBorderFill = LinearGradient {
                 Stop { offset: 0.5 color: Color.web("#BCBCBC") }
             ]
         };
-
 def INFO_LABEL_HEIGHT = 20;
 
 /**
@@ -42,22 +41,21 @@ def INFO_LABEL_HEIGHT = 20;
  */
 public class CriteriaUI extends CustomNode {
 
-	var typesCombo = new JComboBox();
-    var showLogs = false;    
-    
+    var typesCombo = new JComboBox();
+    var showLogs = false;
     public var model = CriteriaModel {
                 columnNames: ["Name", "Type", "Segments"];
-                rows: []
+                rows: [];
                 criteriaNames: []
             };
-    var table = TableUI {
+    public-read var table = TableUI {
                 columns: bind for (cname in model.columnNames) {
                     TableColumn { text: cname };
                 }
                 rows: bind model.rows
-                //width: bind layoutBounds.width;
-            } 
-   
+            //width: bind layoutBounds.width;
+            }
+
     postinit {
         table.addTableModelListener(TableModelListener {
             public override function tableChanged(e: TableModelEvent): Void {
@@ -81,16 +79,18 @@ public class CriteriaUI extends CustomNode {
                     for (i in [row..lastRow]) {
                         delete model.criteriaNames[i] from model.criteriaNames;
                     }
-                } else if (col == 0) {
+                } else {
                     for (i in [row..lastRow]) {
                         var value = tm.getValueAt(i, col);
-                        if (value != model.criteriaNames[i]) {
-                            model.criteriaNames[i] = "{value}";
+                        model.rows[i].cells[col].text = "{value}";
+                        if (col == 0) {
+                            if (value != model.criteriaNames[i]) {
+                                model.criteriaNames[i] = "{value}";
+                            }
                         }
                     }
                 }
                 //if (showLogs) println("CriteriaNames: {criteriaNames}");
-
                 if (row > -1 and col > -1) {
                     var value = tm.getValueAt(row, col);
                     if (showLogs) println("{new Date()}: Table changed at [{row}, {col}] = {value}");
@@ -208,26 +208,26 @@ public class CriteriaUI extends CustomNode {
                             hpos: HPos.CENTER
                             def addButton = Button {
                                         text: "Add"
-                                        id : "Add criterion"
+                                        id: "Add criterion"
                                         action: add
                                     }
                             def removeButton = Button {
                                         text: "Remove"
-                                        id : "Remove criterion"
+                                        id: "Remove criterion"
                                         action: remove
                                     }
-//                            def pojoCheck = Button {
-//                                        text: "Pojo"
-//                                        action: function() {
-//                                            getPOJO()
-//                                        }
-//                                    }
+                            //                            def pojoCheck = Button {
+                            //                                        text: "Pojo"
+                            //                                        action: function() {
+                            //                                            getPOJO()
+                            //                                        }
+                            //                                    }
                             content: [
                                 addButton,
                                 removeButton,
-                                //pojoCheck
+                            //pojoCheck
                             ]
-                            layoutX: bind (table.width - addButton.boundsInLocal.width - removeButton.boundsInLocal.width)/2;// - pojoCheck.boundsInLocal.width - 10) / 2
+                            layoutX: bind (table.width - addButton.boundsInLocal.width - removeButton.boundsInLocal.width) / 2;// - pojoCheck.boundsInLocal.width - 10) / 2
                         }
                     ]
                 }

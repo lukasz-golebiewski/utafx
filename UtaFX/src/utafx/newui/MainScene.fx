@@ -6,6 +6,7 @@
 package utafx.newui;
 
 import java.lang.System;
+import utafx.ui.check.ModelCheck;
 
 /**
  * @author LG
@@ -222,6 +223,7 @@ public class MainScene {
                         time: 0ms
                         action: function() {
                             indexNextButton.text = "Next";
+                            indexNextButton.action = function ():Void { currentState.next(); };
                             tile.visible = true;
                             tile.layoutX = 323.0;
                             tile.layoutY = 717.0;
@@ -239,6 +241,8 @@ public class MainScene {
                             __layoutInfo_criteriaAndRefRankFlow.height = 684.0;
                             criteriaAndRefRankFlow.vertical = false;
                             alternativesUI.visible = false;
+                            alternativesUI.managed = true;
+                            alternativesUI.layoutX = 511.0;
                             finalRankUI.visible = false;
                             finalRankUI.layoutX = 274.0;
                             finalRankUI.layoutY = 322.0;
@@ -272,6 +276,8 @@ public class MainScene {
                             toolsMenu.accelerator = null;
                             helpMenu.text = "Help";
                             menuBar.visible = true;
+                            imageView.layoutX = 0.0;
+                            imageView.layoutY = 0.0;
                             scene.camera = null;
                             scene.cursor = null;
                         }
@@ -284,6 +290,7 @@ public class MainScene {
                         time: 0ms
                         action: function() {
                             indexNextButton.text = "Solve";
+                            indexNextButton.action = indexNextButtonActionAtState2;
                             tile.visible = true;
                             tile.layoutX = 417.0;
                             tile.layoutY = 729.0;
@@ -304,6 +311,8 @@ public class MainScene {
                             __layoutInfo_criteriaAndRefRankFlow.height = 641.0;
                             criteriaAndRefRankFlow.vertical = true;
                             alternativesUI.visible = true;
+                            alternativesUI.managed = false;
+                            alternativesUI.layoutX = 451.0;
                             finalRankUI.visible = false;
                             finalRankUI.layoutX = 274.0;
                             finalRankUI.layoutY = 322.0;
@@ -337,6 +346,8 @@ public class MainScene {
                             toolsMenu.accelerator = null;
                             helpMenu.text = "Help";
                             menuBar.visible = true;
+                            imageView.layoutX = -6.0;
+                            imageView.layoutY = 0.0;
                             scene.camera = null;
                             scene.cursor = null;
                         }
@@ -349,6 +360,7 @@ public class MainScene {
                         time: 0ms
                         action: function() {
                             indexNextButton.text = "Next";
+                            indexNextButton.action = function ():Void { currentState.next(); };
                             tile.visible = true;
                             tile.layoutX = 417.0;
                             tile.layoutY = 729.0;
@@ -363,6 +375,8 @@ public class MainScene {
                             criteriaAndRefRankFlow.layoutY = 0.0;
                             criteriaAndRefRankFlow.vertical = false;
                             alternativesUI.visible = false;
+                            alternativesUI.managed = true;
+                            alternativesUI.layoutX = 511.0;
                             finalRankUI.visible = true;
                             finalRankUI.layoutX = 38.0;
                             finalRankUI.layoutY = 450.0;
@@ -398,6 +412,8 @@ public class MainScene {
                             toolsMenu.accelerator = null;
                             helpMenu.text = "Help";
                             menuBar.visible = true;
+                            imageView.layoutX = 0.0;
+                            imageView.layoutY = 0.0;
                             scene.camera = null;
                             scene.cursor = null;
                         }
@@ -416,21 +432,26 @@ public class MainScene {
     }
     // </editor-fold>//GEN-END:main
 
+    function indexNextButtonActionAtState2(): Void {
+        if (new ModelCheck().doCheck(criteriaUI.model, alternativesUI.model, referenceRankUI.model))
+            currentState.next();
+    }
+
     function utaImplMenuItemOnMouseClicked(event: javafx.scene.input.MouseEvent): Void {
         controller.changeSolverImpl();
-         }
+    }
 
     function exitMenuItemOnMouseClicked(event: javafx.scene.input.MouseEvent): Void {
         System.exit(0);
-         }
+    }
 
     function importMenuItemOnMouseClicked(event: javafx.scene.input.MouseEvent): Void {
         controller.importPreferences();
-         }
+    }
 
     function onNextState(finishedState: Integer): Void {
         controller.onNextState(currentState.actual);
-         }
+    }
 
     var controller: MainSceneController;
 
@@ -441,7 +462,7 @@ public class MainScene {
                     finalRankUI: this.finalRankUI;
                     chartsHBox: this.chartsHBox;
                 }
-         }
+    }
 
 }
 

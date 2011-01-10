@@ -253,16 +253,10 @@ public class ReferenceRankUI extends CustomNode {
     }
 
     public function getPOJO(): Ranking {
-        var rankPojo = new Ranking();
-        var maxRank = sizeof model.rankings;
-        for (i in [1..maxRank]) {
-            var ranking = model.rankings[i - 1];
-            for (child in ranking.children) {
-                rankPojo.add(child.data, i);
-                if (showLogs) println(rankPojo.toString());
-            }
-        }
-        return rankPojo;
+        // remove this hack:
+        if(model == null)
+            return new Ranking();
+        return model.getPOJO();
     }
 
     override function create(): Node {

@@ -8,6 +8,7 @@ import javafx.util.Sequences;
 import com.javafx.preview.control.TreeItemBase;
 import utafx.ui.rank.ReferenceRankUI.RRTreeItem;
 import java.util.Collections;
+import uta.api.Ranking;
 
 /**
  * @author Pawcik
@@ -27,7 +28,7 @@ public class ReferenceRankModel {
                     }
                 }
                 for (nv in newValues) {
-                    if(Sequences.indexOf(availNames, nv) == -1)
+                    if (Sequences.indexOf(availNames, nv) == -1)
                         insert nv into availNames;
                 }
             }
@@ -94,6 +95,18 @@ public class ReferenceRankModel {
                 delete item as RRTreeItem from rankings;
             }
         }
+    }
+
+    public function getPOJO(): Ranking {
+        var rankPojo = new Ranking();
+        var maxRank = sizeof this.rankings;
+        for (i in [1..maxRank]) {
+            var ranking = this.rankings[i - 1];
+            for (child in ranking.children) {
+                rankPojo.add(child.data, i);
+            }
+        }
+        return rankPojo;
     }
 
 }
