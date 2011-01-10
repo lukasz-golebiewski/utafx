@@ -7,6 +7,9 @@ package utafx.newui;
 
 import java.lang.System;
 import utafx.ui.check.ModelCheck;
+import com.javafx.preview.control.MenuItem;
+import javafx.scene.control.Separator;
+import javafx.scene.control.Tooltip;
 
 /**
  * @author LG
@@ -222,6 +225,8 @@ public class MainScene {
                     javafx.animation.KeyFrame {
                         time: 0ms
                         action: function() {
+                            indexNextButton.onMouseEntered = null;
+                            indexNextButton.onMouseExited = null;
                             indexNextButton.text = "Next";
                             indexNextButton.action = function ():Void { currentState.next(); };
                             tile.visible = true;
@@ -289,6 +294,8 @@ public class MainScene {
                     javafx.animation.KeyFrame {
                         time: 0ms
                         action: function() {
+                            indexNextButton.onMouseEntered = indexNextButtonOnMouseEnteredAtState2;
+                            indexNextButton.onMouseExited = indexNextButtonOnMouseExitedAtState2;
                             indexNextButton.text = "Solve";
                             indexNextButton.action = indexNextButtonActionAtState2;
                             tile.visible = true;
@@ -359,6 +366,8 @@ public class MainScene {
                     javafx.animation.KeyFrame {
                         time: 0ms
                         action: function() {
+                            indexNextButton.onMouseEntered = null;
+                            indexNextButton.onMouseExited = null;
                             indexNextButton.text = "Next";
                             indexNextButton.action = function ():Void { currentState.next(); };
                             tile.visible = true;
@@ -432,9 +441,30 @@ public class MainScene {
     }
     // </editor-fold>//GEN-END:main
 
+    var modelCorrect = false;
+
+    function indexNextButtonOnMouseEnteredAtState2(event: javafx.scene.input.MouseEvent): Void {
+        modelCorrect = new ModelCheck().doCheck(criteriaUI.model, alternativesUI.model, referenceRankUI.model);
+        if (modelCorrect) {
+            indexNextButton.tooltip.hide();
+            indexNextButton.tooltip = null;
+        } else {
+            indexNextButton.tooltip = Tooltip {
+                        text: "Model is incorrect";
+                    }
+            indexNextButton.tooltip.show();
+        }
+    }
+
+    function indexNextButtonOnMouseExitedAtState2(event: javafx.scene.input.MouseEvent): Void {
+        indexNextButton.tooltip.hide();
+        indexNextButton.tooltip = null;
+    }
+
     function indexNextButtonActionAtState2(): Void {
-        if (new ModelCheck().doCheck(criteriaUI.model, alternativesUI.model, referenceRankUI.model))
+        if (modelCorrect) {
             currentState.next();
+        }
     }
 
     function utaImplMenuItemOnMouseClicked(event: javafx.scene.input.MouseEvent): Void {

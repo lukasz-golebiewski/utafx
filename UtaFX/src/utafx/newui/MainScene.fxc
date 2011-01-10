@@ -92,6 +92,8 @@
         <Reference name="layoutInfoHFill" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,bool:true,4,null,"/>
         <Reference name="gridLayoutInfoHLocation" value="int:0"/>
         <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="onMouseEntered" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel2,48,anim:,,str:indexNextButtonOnMouseEnteredAtState2,"/>
+        <Reference name="onMouseExited" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel2,47,anim:,,str:indexNextButtonOnMouseExitedAtState2,"/>
         <Reference name="clip" value="null"/>
         <Map name="customProperties"/>
         <Reference name="customClass" value="null"/>

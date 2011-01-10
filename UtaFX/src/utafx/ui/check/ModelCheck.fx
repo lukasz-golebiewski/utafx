@@ -22,7 +22,7 @@ public class ModelCheck {
         result = result and checkAlternatives(alternativesModel);
         result = result and checkReferenceRank(refRankModel);
         if(result == false) {
-            Logger.getLogger(this.getClass().getName()).info("Warning, model is inconsistent");
+            Logger.getLogger(this.getClass().getName()).info("Warning, model is incorrect");
         }
 
         return result;
