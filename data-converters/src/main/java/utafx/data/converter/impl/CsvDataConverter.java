@@ -8,14 +8,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
 
 import utafx.data.converter.ConvertType;
 import utafx.data.converter.DataConverter;
 import utafx.data.converter.FileFormat;
-import utafx.data.converter.PreferenceManager;
 import utafx.data.exception.ConversionException;
 import utafx.data.pref.jaxb.AltValues;
 import utafx.data.pref.jaxb.Alternative;
@@ -34,7 +31,8 @@ import utafx.data.util.CommonUtil;
  * 
  * @author <a href="mailto:marzec12@poczta.onet.pl">Pawel Solarski</a>
  */
-public class CsvDataConverter implements DataConverter {
+public class CsvDataConverter extends XmlPreferenceDataWriter implements
+	DataConverter {
 
     private static Logger LOG = Logger.getLogger(CsvDataConverter.class);
 
@@ -47,7 +45,7 @@ public class CsvDataConverter implements DataConverter {
     private final ConvertType conversionType = new ConvertType(FileFormat.CSV,
 	    FileFormat.XML);
     private String separator;
-    /** data holds comma separated values */
+    /** holds comma separated values */
     private String[][] data;
 
     /**
@@ -71,20 +69,12 @@ public class CsvDataConverter implements DataConverter {
     public void convert(InputStream input, OutputStream output)
 	    throws ConversionException {
 	try {
-	    readData(input);
-	    Preferences pref = readPreferences();
-	    save(pref, output);
+	    Preferences pref = read(input);
+	    write(pref, output);
 	} catch (IOException e) {
-	    throw new ConversionException("I/O error occured", e);
-	} catch (JAXBException e) {
-	    throw new ConversionException("JAXB error occured", e);
+	    throw new ConversionException("Could not convert. Reason: "
+		    + e.getMessage(), e);
 	}
-    }
-
-    private void save(Preferences pref, OutputStream output)
-	    throws JAXBException, IOException {
-	PreferenceManager writer = new PreferenceManager();
-	writer.write(pref, output);
     }
 
     private Preferences readPreferences() {
@@ -275,5 +265,11 @@ public class CsvDataConverter implements DataConverter {
      */
     public String[][] getConvertedData() {
 	return data;
+    }
+
+    public Preferences read(InputStream is) throws IOException {
+	readData(is);
+	Preferences preferences = readPreferences();
+	return preferences;
     }
 }

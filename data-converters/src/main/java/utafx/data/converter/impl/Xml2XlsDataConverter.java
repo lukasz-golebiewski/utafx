@@ -14,8 +14,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import utafx.data.converter.ConvertType;
+import utafx.data.converter.DataConverter;
 import utafx.data.converter.FileFormat;
-import utafx.data.converter.PreferenceDataConverter;
 import utafx.data.converter.PreferenceManager;
 import utafx.data.exception.ConversionException;
 import utafx.data.pref.jaxb.Alternative;
@@ -30,7 +30,8 @@ import utafx.data.pref.jaxb.Value;
 import utafx.data.util.CommonUtil;
 import utafx.data.util.WorkBookUtil;
 
-public class Xml2XlsDataConverter implements PreferenceDataConverter {
+public class Xml2XlsDataConverter extends XmlPreferenceDataReader implements
+	DataConverter {
 
     // private final Logger LOG = Logger.getLogger(Xml2XlsDataConverter.class);
     private static final String DEFAULT_SHEET_NAME = "Preferences";
@@ -175,13 +176,10 @@ public class Xml2XlsDataConverter implements PreferenceDataConverter {
 	return this.conversionType;
     }
 
-    public void convert(Preferences preferences, OutputStream output)
-	    throws ConversionException {
-	try {
-	    Workbook wb = createXls(preferences);
-	    saveAndClose(wb, output);
-	} catch (IOException e) {
-	    throw new ConversionException("I/O error occured", e);
-	}
+    public void write(Preferences preferences, OutputStream output)
+	    throws IOException {
+
+	Workbook wb = createXls(preferences);
+	saveAndClose(wb, output);
     }
 }

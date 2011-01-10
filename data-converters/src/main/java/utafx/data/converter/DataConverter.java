@@ -6,11 +6,11 @@ import java.io.OutputStream;
 import utafx.data.exception.ConversionException;
 
 /**
- * Generic interface for converting streams.
+ * Generic interface for converting preferences.
  * 
  * @author <a href="mailto:marzec12@poczta.onet.pl">Pawel Solarski</a>
  */
-public interface DataConverter {
+public interface DataConverter extends PreferenceDataReader, PreferenceDataWriter{
     /**
      * Converts data from input stream to output stream.
      * 

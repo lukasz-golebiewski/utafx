@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,7 +19,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import utafx.data.converter.ConvertType;
 import utafx.data.converter.DataConverter;
 import utafx.data.converter.FileFormat;
-import utafx.data.converter.PreferenceManager;
 import utafx.data.exception.ConversionException;
 import utafx.data.pref.jaxb.AltValues;
 import utafx.data.pref.jaxb.Alternative;
@@ -44,7 +41,8 @@ import utafx.data.util.WorkBookUtil;
  * 
  * @author <a href="mailto:marzec12@poczta.onet.pl">Pawel Solarski</a>
  */
-public class XlsDataConverter implements DataConverter {
+public class XlsDataConverter extends XmlPreferenceDataWriter implements
+	DataConverter {
 
     private static final Logger LOG = Logger.getLogger(XlsDataConverter.class);
 
@@ -52,7 +50,6 @@ public class XlsDataConverter implements DataConverter {
     private String sheetName;
     private SelectionArea selectionArea;
     private ObjectFactory factory = new ObjectFactory();
-    private Preferences pref;
     private Map<Integer, Integer> refRankMap = new HashMap<Integer, Integer>();
     /**
      * This member will hold the column index, where first criteria is stored
@@ -62,6 +59,9 @@ public class XlsDataConverter implements DataConverter {
 	    FileFormat.XML);
 
     private static final double MINIMUM_MATCH_RATE = 0.9;
+
+    private static final String GAIN_ABBREV_STRING = "g";
+    private static final String COST_ABBREV_STRING = "c";
 
     /**
      * Creates new converter, that will process the data from given sheet index,
@@ -125,25 +125,30 @@ public class XlsDataConverter implements DataConverter {
     public void convert(InputStream input, OutputStream output)
 	    throws ConversionException {
 	try {
-	    Workbook wb = getWorkbook(input);
-	    int number = getSheetNumber(wb);
-	    if (number >= 0) {
-		Sheet sheet = wb.getSheetAt(number);
-		if (sheet != null) {
-		    checkSelectionArea(sheet);
-		    pref = readPreferences(sheet);
-		    save(pref, output);
-		} else {
-		    throw new ConversionException("Sheet \"" + sheetName
-			    + "\" not found");
-		}
-	    } else {
-		throw new ConversionException("Sheet name or index must be set");
-	    }
+	    Sheet sheet = getWorkingSheet(input);
+	    checkSelectionArea(sheet);
+	    Preferences pref = readPreferences(sheet);
+	    write(pref, output);
 	} catch (IOException e) {
 	    throw new ConversionException("I/O error occured", e);
-	} catch (JAXBException e) {
-	    throw new ConversionException("Error in writing objects", e);
+	}
+    }
+
+    private Sheet getWorkingSheet(InputStream xls) throws IOException {
+	Workbook wb;
+	wb = getWorkbook(xls);
+	int number = getSheetNumber(wb);
+	if (number >= 0) {
+	    Sheet sheet = wb.getSheetAt(number);
+	    if (sheet != null) {
+		return sheet;
+	    } else {
+		throw new IllegalArgumentException("Sheet \"" + sheetName
+			+ "\" not found");
+	    }
+	} else {
+	    throw new IllegalArgumentException(
+		    "Sheet name or index must be set");
 	}
     }
 
@@ -189,7 +194,8 @@ public class XlsDataConverter implements DataConverter {
 	String value = cell.getStringCellValue();
 	if (value != null) {
 	    value = value.trim().toLowerCase();
-	    if (value.startsWith("g") || value.startsWith("c")) {
+	    if (value.startsWith(GAIN_ABBREV_STRING)
+		    || value.startsWith(COST_ABBREV_STRING)) {
 		return true;
 	    }
 	}
@@ -241,12 +247,6 @@ public class XlsDataConverter implements DataConverter {
 	    }
 	}
 	return (1.0 * trueCount / flags.length > MINIMUM_MATCH_RATE);
-    }
-
-    private void save(Preferences pref, OutputStream output)
-	    throws IOException, JAXBException {
-	PreferenceManager writer = new PreferenceManager();
-	writer.write(pref, output);
     }
 
     private Preferences readPreferences(Sheet sheet) {
@@ -445,5 +445,11 @@ public class XlsDataConverter implements DataConverter {
 
     public ConvertType getConversionType() {
 	return conversionType;
+    }
+
+    public Preferences read(InputStream xls) throws IOException {
+	Sheet sheet = getWorkingSheet(xls);
+	checkSelectionArea(sheet);
+	return readPreferences(sheet);
     }
 }

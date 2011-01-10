@@ -11,6 +11,10 @@ import javax.xml.bind.Unmarshaller;
 
 import utafx.data.pref.jaxb.Preferences;
 
+/**
+ * This class read and writes preferences from/to XML file format. 
+ * @author <a href="mailto:marzec12@poczta.onet.pl">Pawel Solarski</a>
+ */
 public class PreferenceManager {
 
     public Preferences read(InputStream prefXml) throws JAXBException,

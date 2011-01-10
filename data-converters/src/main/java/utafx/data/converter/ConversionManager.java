@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.prefs.Preferences;
 
 import utafx.data.converter.impl.CsvDataConverter;
 import utafx.data.converter.impl.XlsDataConverter;
@@ -15,6 +14,7 @@ import utafx.data.converter.impl.Xml2XlsDataConverter;
 import utafx.data.converter.impl.Xml2XlsxDataConverter;
 import utafx.data.exception.ConversionException;
 import utafx.data.exception.UnsupportedFormatException;
+import utafx.data.pref.jaxb.Preferences;
 import utafx.data.selection.SelectionArea;
 
 public class ConversionManager {
@@ -78,12 +78,36 @@ public class ConversionManager {
 			    .getDestinationFormat().toString()));
 	}
     }
-    
-    public void convert(Preferences peferences, String outputPath){
-	
+
+    public void write(Preferences preferences, String outputPath)
+	    throws UnsupportedFormatException, IOException {
+	ConvertType ct = getConversionType("someFile.xml", outputPath);
+	PreferenceDataWriter writer = converters.get(ct);
+	if (writer != null) {
+	    writer.write(preferences, new FileOutputStream(outputPath));
+	} else {
+	    throw new UnsupportedFormatException(String.format(
+		    "Conversion \"%s\" -> \"%s\" is not supported", ct
+			    .getSourceFormat().toString(), ct
+			    .getDestinationFormat().toString()));
+	}
     }
 
-    private ConvertType getConversionType(String inputPath, String outputPath) {
+    public Preferences read(String inputPath)
+	    throws UnsupportedFormatException, IOException {
+	ConvertType ct = getConversionType(inputPath, "someFile.xml");
+	PreferenceDataReader reader = converters.get(ct);	
+	if (reader != null) {
+	    return reader.read(new FileInputStream(inputPath));
+	} else {
+	    throw new UnsupportedFormatException(String.format(
+		    "Conversion \"%s\" -> \"%s\" is not supported", ct
+			    .getSourceFormat().toString(), ct
+			    .getDestinationFormat().toString()));
+	}
+    }
+
+    public ConvertType getConversionType(String inputPath, String outputPath) {
 	String src = getExtension(inputPath);
 	String dst = getExtension(outputPath);
 	return new ConvertType(src, dst);
@@ -95,5 +119,9 @@ public class ConversionManager {
 
     public ConvertType[] getSupportedConversions() {
 	return converters.keySet().toArray(new ConvertType[converters.size()]);
+    }
+
+    public DataConverter getConverter(ConvertType cType) {
+	return converters.get(cType);
     }
 }
