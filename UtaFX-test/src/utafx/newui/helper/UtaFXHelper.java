@@ -12,6 +12,7 @@ import org.jemmy.lookup.Lookup;
 import org.jemmy.lookup.LookupCriteria;
 import org.netbeans.jemmy.operators.JFileChooserOperator;
 
+import utafx.ui.Constants;
 import utafx.ui.generic.table.TableUI;
 
 import com.javafx.preview.control.Menu;
@@ -21,11 +22,9 @@ public class UtaFXHelper {
 
   public static final double DOUBLE_PRECISION = 0.0000000001;
 
-  private static final String SOLVE = "Solve";
+  public static final String SOLVE = "Solve";
 
   private static final String NEXT = "Next";
-
-  private static final String FINAL_RANK_TABLE_NAME = "finalRankTable";
 
   private static final String DEFAULT_DATA_PATH = "./data";
 
@@ -38,7 +37,7 @@ public class UtaFXHelper {
   }
 
   public Wrap<? extends TableUI> getFinalRankTable() {
-    return getTableByName(FINAL_RANK_TABLE_NAME);
+    return getTableByName(Constants.FINAL_RANK_TABLE_ID);
   }
 
   public Wrap<? extends TableUI> getTableByName(final String name) {
@@ -72,23 +71,26 @@ public class UtaFXHelper {
   }
 
   public void clickNext() {
-    clickButton(NEXT);
+    clickButtonWithText(NEXT);
   }
 
   public void clickSolve() {
-    clickButton(SOLVE);
+    clickButtonWithText(SOLVE);
   }
 
-  public void clickButton(final String buttonText) {
-    Lookup<Button> nextButton = scene.as(Parent.class, Node.class).lookup(Button.class, new LookupCriteria<Button>() {
+  public void clickButtonWithText(final String buttonText) {
+    getButtonWrapByText(buttonText).mouse().click();
+  }
+
+  public Wrap<Button> getButtonWrapByText(final String text) {
+    return scene.as(Parent.class, Node.class).lookup(Button.class, new LookupCriteria<Button>() {
       public boolean check(Button button) {
-        return button.get$text().equals(buttonText);
+        return button.get$text().equals(text);
       }
-    });
-    nextButton.wrap().mouse().click();
+    }).wrap();
   }
 
-  public Wrap<Button> getButtonWrap(final String buttonId) {
+  public Wrap<Button> getButtonWrapByID(final String buttonId) {
     return scene.as(Parent.class, Node.class).lookup(Button.class, new LookupCriteria<Button>() {
       @Override
       public boolean check(Button button) {

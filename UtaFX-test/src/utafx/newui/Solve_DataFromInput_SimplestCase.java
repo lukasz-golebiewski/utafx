@@ -16,12 +16,12 @@ public class Solve_DataFromInput_SimplestCase extends BaseUtaFXTest {
   public void test() {
     helper.clickNext();
 
-    helper.getButtonWrap("Add criterion").mouse().click(2);
-    helper.getButtonWrap("Add alternative").mouse().click(3);
-    helper.getButtonWrap("Add alt to rank").mouse().click();
-    helper.clickButton("Accept");
-    helper.getButtonWrap("Add alt to rank").mouse().click();
-    helper.clickButton("Accept");
+    helper.getButtonWrapByID("Add criterion").mouse().click(2);
+    helper.getButtonWrapByID("Add alternative").mouse().click(3);
+    helper.getButtonWrapByID("Add alt to rank").mouse().click();
+    helper.clickButtonWithText("Accept");
+    helper.getButtonWrapByID("Add alt to rank").mouse().click();
+    helper.clickButtonWithText("Accept");
     helper.clickSolve();
     checkFinalRank();
   }

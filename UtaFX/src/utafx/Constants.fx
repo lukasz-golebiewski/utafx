@@ -3,7 +3,6 @@ package utafx;
 import javafx.scene.layout.LayoutInfo;
 import javafx.scene.layout.Priority;
 
-
 /*package def ALWAYS_RESIZE = LayoutInfo{
     hgrow: Priority.ALWAYS
     vgrow: Priority.ALWAYS

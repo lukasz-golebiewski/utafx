@@ -34,6 +34,7 @@ import uta.api.Ranking;
 import javafx.geometry.Insets;
 import uta.api.IUtaSolver;
 import uta.UtaSolverFactory;
+import utafx.ui.Constants;
 
 def outerBorderFill = LinearGradient {
             startX: 0.0 startY: 0.0 endX: 0.0 endY: 1.0
@@ -146,7 +147,7 @@ public class FinalRankUI extends CustomNode {
 
     function updateTable() {
         table = TableUI {
-            		id : "finalRankTable"
+            		id : Constants.FINAL_RANK_TABLE_ID;
                     columns: bind for (c in model.columnNames) {
                         TableColumn {
                             text: c
