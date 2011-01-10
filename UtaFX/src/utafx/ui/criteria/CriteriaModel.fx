@@ -18,5 +18,26 @@ public class CriteriaModel {
 
     public function clear(){
         delete rows;
-    }   
+    }
+
+    public function getPOJO(): uta.api.Criterion[] {
+        var criteriaPOJO: uta.api.Criterion[];
+
+        for (row in this.rows) {
+            var i = indexof row;
+            var name = "{row.cells[0].text}";
+            var origType = "{row.cells[1].text}";
+            var type: Integer =
+                    if (origType == 'Cost') {
+                        0
+                    } else {
+                        1
+                    };
+
+            var seg = Integer.parseInt("{row.cells[2].text}");
+            var c: uta.api.Criterion = new uta.api.Criterion(name, type == 1, seg);
+            insert c into criteriaPOJO;            
+        }
+        return criteriaPOJO;
+    }
 }

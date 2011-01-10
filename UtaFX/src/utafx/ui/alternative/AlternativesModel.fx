@@ -21,4 +21,22 @@ public class AlternativesModel {
     //new approach
     public var alternativeNames:String[];
 
+    public function getPOJO(): uta.api.Alternative[] {
+        var alternativesPOJO: Alternative[] = [];
+
+        for (row in this.rows) {
+            var i = indexof row;
+            var name = "{row.cells[0].text}";
+            var values: Double[] =
+                    for (j in [1..<sizeof this.columnNames]) {
+                        Double.parseDouble("{row.cells[j].text}");
+                    }
+            var a = new uta.api.Alternative();
+            a.setName(name);
+            a.setValues(values);
+            insert a into alternativesPOJO;
+        }
+        return alternativesPOJO;
+    }
+
 }

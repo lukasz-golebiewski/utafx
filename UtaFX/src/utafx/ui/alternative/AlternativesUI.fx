@@ -122,24 +122,7 @@ public class AlternativesUI extends CustomNode {
     }
 
     public function getPOJO(): uta.api.Alternative[] {
-        //if (showLogs) println("Executed alternativesUI.getPOJO()");
-        var alternativesPOJO: Alternative[] = [];
-
-        for (row in model.rows) {
-            var i = indexof row;
-            var name = "{table.getValueAt(i, 0)}";
-            var values: Double[] =
-                    for (j in [1..<sizeof model.columnNames]) {
-                        Double.parseDouble("{table.getValueAt(i, j)}");
-                    }
-            var a = new uta.api.Alternative();
-            a.setName(name);
-            a.setValues(values);
-            //a.setCriteria(criteriaPOJO);
-            if (showLogs) println("{a.getName()} {Arrays.toString(a.getValues())}");
-            insert a into alternativesPOJO;
-        }
-        return alternativesPOJO;
+        return model.getPOJO();
     }
 
     override function create(): Node {

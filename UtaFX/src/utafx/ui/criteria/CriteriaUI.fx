@@ -132,26 +132,7 @@ public class CriteriaUI extends CustomNode {
     }
 
     public function getPOJO(): uta.api.Criterion[] {
-        if (showLogs) println("Executed getPOJO");
-        var criteriaPOJO: uta.api.Criterion[];
-
-        for (row in model.rows) {
-            var i = indexof row;
-            var name = "{table.getValueAt(i, 0)}";
-            var origType = table.getValueAt(i, 1);
-            var type: Integer =
-                    if (origType == 'Cost') {
-                        0
-                    } else {
-                        1
-                    };
-
-            var seg = Integer.parseInt("{table.getValueAt(i, 2)}");
-            var c: uta.api.Criterion = new uta.api.Criterion(name, type == 1, seg);
-            insert c into criteriaPOJO;
-            if (showLogs) println("{c.getName()} {c.isGain()} {c.getNoOfSegments()}");
-        }
-        return criteriaPOJO;
+        this.model.getPOJO();
     }
 
     public function getCriteriaNames(): String[] {

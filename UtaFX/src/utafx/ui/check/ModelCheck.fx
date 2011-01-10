@@ -12,7 +12,7 @@ import java.lang.NumberFormatException;
 import java.util.logging.Logger;
 
 /**
- * @author masklin
+ * @author LG
  */
 public class ModelCheck {
 
