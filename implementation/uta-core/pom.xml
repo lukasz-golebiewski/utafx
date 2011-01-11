@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>implementation</artifactId>
+		<groupId>uta</groupId>
+		<version>1.0</version>
+	</parent>
+	<properties>
+		<core.impl.version>1.0</core.impl.version>
+		<solver.api.version>1.0</solver.api.version>
+	</properties>
+	<groupId>uta</groupId>
+	<artifactId>uta-core</artifactId>
+	<version>${core.version}</version>
+	<name>Uta implemenation - Core</name>
+	<packaging>pom</packaging>
+	<modules>
+		<module>uta-core-impl</module>
+		<module>uta-solver-api</module>
+	</modules>
+</project>

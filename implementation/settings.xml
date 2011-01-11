@@ -1,0 +1,81 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<repositories>
+				<repository>
+					<releases>
+						<enabled>false</enabled>
+						<updatePolicy>always</updatePolicy>
+						<checksumPolicy>warn</checksumPolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+						<checksumPolicy>fail</checksumPolicy>
+					</snapshots>
+					<id>codehausSnapshots</id>
+					<name>Codehaus Snapshots</name>
+					<url>http://snapshots.maven.codehaus.org/maven2</url>
+					<layout>default</layout>
+				</repository>
+				<repository>
+					<id>java.net</id>
+					<name>java.net Maven Repository</name>
+					<url>https://maven-repository.dev.java.net/nonav/repository</url>
+				</repository>
+				<repository>
+					<id>jboss.org</id>
+					<name>JBoss Maven Repository</name>
+					<url>http://repository.jboss.org/maven2</url>
+				</repository>
+				<repository>
+					<id>jfrog-libs-dist</id>
+					<name>jfrog-libs-dist</name>
+					<url>http://repo.jfrog.org/artifactory/libs-releases-local</url>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>central</id>
+					<name>Maven Plugin Repository</name>
+					<url>http://repo1.maven.org/maven2</url>
+					<layout>default</layout>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<releases>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+				</pluginRepository>
+				<pluginRepository>
+					<id>jfrog-plugins-dist</id>
+					<name>jfrog-plugins-dist</name>
+					<url>http://repo.jfrog.org/artifactory/plugins-releases-local</url>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</pluginRepository>
+				<pluginRepository>
+					<id>jfrog-libs-dist</id>
+					<name>jfrog-libs-dist</name>
+					<url>http://repo.jfrog.org/artifactory/libs-releases-local</url>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</pluginRepository>
+
+			</pluginRepositories>
+		</profile>
+	</profiles>
+</settings>

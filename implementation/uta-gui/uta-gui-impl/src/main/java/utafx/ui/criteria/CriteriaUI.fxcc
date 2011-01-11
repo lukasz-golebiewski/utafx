@@ -1,0 +1,2 @@
+<CustomComponent version="1" className="utafx.ui.criteria.CriteriaUI" extends="javafx.scene.CustomNode">
+</CustomComponent>

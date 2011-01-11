@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>implementation</artifactId>
+		<groupId>uta</groupId>
+		<version>1.0</version>
+	</parent>
+	<groupId>uta</groupId>
+	<artifactId>uta-application</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>	
+	<properties>
+		<core.version>1.0</core.version>
+		<gui.version>1.0</gui.version>		
+		<encoding>UTF-8</encoding>
+	</properties>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<descriptor>src/main/resources/assembly.xml</descriptor>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>uta</groupId>
+			<artifactId>uta-core-impl</artifactId>
+			<version>${core.version}</version>			
+		</dependency>
+		<dependency>
+			<groupId>uta</groupId>
+			<artifactId>uta-gui-impl</artifactId>
+			<version>${gui.version}</version>			
+		</dependency>		
+	</dependencies>
+</project>

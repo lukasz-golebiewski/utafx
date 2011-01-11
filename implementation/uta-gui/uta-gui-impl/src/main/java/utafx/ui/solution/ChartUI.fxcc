@@ -1,0 +1,2 @@
+<CustomComponent version="1" className="utafx.ui.solution.ChartUI" extends="javafx.scene.CustomNode">
+</CustomComponent>
