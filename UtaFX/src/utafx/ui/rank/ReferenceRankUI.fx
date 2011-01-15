@@ -63,7 +63,7 @@ public class ReferenceRankUI extends CustomNode {
     public var comboBox2: ChoiceBox;
     public var guiController: GUIController;
 
-    public function reset() {
+    public function clearAll() {
         if (showLogs) println("Reseting ReferenceRank...");
         model.rankings = [];
         model.availNames = model.alternativeNames;

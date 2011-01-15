@@ -109,6 +109,10 @@ public class AlternativesUI extends CustomNode {
         insert row into model.rows
     }
 
+    public function clearAll() {
+        delete  model.rows;
+    }
+
     /**
     Removes the selected criterion from the table
      */

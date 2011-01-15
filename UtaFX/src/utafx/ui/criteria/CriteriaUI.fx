@@ -133,6 +133,12 @@ public class CriteriaUI extends CustomNode {
         }
     }
 
+    public function clearAll() {
+        delete  model.criteriaNames;
+        delete  model.rows;
+    }
+
+
     public function getPOJO(): uta.api.Criterion[] {
         this.model.getPOJO();
     }

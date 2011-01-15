@@ -403,6 +403,7 @@
         <Reference name="graphic" value="null"/>
         <List name="items">
             <Item value="inst:MenuItemModel4"/>
+            <Item value="inst:MenuItemModel5"/>
         </List>
     </Instance>
     <Instance classID="MenuItemModel" instanceID="MenuItemModel4">
@@ -420,6 +421,20 @@
         <Reference name="font" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel1,11,anim:,,null,"/>
         <Reference name="graphic" value="null"/>
     </Instance>
+    <Instance classID="MenuItemModel" instanceID="MenuItemModel5">
+        <Reference name="instanceName" value="str:clearAllMenuItem"/>
+        <Reference name="visible" value="prop2:7,NOT_SET,4,null,4,null,17,anim:,,bool:false,24,inst:StateVariableModel1,16,inst:StateModel2,16,anim:,,bool:true,"/>
+        <Reference name="disable" value="prop2:7,NOT_SET,4,null,4,null,16,anim:,,bool:true,24,inst:StateVariableModel1,16,inst:StateModel2,17,anim:,,bool:false,"/>
+        <Reference name="gridLayoutInfoHLocation" value="int:0"/>
+        <Reference name="gridLayoutInfoVLocation" value="int:0"/>
+        <Reference name="onMouseClicked" value="prop2:7,NOT_SET,4,null,4,null,4,null,24,inst:StateVariableModel1,16,inst:StateModel2,49,anim:,,str:clearAllMenuItemOnMouseClickedAtState2,"/>
+        <Reference name="clip" value="null"/>
+        <Map name="customProperties"/>
+        <Reference name="customClass" value="null"/>
+        <Reference name="tooltip" value="null"/>
+        <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,20,anim:,,str:Menu Item,24,inst:StateVariableModel1,16,inst:StateModel2,20,anim:,,str:Clear all,"/>
+        <Reference name="graphic" value="null"/>
+    </Instance>
     <Instance classID="MenuModel" instanceID="MenuModel3">
         <Reference name="instanceName" value="str:helpMenu"/>
         <Reference name="gridLayoutInfoHLocation" value="int:0"/>
@@ -431,10 +446,10 @@
         <Reference name="text" value="prop2:7,NOT_SET,4,null,4,null,15,anim:,,str:Help,24,inst:StateVariableModel1,16,inst:StateModel3,15,anim:,,str:Help,"/>
         <Reference name="graphic" value="null"/>
         <List name="items">
-            <Item value="inst:MenuItemModel5"/>
+            <Item value="inst:MenuItemModel6"/>
         </List>
     </Instance>
-    <Instance classID="MenuItemModel" instanceID="MenuItemModel5">
+    <Instance classID="MenuItemModel" instanceID="MenuItemModel6">
         <Reference name="instanceName" value="str:aboutMenuItem"/>
         <Reference name="gridLayoutInfoHLocation" value="int:0"/>
         <Reference name="gridLayoutInfoVLocation" value="int:0"/>

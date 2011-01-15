@@ -148,9 +148,15 @@ public class MainScene {
         text: "Choose solver"
     }
     
+    public-read def clearAllMenuItem: com.javafx.preview.control.MenuItem = com.javafx.preview.control.MenuItem {
+        visible: false
+        disable: true
+        text: "Menu Item"
+    }
+    
     public-read def toolsMenu: com.javafx.preview.control.Menu = com.javafx.preview.control.Menu {
         text: "Edit"
-        items: [ utaImplMenuItem, ]
+        items: [ utaImplMenuItem, clearAllMenuItem, ]
     }
     
     public-read def aboutMenuItem: com.javafx.preview.control.MenuItem = com.javafx.preview.control.MenuItem {
@@ -275,6 +281,10 @@ public class MainScene {
                             utaImplMenuItem.disable = false;
                             utaImplMenuItem.text = "Choose solver";
                             utaImplMenuItem.font = null;
+                            clearAllMenuItem.visible = false;
+                            clearAllMenuItem.disable = true;
+                            clearAllMenuItem.onMouseClicked = null;
+                            clearAllMenuItem.text = "Menu Item";
                             toolsMenu.disable = true;
                             toolsMenu.text = "Tools";
                             toolsMenu.font = null;
@@ -347,6 +357,10 @@ public class MainScene {
                             utaImplMenuItem.disable = false;
                             utaImplMenuItem.text = "Choose solver";
                             utaImplMenuItem.font = null;
+                            clearAllMenuItem.visible = true;
+                            clearAllMenuItem.disable = false;
+                            clearAllMenuItem.onMouseClicked = clearAllMenuItemOnMouseClickedAtState2;
+                            clearAllMenuItem.text = "Clear all";
                             toolsMenu.disable = false;
                             toolsMenu.text = "Tools";
                             toolsMenu.font = null;
@@ -415,6 +429,10 @@ public class MainScene {
                             utaImplMenuItem.disable = true;
                             utaImplMenuItem.text = "Choose solver";
                             utaImplMenuItem.font = null;
+                            clearAllMenuItem.visible = false;
+                            clearAllMenuItem.disable = true;
+                            clearAllMenuItem.onMouseClicked = null;
+                            clearAllMenuItem.text = "Menu Item";
                             toolsMenu.disable = false;
                             toolsMenu.text = "Tools";
                             toolsMenu.font = null;
@@ -441,6 +459,10 @@ public class MainScene {
     }
     // </editor-fold>//GEN-END:main
 
+    function clearAllMenuItemOnMouseClickedAtState2(event: javafx.scene.input.MouseEvent): Void {
+        controller.clearData();
+         }
+
     var modelCorrect = false;
 
     function indexNextButtonOnMouseEnteredAtState2(event: javafx.scene.input.MouseEvent): Void {
@@ -448,40 +470,40 @@ public class MainScene {
         if (modelCorrect) {
             indexNextButton.tooltip.hide();
             indexNextButton.tooltip = null;
-        } else {
+             } else {
             indexNextButton.tooltip = Tooltip {
                         text: "Model is incorrect";
                     }
             indexNextButton.tooltip.show();
-        }
-    }
+             }
+         }
 
     function indexNextButtonOnMouseExitedAtState2(event: javafx.scene.input.MouseEvent): Void {
         indexNextButton.tooltip.hide();
         indexNextButton.tooltip = null;
-    }
+         }
 
     function indexNextButtonActionAtState2(): Void {
         if (modelCorrect) {
             currentState.next();
-        }
-    }
+             }
+         }
 
     function utaImplMenuItemOnMouseClicked(event: javafx.scene.input.MouseEvent): Void {
         controller.changeSolverImpl();
-    }
+         }
 
     function exitMenuItemOnMouseClicked(event: javafx.scene.input.MouseEvent): Void {
         System.exit(0);
-    }
+         }
 
     function importMenuItemOnMouseClicked(event: javafx.scene.input.MouseEvent): Void {
         controller.importPreferences();
-    }
+         }
 
     function onNextState(finishedState: Integer): Void {
         controller.onNextState(currentState.actual);
-    }
+         }
 
     var controller: MainSceneController;
 
@@ -492,7 +514,7 @@ public class MainScene {
                     finalRankUI: this.finalRankUI;
                     chartsHBox: this.chartsHBox;
                 }
-    }
+         }
 
 }
 

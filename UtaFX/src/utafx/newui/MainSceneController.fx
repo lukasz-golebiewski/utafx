@@ -163,8 +163,10 @@ public class MainSceneController {
         return refRank;
     }
 
-    function clearDataControls() {
-        delete  criteriaUI.model.criteriaNames;
+    public function clearData() {
+        criteriaUI.clearAll();
+        alternativesUI.clearAll();
+        referenceRankUI.clearAll();
     }
 
     public function importPreferences() {
@@ -176,7 +178,7 @@ public class MainSceneController {
                     show: true
                 }
         if (fc.selectedFile != null) {
-            clearDataControls();
+            clearData();
             prefManager.importLastDir = fc.selectedFile.getParentFile();
             var preferences: Preferences = prefManager.doImport(fc.selectedFile);
             var importedCriteria = preferences.getCriteria();
