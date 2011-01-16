@@ -43,9 +43,7 @@ def outerBorderFill = LinearGradient {
                 Stop { offset: 0.5 color: Color.web("#BCBCBC") }
             ]
         };
-
 def KENDALL_LEFT_PADDING = 10;
-
 
 /**
  * @author Pawcik
@@ -65,18 +63,16 @@ public class FinalRankUI extends CustomNode {
     var solver: IUtaSolver = new UtaSolverFactory().createSolver();
     var rankUtils = new RankingUtils();
     public var solutionUI: SolutionUI;
-
     public-read var preserveKendallRate = bind kendallCheckBox.selected on replace {
-           solutionUI.freezedKendall = kendallCheckBox.selected;
-    }
-
+                solutionUI.freezedKendall = kendallCheckBox.selected;
+            }
     //each time this reference change, all related data will be updated
     public var refRank: Ranking on replace {
-                if(functions != null)
-                 update();
+                if (functions != null)
+                    update();
             }
 
-    init {        
+    init {
         kendallRate = Tile {
                     vertical: true
 
@@ -88,13 +84,13 @@ public class FinalRankUI extends CustomNode {
                                         Label {
                                             text: bind "Kendall's coefficient: {kendallValue}"
                                         }
-//                                        TextBox {
-//                                            lines: 1
-//                                            multiline: false
-//                                            editable: false
-//                                            columns: 5
-//                                            text: bind "{kendallValue}"
-//                                        }
+                                    //                                        TextBox {
+                                    //                                            lines: 1
+                                    //                                            multiline: false
+                                    //                                            editable: false
+                                    //                                            columns: 5
+                                    //                                            text: bind "{kendallValue}"
+                                    //                                        }
                                     ]
                                 }
                         kendallCheckBox = CheckBox {
@@ -103,7 +99,7 @@ public class FinalRankUI extends CustomNode {
                                 },
                     ]
                 };
-        kendallRate.padding = Insets{left: KENDALL_LEFT_PADDING};
+        kendallRate.padding = Insets { left: KENDALL_LEFT_PADDING };
     }
 
     public override function create(): Node {
@@ -147,7 +143,8 @@ public class FinalRankUI extends CustomNode {
 
     function updateTable() {
         table = TableUI {
-            		id : Constants.FINAL_RANK_TABLE_ID;
+                    id: Constants.FINAL_RANK_TABLE_ID;
+                    maxWidth: 800;
                     columns: bind for (c in model.columnNames) {
                         TableColumn {
                             text: c
@@ -158,14 +155,14 @@ public class FinalRankUI extends CustomNode {
                         var size = sizeof model.columnNames;
                         TableRow {
                             cells: for (c in model.columnNames) {
-                                var index = indexof c;                                
+                                var index = indexof c;
                                 TableCell {
                                     text: if (index == 0) {
                                         aCast.getName()
                                     } else if (index == (size - 1)) {
                                         "{aCast.getGeneralUtil(functions)}";
                                     } else {
-                                        "{aCast.getValues()[index-1]}";
+                                        "{aCast.getValues()[index - 1]}";
                                     }
                                 }
                             }

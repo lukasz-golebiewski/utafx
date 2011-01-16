@@ -43,6 +43,7 @@ public class AlternativesUI extends CustomNode {
     public var model: AlternativesModel;
     var showLogs = true;
     public-read var table = TableUI {
+                tHeight: 530;
                 columns: bind for (cname in model.columnNames) {
                     TableColumn { text: cname };
                 }
@@ -159,7 +160,7 @@ public class AlternativesUI extends CustomNode {
 
                 HBox {
                     hpos: HPos.CENTER
-                    height: 200
+                    height: table.tHeight
                     content: bind table
                 },
                 /*table = TableView {
