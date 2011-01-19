@@ -18,7 +18,7 @@ import uta.star.UtaStarSolver;
 
 public class ConstantKendallConstraintsManagerTest {
 
-	private static final double PRECISION = 0.001;
+	private static final double PRECISION = 0.0000000001;
 
 	private static IUtaSolver starSolver;
 
@@ -86,7 +86,7 @@ public class ConstantKendallConstraintsManagerTest {
 		Constraint stdConstraint = mgr.getConstraintFor(mgr.functions[0].getPoints().get(1));
 		Constraint constKendallConstraint = tested.getConstraintFor(tested.functions[0].getPoints().get(1));
 
-		Assert.assertEquals(0.332, constKendallConstraint.getLowerBound(), PRECISION);
+		Assert.assertEquals(0.333333333333333, constKendallConstraint.getLowerBound(), PRECISION);
 		Assert.assertEquals(stdConstraint.getUpperBound(), constKendallConstraint.getUpperBound());
 
 		constKendallConstraint = tested.getConstraintFor(tested.functions[2].getPoints().get(1));
@@ -98,10 +98,10 @@ public class ConstantKendallConstraintsManagerTest {
 
 		constKendallConstraint = tested.getConstraintFor(tested.functions[1].getPoints().get(1));
 		Assert.assertEquals(0d, constKendallConstraint.getLowerBound(), PRECISION);
-		Assert.assertEquals(0.332, constKendallConstraint.getUpperBound(), PRECISION);
+		Assert.assertEquals(0.33333333333333, constKendallConstraint.getUpperBound(), PRECISION);
 		constKendallConstraint = tested.getConstraintFor(tested.functions[1].getPoints().get(2));
-		Assert.assertEquals(0.0005, constKendallConstraint.getLowerBound(), PRECISION);
-		Assert.assertEquals(0.666, constKendallConstraint.getUpperBound(), PRECISION);
+		Assert.assertEquals(0.000000000000005, constKendallConstraint.getLowerBound(), PRECISION);
+		Assert.assertEquals(0.666666666666666, constKendallConstraint.getUpperBound(), PRECISION);
 	}
 
 	@Test
@@ -112,15 +112,15 @@ public class ConstantKendallConstraintsManagerTest {
 
 		// check that bound has been changed where it should have been:
 		// price
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.333333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.333333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
 		// time
 		// assertEquals(0.34,
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.6666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
 		// comfort
 		assertEquals(0.00, tested.getConstraintFor(functions[2].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.332, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.3333333333333333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
 
 	}
 
@@ -132,32 +132,32 @@ public class ConstantKendallConstraintsManagerTest {
 
 		// check that boundaries has been changed where it should have been:
 		// price
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.3333333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.3333333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
 		// time
 		// assertEquals(0.34,
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.6666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.6666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
 		// comfort
 		assertEquals(0.00, tested.getConstraintFor(functions[2].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.332, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.3333333333333333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
 
 		functions[2].getBestPoint().setY(0.1);
 		tested.update(functions[2], functions[2].getBestPoint());
 
-		assertEquals(0.566, functions[1].getBestPoint().getY(), PRECISION);
+		assertEquals(0.566666666666666, functions[1].getBestPoint().getY(), PRECISION);
 		assertEquals(0.1, functions[2].getBestPoint().getY(), PRECISION);
 		// check that bound has been changed where it should have been:
 		// price
-		assertEquals(0.3333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.3333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.3333333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.3333333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
 		// time
 		// assertEquals(0.34,
-		assertEquals(0.566, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.5666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.66666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
 		// comfort
 		assertEquals(0.10, tested.getConstraintFor(functions[2].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.332, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.3333333333333333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
 
 	}
 
@@ -169,30 +169,30 @@ public class ConstantKendallConstraintsManagerTest {
 
 		// check that boundaries has been changed where it should have been:
 		// price
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.3333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.3333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
 		// time
 		// assertEquals(0.34,
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.667, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
 		// comfort
 		assertEquals(0.00, tested.getConstraintFor(functions[2].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.3333333333333333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
 
 		functions[1].getPoints().get(2).setY(0.1);
 		tested.update(functions[1], functions[1].getPoints().get(2));
 
 		// check that bound has been changed where it should have been:
 		// price
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.3333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
 		// time
 		// assertEquals(0.34,
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.667, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.6666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
 		// comfort
 		assertEquals(0.00, tested.getConstraintFor(functions[2].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.3333333333333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
 
 		// check that bounds for worst points have not been changed:
 		for (LinearFunction linearFunction : functions) {
@@ -203,7 +203,7 @@ public class ConstantKendallConstraintsManagerTest {
 
 		// check that bound has been changed where it should have been:
 		Constraint constKendallConstraint = tested.getConstraintFor(tested.functions[0].getPoints().get(1));
-		Assert.assertEquals(0.332, constKendallConstraint.getLowerBound(), PRECISION);
+		Assert.assertEquals(0.3333333333333, constKendallConstraint.getLowerBound(), PRECISION);
 
 		constKendallConstraint = tested.getConstraintFor(tested.functions[2].getPoints().get(1));
 		Assert.assertEquals(0d, constKendallConstraint.getLowerBound(), PRECISION);
@@ -214,10 +214,10 @@ public class ConstantKendallConstraintsManagerTest {
 
 		constKendallConstraint = tested.getConstraintFor(tested.functions[1].getPoints().get(1));
 		Assert.assertEquals(0d, constKendallConstraint.getLowerBound(), PRECISION);
-		Assert.assertEquals(0.099, constKendallConstraint.getUpperBound(), PRECISION);
+		Assert.assertEquals(0.1, constKendallConstraint.getUpperBound(), PRECISION);
 		constKendallConstraint = tested.getConstraintFor(tested.functions[1].getPoints().get(2));
-		Assert.assertEquals(0.001, constKendallConstraint.getLowerBound(), PRECISION);
-		Assert.assertEquals(0.666, constKendallConstraint.getUpperBound(), PRECISION);
+		Assert.assertEquals(0.000000000000001, constKendallConstraint.getLowerBound(), PRECISION);
+		Assert.assertEquals(0.66666666666666, constKendallConstraint.getUpperBound(), PRECISION);
 	}
 
 	@Test
@@ -230,15 +230,15 @@ public class ConstantKendallConstraintsManagerTest {
 
 		// check that boundaries has been changed where it should have been:
 		// price
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.333333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.333333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
 		// time
 		// assertEquals(0.34,
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.667, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.666666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
 		// comfort
 		assertEquals(0.00, tested.getConstraintFor(functions[2].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.333333333333333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
 
 		double previousValue = functions[1].getPoints().get(2).getY();
 
@@ -247,15 +247,15 @@ public class ConstantKendallConstraintsManagerTest {
 
 		// check that bound has been changed where it should have been:
 		// price
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.3333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.3333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
 		// time
 		// assertEquals(0.34,
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.667, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.6666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.66666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
 		// comfort
 		assertEquals(0.00, tested.getConstraintFor(functions[2].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.333333333333333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
 
 		// check that bounds for worst points have not been changed:
 		for (LinearFunction linearFunction : functions) {
@@ -266,7 +266,7 @@ public class ConstantKendallConstraintsManagerTest {
 
 		// check that bound has been changed where it should have been:
 		Constraint constKendallConstraint = tested.getConstraintFor(tested.functions[0].getPoints().get(1));
-		Assert.assertEquals(0.332, constKendallConstraint.getLowerBound(), PRECISION);
+		Assert.assertEquals(0.333333333333, constKendallConstraint.getLowerBound(), PRECISION);
 
 		constKendallConstraint = tested.getConstraintFor(tested.functions[2].getPoints().get(1));
 		Assert.assertEquals(0d, constKendallConstraint.getLowerBound(), PRECISION);
@@ -277,30 +277,30 @@ public class ConstantKendallConstraintsManagerTest {
 
 		constKendallConstraint = tested.getConstraintFor(tested.functions[1].getPoints().get(1));
 		Assert.assertEquals(0d, constKendallConstraint.getLowerBound(), PRECISION);
-		Assert.assertEquals(0.099, constKendallConstraint.getUpperBound(), PRECISION);
+		Assert.assertEquals(0.1, constKendallConstraint.getUpperBound(), PRECISION);
 		constKendallConstraint = tested.getConstraintFor(tested.functions[1].getPoints().get(2));
-		Assert.assertEquals(0.001, constKendallConstraint.getLowerBound(), PRECISION);
-		Assert.assertEquals(0.666, constKendallConstraint.getUpperBound(), PRECISION);
+		Assert.assertEquals(0.000000000000001, constKendallConstraint.getLowerBound(), PRECISION);
+		Assert.assertEquals(0.666666666666666, constKendallConstraint.getUpperBound(), PRECISION);
 
 		// restore previous value
 		functions[1].getPoints().get(2).setY(previousValue);
 		tested.update(functions[1], functions[1].getPoints().get(2));
 
 		// price
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.33333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.33333333333333, tested.getConstraintFor(functions[0].getBestPoint()).getUpperBound(), PRECISION);
 		// time
 		// assertEquals(0.34,
-		assertEquals(0.666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.667, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.66666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getLowerBound(), PRECISION);
+		assertEquals(0.66666666666666, tested.getConstraintFor(functions[1].getBestPoint()).getUpperBound(), PRECISION);
 		// comfort
 		assertEquals(0.00, tested.getConstraintFor(functions[2].getBestPoint()).getLowerBound(), PRECISION);
-		assertEquals(0.333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
+		assertEquals(0.33333333333333, tested.getConstraintFor(functions[2].getBestPoint()).getUpperBound(), PRECISION);
 
 		// check that bound has been changed where it should have been:
 
 		constKendallConstraint = tested.getConstraintFor(tested.functions[0].getPoints().get(1));
-		Assert.assertEquals(0.332, constKendallConstraint.getLowerBound(), PRECISION);
+		Assert.assertEquals(0.3333333333333, constKendallConstraint.getLowerBound(), PRECISION);
 
 		constKendallConstraint = tested.getConstraintFor(tested.functions[2].getPoints().get(1));
 		Assert.assertEquals(0d, constKendallConstraint.getLowerBound(), PRECISION);
@@ -311,10 +311,10 @@ public class ConstantKendallConstraintsManagerTest {
 
 		constKendallConstraint = tested.getConstraintFor(tested.functions[1].getPoints().get(1));
 		Assert.assertEquals(0d, constKendallConstraint.getLowerBound(), PRECISION);
-		Assert.assertEquals(0.332, constKendallConstraint.getUpperBound(), PRECISION);
+		Assert.assertEquals(0.33333333333333, constKendallConstraint.getUpperBound(), PRECISION);
 		constKendallConstraint = tested.getConstraintFor(tested.functions[1].getPoints().get(2));
-		Assert.assertEquals(0.0005, constKendallConstraint.getLowerBound(), PRECISION);
-		Assert.assertEquals(0.666, constKendallConstraint.getUpperBound(), PRECISION);
+		Assert.assertEquals(0.00000000000005, constKendallConstraint.getLowerBound(), PRECISION);
+		Assert.assertEquals(0.66666666666666, constKendallConstraint.getUpperBound(), PRECISION);
 
 		//
 		Constraint[] constraintsAfter = tested.getConstraints();
