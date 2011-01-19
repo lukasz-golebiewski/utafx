@@ -10,7 +10,7 @@ import uta.api.RankingUtils;
 
 public class ConstantKendallConstraintsManager extends StandardConstraintsManager {
 
-	private double searchPrecision = 0.001;
+	public static final double SEARCH_PRECISION = 0.000000000000000000001;
 	private static final RankingUtils RANKING_UTILS = new RankingUtils();
 	private final Ranking<Alternative> referenceRank;
 	private Ranking<Alternative> finalRank;
@@ -66,6 +66,7 @@ public class ConstantKendallConstraintsManager extends StandardConstraintsManage
 
 		double newConstraintValue = search(p, c, c.getUpperBound(), p.getY(), true);
 		// if (Math.abs(middle - c.getUpperBound()) > 0) {
+                
 		setNewUpperBound(p, newConstraintValue);
 		// }
 
@@ -81,7 +82,7 @@ public class ConstantKendallConstraintsManager extends StandardConstraintsManage
 		double previousHigh = high;
 		double previousLow = low;
 
-		while (Math.abs(middle - prevMiddle) > searchPrecision) {
+		while (Math.abs(middle - prevMiddle) > SEARCH_PRECISION) {
 			prevMiddle = middle;
 			boolean isWorse = isKendallWorseWhenPointHasValue(p, middle);
 			// conditions are inverted when we are searching downwards
