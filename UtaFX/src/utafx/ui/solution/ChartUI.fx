@@ -30,7 +30,7 @@ import javafx.util.Sequences;
 public class ChartUI extends CustomNode {
 
     def INITIAL_FACTOR_VALUE = 0;
-    var showLogs = false;
+    var showLogs = true;
 
     public var name:String;
     public-read var chart: LineChart;
@@ -57,6 +57,7 @@ public class ChartUI extends CustomNode {
 
     var factor:Double = INITIAL_FACTOR_VALUE;
 
+    override var transforms = null;
 
 
 //    var calcFactorReady:Boolean = bind chart.visible on replace {
@@ -140,17 +141,18 @@ public class ChartUI extends CustomNode {
     }
 
     public function update(){
+        if(showLogs) println("Updating local bounds of {name} :");
         for(i in [0..<sizeof data.x]){
             updatePoint(i);
             updateLocalBound(i);
-        }
-        if(showLogs) println("Updated local bounds of {name}");
+        }        
     }
 
 
     public function updatePoint(index:Integer) {
         var p:Point = fun.getPoints().get(index);
         data.y[index] = p.getY();
+        if(showLogs) println("Updated point {p.getX()} to value {p.getY()}");
     }
 
 
@@ -159,7 +161,9 @@ public class ChartUI extends CustomNode {
 //          data.lowers[index] -= 0.1;
 //          data.uppers[index] += 0.05;
           data.lowers[index] = constraintsManager.getConstraintFor(p).getLowerBound();
+          if(showLogs) println("Updated point's {p.getX()} lower bound to value {data.lowers[index]}");
           data.uppers[index] = constraintsManager.getConstraintFor(p).getUpperBound();
+          if (showLogs) println("Updated point's {p.getX()} upper bound to value {data.uppers[index]}");
 //        data.lowers = for(p in fun.getPoints()){
 //            (constraintsManager.getConstraintFor(p) as Constraint).getLowerBound();
 //        }
@@ -303,8 +307,8 @@ package class CharPointSymbol extends CustomNode {
     var valueAfter:Double;
 
     override function create():Node{
-
-        Container {
+        var dupa  = true;
+        var c = Container {
             content: [
                 rectangle = Rectangle {
                     width: 10
@@ -312,11 +316,12 @@ package class CharPointSymbol extends CustomNode {
                     arcWidth: 10
                     arcHeight: 10
                     fill: bind rectFill;
-                    translateX: bind -1.0 * rectangle.width / 2;
-                    translateY: bind if(item.upperBound>data.y[item.index]){
+                    translateX : bind -1.0 * rectangle.width / 2                   
+                   
+                    translateY : bind if(item.upperBound>data.y[item.index]){
                         -1.0 * rectangle.height * (item.upperBound-data.y[item.index])/(item.upperBound-item.lowerBound);
                     } else {
-                       0.0;
+                       Double.NEGATIVE_INFINITY;
                     }
                 },
                 circle = PlotSymbol.Circle {
@@ -408,7 +413,12 @@ package class CharPointSymbol extends CustomNode {
                }                    
             ]
           }
+          println("#################################X: {rectangle.translateX}" );
+          println("#################################Y: {rectangle.translateY}" );
+          
+          return c;
       }
+
 }
 
 
