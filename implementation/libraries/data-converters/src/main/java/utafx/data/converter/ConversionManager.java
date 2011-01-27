@@ -35,6 +35,7 @@ public class ConversionManager {
 	addConverter(new Xml2XlsDataConverter());
 	addConverter(new Xml2XlsxDataConverter());
 	addConverter(new Xml2CsvDataConverter());
+	addConverter(new Xml2CsvDataConverter());
     }
 
     private void addConverter(DataConverter converter) {
@@ -96,7 +97,7 @@ public class ConversionManager {
     public Preferences read(String inputPath)
 	    throws UnsupportedFormatException, IOException {
 	ConvertType ct = getConversionType(inputPath, "someFile.xml");
-	PreferenceDataReader reader = converters.get(ct);	
+	PreferenceDataReader reader = getReader(ct);	
 	if (reader != null) {
 	    return reader.read(new FileInputStream(inputPath));
 	} else {
@@ -107,7 +108,19 @@ public class ConversionManager {
 	}
     }
 
-    public ConvertType getConversionType(String inputPath, String outputPath) {
+    private PreferenceDataReader getReader(ConvertType ct) {
+    	PreferenceDataReader reader = converters.get(ct);
+    	if(reader == null && ct.getSourceFormat().equalsIgnoreCase("xml")){
+    		for(ConvertType type: converters.keySet()){
+    			if(type.getSourceFormat().equalsIgnoreCase("xml")){
+    				reader = converters.get(type);
+    			}
+    		}
+    	}
+    	return reader;
+	}
+
+	public ConvertType getConversionType(String inputPath, String outputPath) {
 	String src = getExtension(inputPath);
 	String dst = getExtension(outputPath);
 	return new ConvertType(src, dst);
