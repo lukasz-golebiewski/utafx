@@ -206,10 +206,10 @@ public class CsvDataConverter extends XmlPreferenceDataWriter implements
     private RefRank readReferenceRank() {
 	RefRank rank = new RefRank();
 	int rankCol;
-	String[] criteria = data[CRIT_NAMES_LINE];
+	String[] criteria = data[CRIT_TYPES_LINE];
 	int index = CommonUtil.getFirstNotEmptyValueIndex(criteria);
 	if (index > 0) {
-	    rankCol = index - 1;
+	    rankCol = index - 2;
 	    int id = 0;
 	    for (int line = ALTERNS_DATA_LINE; line < data.length; line++) {
 		String srank = (data[line][rankCol]);
