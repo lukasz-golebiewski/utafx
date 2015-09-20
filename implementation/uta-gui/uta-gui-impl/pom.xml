@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>uta</groupId>
 			<artifactId>uta-core-impl</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>uta-core</groupId>
 			<artifactId>uta-solver-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>		
